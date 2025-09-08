@@ -7,8 +7,14 @@ EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
+
 WORKDIR /src
 COPY ["src/LoginEKO.FileProcessingService.Api/LoginEKO.FileProcessingService.Api.csproj", "LoginEKO.FileProcessingService.Api/"]
+COPY ["src/LoginEKO.FileProcessingService.CompositionRoot/LoginEKO.FileProcessingService.CompositionRoot.csproj", "LoginEKO.FileProcessingService.CompositionRoot/"]
+COPY ["src/LoginEKO.FileProcessingService.Contracts/LoginEKO.FileProcessingService.Contracts.csproj", "LoginEKO.FileProcessingService.Contracts/"]
+COPY ["src/LoginEKO.FileProcessingService.Domain/LoginEKO.FileProcessingService.Domain.csproj", "LoginEKO.FileProcessingService.Domain/"]
+COPY ["src/LoginEKO.FileProcessingService.Persistence/LoginEKO.FileProcessingService.Persistence.csproj", "LoginEKO.FileProcessingService.Persistence/"]
+
 RUN dotnet restore "LoginEKO.FileProcessingService.Api/LoginEKO.FileProcessingService.Api.csproj"
 COPY ./src/ ./
 WORKDIR LoginEKO.FileProcessingService.Api
