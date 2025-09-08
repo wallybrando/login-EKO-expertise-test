@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  dotnet-api:
+    image: dotnet-rest-api/src
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=loginEKO
+      - POSTGRES_PASSWORD=change_me
+      - POSTGRES_DB=files
+    ports:
+      - "5432:5432"
