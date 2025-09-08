@@ -11,6 +11,13 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
     public class FileRepository : IFileRepository
     {
         private readonly List<FileDto> _files = [];
+
+        public Task<FileDto?> GetAsync(Guid id)
+        {
+            var file = _files.SingleOrDefault(x => x.Id == id);
+            return Task.FromResult(file);
+        }
+
         public Task<Guid> UploadFileAsync(FileDto file)
         {
             _files.Add(file);

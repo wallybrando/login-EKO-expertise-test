@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace LoginEKO.FileProcessingService.Api.Controllers
 {
     [ApiController]
-    [Route("api")]
     public class FilesController : ControllerBase
     {
         private readonly IFileService _fileService;
@@ -16,13 +15,26 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
             _fileService = fileService;
         }
 
-        [HttpPost("files")]
-        public async Task<IActionResult> UploadAsync([FromBody] UploadFileRequest request)
+        [HttpPost(ApiEndpoints.Files.Upload)]
+        public async Task<IActionResult> UploadAsync([FromForm] UploadFileRequest request)
         {
             var file = request.MapToFileDto();
             await _fileService.UploadFileAsync(file);
             var response = file.MapToResponse();
-            return Created($"/api/files/{response.Id}", response);
+
+            return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
+        }
+
+        [HttpGet(ApiEndpoints.Files.Get)]
+        public async Task<IActionResult> Get([FromRoute] Guid id)
+        {
+            var file = await _fileService.GetAsync(id);
+
+            if (file == null)
+                return NotFound();
+
+            var response = file.MapToResponse();
+            return Ok(response);
         }
     }
 }

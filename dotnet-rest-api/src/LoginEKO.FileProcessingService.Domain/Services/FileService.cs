@@ -18,9 +18,24 @@ namespace LoginEKO.FileProcessingService.Domain.Services
             _fileRepository = fileRepository;
         }
 
+        public async Task<FileDto?> GetAsync(Guid id)
+        {
+            var file = await _fileRepository.GetAsync(id);
+
+            if (file == null)
+                return null;
+
+            return file;
+        }
+
         public Task<bool> UploadFileAsync(FileDto file)
         {
-            file.CreatedAt = DateTime.UtcNow;
+            // IsFileExtensionAllowed()
+            // IsFileSizeWithinLimit()
+            // FileWithSameNameExists()
+            // FileWithSameMD5HashExists()
+
+            file.CreatedDate = DateTime.UtcNow;
            _fileRepository.UploadFileAsync(file);
             return Task.FromResult(true);
         }

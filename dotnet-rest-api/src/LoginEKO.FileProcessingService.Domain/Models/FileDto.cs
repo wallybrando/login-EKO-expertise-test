@@ -10,8 +10,10 @@ namespace LoginEKO.FileProcessingService.Domain.Models
     {
         public Guid Id { get; set; }
         public required string Filename { get; set; }
-        public double Size { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime LastModifiedAt { get; set; }
+        public required string Extension { get; set; }
+        public double SizeInBytes { get; set; }
+        public required byte[] BinaryObject { get; set; }
+        public string MD5Hash { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

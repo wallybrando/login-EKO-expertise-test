@@ -12,8 +12,10 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
             return new FileDto
             {
                 Id = Guid.NewGuid(),
-                Filename = request.Filename,
-                Size = request.Size
+                Filename = request.File.FileName,
+                Extension = request.File.ContentType.Split('/').Last(),
+                SizeInBytes = request.File.Length,
+                BinaryObject = ToByteArray(request.File)
             };
         }
 
@@ -23,9 +25,21 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
             {
                 Id = file.Id,
                 Filename = file.Filename,
-                Size = file.Size,
-                CreatedAt = file.CreatedAt,
+                SizeInBytes = file.SizeInBytes,
+                CreatedDate = file.CreatedDate,
             };
+        }
+
+        private static byte[] ToByteArray(IFormFile file)
+        {
+            byte[] bytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                file.CopyTo(memoryStream);
+                bytes = memoryStream.ToArray();
+            }
+
+            return bytes;
         }
     }
 }

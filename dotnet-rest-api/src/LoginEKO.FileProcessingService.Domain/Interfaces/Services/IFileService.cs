@@ -10,5 +10,6 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces.Services
     public interface IFileService
     {
         Task<bool> UploadFileAsync(FileDto file);
+        Task<FileDto?> GetAsync(Guid id);
     }
 }
