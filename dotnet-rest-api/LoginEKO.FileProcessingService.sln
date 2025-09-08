@@ -5,6 +5,14 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginEKO.FileProcessingService.Api", "src\LoginEKO.FileProcessingService.Api\LoginEKO.FileProcessingService.Api.csproj", "{D6DACFDB-BD31-4879-83A9-25C388D4F811}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginEKO.FileProcessingService.Domain", "src\LoginEKO.FileProcessingService.Domain\LoginEKO.FileProcessingService.Domain.csproj", "{F85C3DA2-9876-45CB-A49A-67481CAB55DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginEKO.FileProcessingService.Persistence", "src\LoginEKO.FileProcessingService.Persistence\LoginEKO.FileProcessingService.Persistence.csproj", "{96618810-CFB5-49AF-85B8-BDC1510BD64A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginEKO.FileProcessingService.Contracts", "src\LoginEKO.FileProcessingService.Contracts\LoginEKO.FileProcessingService.Contracts.csproj", "{9BE2FAA8-2049-46A8-82ED-C6C5D300C719}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginEKO.FileProcessingService.CompositionRoot", "src\LoginEKO.FileProcessingService.CompositionRoot\LoginEKO.FileProcessingService.CompositionRoot.csproj", "{AC167197-E53C-4F11-90E7-402EE1992BDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,8 +23,27 @@ Global
 		{D6DACFDB-BD31-4879-83A9-25C388D4F811}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6DACFDB-BD31-4879-83A9-25C388D4F811}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6DACFDB-BD31-4879-83A9-25C388D4F811}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F85C3DA2-9876-45CB-A49A-67481CAB55DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F85C3DA2-9876-45CB-A49A-67481CAB55DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F85C3DA2-9876-45CB-A49A-67481CAB55DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F85C3DA2-9876-45CB-A49A-67481CAB55DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96618810-CFB5-49AF-85B8-BDC1510BD64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96618810-CFB5-49AF-85B8-BDC1510BD64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96618810-CFB5-49AF-85B8-BDC1510BD64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96618810-CFB5-49AF-85B8-BDC1510BD64A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BE2FAA8-2049-46A8-82ED-C6C5D300C719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BE2FAA8-2049-46A8-82ED-C6C5D300C719}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BE2FAA8-2049-46A8-82ED-C6C5D300C719}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BE2FAA8-2049-46A8-82ED-C6C5D300C719}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC167197-E53C-4F11-90E7-402EE1992BDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC167197-E53C-4F11-90E7-402EE1992BDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC167197-E53C-4F11-90E7-402EE1992BDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC167197-E53C-4F11-90E7-402EE1992BDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C48BED20-ED34-4D6B-983B-170D798F52B1}
 	EndGlobalSection
 EndGlobal

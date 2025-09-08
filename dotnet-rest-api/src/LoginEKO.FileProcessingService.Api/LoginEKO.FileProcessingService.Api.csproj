@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,6 +12,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LoginEKO.FileProcessingService.CompositionRoot\LoginEKO.FileProcessingService.CompositionRoot.csproj" />
+    <ProjectReference Include="..\LoginEKO.FileProcessingService.Contracts\LoginEKO.FileProcessingService.Contracts.csproj" />
+    <ProjectReference Include="..\LoginEKO.FileProcessingService.Domain\LoginEKO.FileProcessingService.Domain.csproj" />
   </ItemGroup>
 
 </Project>

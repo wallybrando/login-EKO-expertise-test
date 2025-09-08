@@ -1,3 +1,4 @@
+using LoginEKO.FileProcessingService.CompositionRoot.Extensions;
 
 namespace LoginEKO.FileProcessingService.Api
 {
@@ -13,6 +14,9 @@ namespace LoginEKO.FileProcessingService.Api
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDomain();
+            builder.Services.AddDatabase();
 
             var app = builder.Build();
 
