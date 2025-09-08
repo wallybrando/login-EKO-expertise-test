@@ -1,0 +1,6 @@
+@LoginEKO.FileProcessingService.Api_HostAddress = http://localhost:5081
+
+GET {{LoginEKO.FileProcessingService.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
