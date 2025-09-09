@@ -10,7 +10,7 @@ namespace LoginEKO.FileProcessingService.Contracts.Responses
     {
         public Guid Id { get; init; }
         public required string Filename { get; init; }
-        public double SizeInBytes { get; init; }
+        public long SizeInBytes { get; init; }
         public DateTime CreatedDate { get; init; }
     }
 }

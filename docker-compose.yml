@@ -7,6 +7,7 @@ services:
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - Database__ConnectionString=Server=db;Port=5432;Database=files;User ID=loginEKO;password=change_me;
     ports:
       - "8080:8080"
     depends_on:

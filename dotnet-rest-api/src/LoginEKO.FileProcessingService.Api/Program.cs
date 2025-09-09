@@ -1,13 +1,16 @@
 using LoginEKO.FileProcessingService.CompositionRoot.Extensions;
+using LoginEKO.FileProcessingService.Persistence.Database;
+using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var config = builder.Configuration;
+             
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -16,7 +19,7 @@ namespace LoginEKO.FileProcessingService.Api
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDomain();
-            builder.Services.AddDatabase();
+            builder.Services.AddDatabase(config["Database:ConnectionString"]!);
 
             var app = builder.Build();
 
@@ -31,8 +34,10 @@ namespace LoginEKO.FileProcessingService.Api
 
             app.UseAuthorization();
 
-
             app.MapControllers();
+
+            var dbInitializer = app.Services.GetRequiredService<DbInitializer>();
+            await dbInitializer.InitializeAsync();
 
             app.Run();
         }
