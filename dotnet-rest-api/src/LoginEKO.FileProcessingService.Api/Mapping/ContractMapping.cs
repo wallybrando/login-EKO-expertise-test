@@ -15,7 +15,8 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
                 Filename = request.File.FileName,
                 Extension = request.File.ContentType.Split('/').Last(),
                 SizeInBytes = request.File.Length,
-                BinaryObject = ToByteArray(request.File)
+                BinaryObject = ToByteArray(request.File),
+                File = request.File,
             };
         }
 

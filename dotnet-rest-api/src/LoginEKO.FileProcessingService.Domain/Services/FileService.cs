@@ -1,21 +1,21 @@
-﻿using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
+﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
+using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
 using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Validators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LoginEKO.FileProcessingService.Domain.Services
 {
     public class FileService : IFileService
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly IFileRepository _fileRepository;
 
-        public FileService(IFileRepository fileRepository)
+        public FileService(IServiceProvider serviceProvider, ITextFileExtractor fileExtractor, IFileRepository fileRepository)
         {
+            _serviceProvider = serviceProvider;
             _fileRepository = fileRepository;
         }
 
@@ -31,12 +31,6 @@ namespace LoginEKO.FileProcessingService.Domain.Services
 
         public async Task<bool> UploadFileAsync(FileDto file)
         {
-
-            // IsFileExtensionAllowed()
-            // IsFileSizeWithinLimit()
-            // FileWithSameNameExists()
-            // FileWithSameMD5HashExists()
-
             var fileHashBytes = MD5Validator.ComputeHash(file.BinaryObject);
 
             var fileDb = await _fileRepository.GetByFilenameAsync(file.Filename);
@@ -51,10 +45,60 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                 throw new ArgumentException("File already exists");
             }
 
-            file.MD5Hash = MD5Validator.CreateHashStringFromHashBytes(fileHashBytes);
-            file.CreatedDate = DateTime.UtcNow;
+            var vehicleType = GetVehicleType(file.Filename);
+            if (vehicleType == VehicleType.UNKNOWN)
+                throw new ArgumentException();
 
-            return await _fileRepository.UploadFileAsync(file);
+            var fileType = GetFileType(file.Extension);
+            if (fileType == FileType.UNKNOWN)
+                throw new ArgumentException();
+
+            var fileExtractor = _serviceProvider.GetServices<ITextFileExtractor>()
+                                                .FirstOrDefault(x => x.Type == fileType)
+                                                ??
+                                                throw new ArgumentNullException();
+
+            var vehicleDataTransformator = _serviceProvider.GetServices<IVehicleDataTransformator>()
+                                                           .FirstOrDefault(x => x.Type == vehicleType)
+                                                           ??
+                                                           throw new ArgumentNullException();
+
+            var extractedData = await fileExtractor.ExtractDataAsync(file.File);
+            var transformedData = vehicleDataTransformator.TransformVehicleData(extractedData);
+
+            switch (vehicleType)
+            {
+                case VehicleType.TRACTOR:
+                    // call repository
+                    break;
+                case VehicleType.COMBINE:
+                    // call repository
+                    break;
+                case VehicleType.UNKNOWN:
+                default:
+                    throw new ArgumentException();
+            }
+
+            throw new NotImplementedException();
+        }
+
+        private VehicleType GetVehicleType(string filename)
+        {
+            if (filename.StartsWith("LD_A", StringComparison.Ordinal))
+                return VehicleType.TRACTOR;
+            if (filename.StartsWith("LD_C", StringComparison.Ordinal))
+                return VehicleType.COMBINE;
+
+            return VehicleType.UNKNOWN;
+        }
+
+        private FileType GetFileType(string fileType)
+        {
+            fileType = fileType.Split('/').Last();
+            if (fileType.Equals("CSV", StringComparison.OrdinalIgnoreCase))
+                return FileType.CSV;
+
+            return FileType.UNKNOWN;
         }
     }
 }

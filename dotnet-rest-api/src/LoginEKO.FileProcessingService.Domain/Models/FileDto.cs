@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,8 @@ namespace LoginEKO.FileProcessingService.Domain.Models
         public required string Filename { get; set; }
         public required string Extension { get; set; }
         public long SizeInBytes { get; set; }
-        public required byte[] BinaryObject { get; set; }
+        public byte[] BinaryObject { get; set; }
+        public required IFormFile File { get; set; }
         public string MD5Hash { get; set; }
         public DateTime CreatedDate { get; set; }
     }

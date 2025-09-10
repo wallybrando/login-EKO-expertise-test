@@ -1,11 +1,9 @@
-﻿using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
+﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
+using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
 using LoginEKO.FileProcessingService.Domain.Services;
+using LoginEKO.FileProcessingService.Domain.Services.DataTransformators;
+using LoginEKO.FileProcessingService.Domain.Services.FileExtractors;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
 {
@@ -13,7 +11,9 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
     {
         public static IServiceCollection AddDomain(this IServiceCollection services)
         {
-            services.AddSingleton<IFileService, FileService>();
+            services.AddScoped<IVehicleDataTransformator, TractorDataTransformator>();
+            services.AddScoped<ITextFileExtractor, CsvFileExtractor>();
+            services.AddScoped<IFileService, FileService>();
             return services;
         }
     }
