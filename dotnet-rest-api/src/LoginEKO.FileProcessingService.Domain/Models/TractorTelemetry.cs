@@ -5,7 +5,7 @@ namespace LoginEKO.FileProcessingService.Domain.Models
 {
     public class TractorTelemetry : Vehicle
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         // Column B
         //public string SerialNumber { get; set; } // common
 

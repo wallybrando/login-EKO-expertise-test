@@ -12,87 +12,122 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
     {
         public VehicleType Type { get; init; }
         private readonly Dictionary<string, string> _columnsWithSpecialValues;
+
+        private readonly IDictionary<string, string[]> _boolValues;
         public CombineDataTransformator()
         {
             Type = VehicleType.COMBINE;
 
-            _columnsWithSpecialValues = new Dictionary<string, string>
+            _boolValues = new Dictionary<string, string[]>()
             {
-                { nameof(Combine.SeparationLossesInPercentages), "NA;" },
-                { nameof(Combine.SieveLossesInPercentage), "NA;" },
-                { nameof(Combine.Chopper), "on;off;" },
-
-                { nameof(Combine.FrontAttachment), "on;off;" },
-                { nameof(Combine.WorkingPosition), "on;off;" },
-                { nameof(Combine.GrainTankUnloading), "on;off;" },
-                { nameof(Combine.MainDriveStatus), "on;off;" },
-                { nameof(Combine.GrainTank70), "on;off;" },
-                { nameof(Combine.GrainTank100), "on;off;" },
-                { nameof(Combine.GrainMoistureContentInPercentage), "NA;" },
-                { nameof(Combine.RadialSpreaderSpeedInRpm), "NA;" },
-                { nameof(Combine.YieldMeasurement), "on;off;" },
-                { nameof(Combine.MoistureMeasurement), "on;off;" },
-                { nameof(Combine.TypeOfCrop), "Sunflowers;Maize;" },
-                { nameof(Combine.AutoPilotStatus), "on;off;" },
-                { nameof(Combine.CruisePilotStatus), "0;" },
-                { nameof(Combine.YieldInTonsPerHour), "NA;" },
+                { nameof(CombineTelemetry.Chopper), new string[2] { "on", "off"} },
+                { nameof(CombineTelemetry.FrontAttachment), new string[2] { "on", "off"} },
+                { nameof(CombineTelemetry.WorkingPosition), new string[2] { "on", "off"} },
+                { nameof(CombineTelemetry.GrainTankUnloading), new string[2] { "on", "off"} },
+                { nameof(CombineTelemetry.MainDriveStatus), new string[2] { "on", "off"} },
+                { nameof(CombineTelemetry.GrainTank70), new string[2] { "on", "off"} },
+                { nameof(CombineTelemetry.GrainTank100), new string[2] { "on", "off"} },
+                { nameof(CombineTelemetry.MoistureMeasurement), new string[2] { "on", "off"} },
+                { nameof(CombineTelemetry.AutoPilotStatus), new string[2] { "on", "off"} },
             };
+
+            //_columnsWithSpecialValues = new Dictionary<string, string>
+            //{
+            //    { nameof(CombineTelemetry.SeparationLossesInPercentages), "NA;" },
+            //    { nameof(CombineTelemetry.SieveLossesInPercentage), "NA;" },
+            //    { nameof(CombineTelemetry.Chopper), "on;off;" },
+
+            //    { nameof(CombineTelemetry.FrontAttachment), "on;off;" },
+            //    { nameof(CombineTelemetry.WorkingPosition), "on;off;" },
+            //    { nameof(CombineTelemetry.GrainTankUnloading), "on;off;" },
+            //    { nameof(CombineTelemetry.MainDriveStatus), "on;off;" },
+            //    { nameof(CombineTelemetry.GrainTank70), "on;off;" },
+            //    { nameof(CombineTelemetry.GrainTank100), "on;off;" },
+            //    { nameof(CombineTelemetry.GrainMoistureContentInPercentage), "NA;" },
+            //    { nameof(CombineTelemetry.RadialSpreaderSpeedInRpm), "NA;" },
+            //    { nameof(CombineTelemetry.YieldMeasurement), "on;off;" },
+            //    { nameof(CombineTelemetry.MoistureMeasurement), "on;off;" },
+            //    { nameof(CombineTelemetry.TypeOfCrop), "Sunflowers;Maize;" },
+            //    { nameof(CombineTelemetry.AutoPilotStatus), "on;off;" },
+            //    { nameof(CombineTelemetry.CruisePilotStatus), "0;" },
+            //    { nameof(CombineTelemetry.YieldInTonsPerHour), "NA;" },
+            //};
         }
 
         public IEnumerable<Vehicle> TransformVehicleData(IEnumerable<string[]> data)
         {
-            var combineTelemetry = new List<Combine>();
+            var combineTelemetry = new List<CombineTelemetry>();
 
             foreach (var entity in data)
             {
-                var combine = new Combine();
+                var combine = new CombineTelemetry();
 
                 try
                 {
-                    combine.Date = DateTime.Parse(entity[0]);
-                    combine.SerialNumber = entity[1];
-                    combine.GPSLongitude = double.Parse(entity[2]);
-                    combine.GPSLatitude = double.Parse(entity[3]);
-                    combine.TotalWorkingHours = double.Parse(entity[4]);
-                    combine.GroundSpeedInKmh = double.Parse(entity[5]);
-                    combine.EngineSpeedInRpm = int.Parse(entity[6]);
-                    combine.EngineLoadInPercentage = double.Parse(entity[7]);
-                    combine.DrumSpeedInRpm = int.Parse(entity[8]);
-                    combine.FanSpeedInRpm = int.Parse(entity[9]);
-                    combine.RotorStrawWalkerSpeedInRpm = int.Parse(entity[10]);
-                    combine.SeparationLossesInPercentages = ParseNullablDoubleNumber(entity[11], nameof(Combine.SeparationLossesInPercentages));  // entity[11] == "NA" ? null : double.Parse(entity[11]);
-                    combine.SieveLossesInPercentage = entity[12] == "NA" ? null : double.Parse(entity[12]);
-                    combine.Chopper = entity[13] == "on" ? true : false;
-                    combine.DieselTankLevelInPercentage = double.Parse(entity[14]);
-                    combine.NumberOfPartialWidths = short.Parse(entity[15]);
-                    combine.FrontAttachment = entity[16] == "on" ? true : false;
-                    combine.MaxNumberOfPartialWidths = short.Parse(entity[17]);
-                    combine.FeedRakeSpeedInRpm = int.Parse(entity[18]);
-                    combine.WorkingPosition = entity[19] == "on" ? true : false;
-                    combine.GrainTankUnloading = entity[20] == "on" ? true : false;
-                    combine.MainDriveStatus = entity[21] == "on" ? true : false;
-                    combine.ConcavePositionInMM = short.Parse(entity[22]);
-                    combine.UpperSievePositionInMM = short.Parse(entity[23]);
-                    combine.LowerSievePositionInMM = short.Parse(entity[24]);
-                    combine.GrainTank70 = entity[25] == "on" ? true : false;
-                    combine.GrainTank100 = entity[26] == "on" ? true : false;
-                    combine.GrainMoistureContentInPercentage = entity[27] == "NA" ? null : double.Parse(entity[27]);
-                    combine.ThroughputTonsPerHour = double.Parse(entity[28]);
-                    combine.RadialSpreaderSpeedInRpm = entity[29] == "NA" ? null : int.Parse(entity[29]);
-                    combine.GrainInReturnsInPercentage = double.Parse(entity[30]);
-                    combine.ChannelPositionInPercentage = double.Parse(entity[31]);
-                    combine.YieldMeasurement = entity[32] == "on" ? true : false;
-                    combine.ReturnsAuferMeasurementInPercentage = double.Parse(entity[33]);
-                    combine.MoistureMeasurement = entity[34] == "on" ? true : false;
-                    combine.TypeOfCrop = ParseCropType(entity[35]); // CropType.SUNFLOWERS; // [35]
-                    combine.SpecialCropWeightInGrams = int.Parse(entity[36]);
-                    combine.AutoPilotStatus = entity[37] == "on" ? true : false;
-                    combine.CruisePilotStatus = ParseCruisePilotStatus(entity[38]); // CruisePilotStatus.STATUS_0; // [38]
-                    combine.RateOfWorkInHaPerHour = double.Parse(entity[39]);
-                    combine.YieldInTonsPerHour = entity[40] == "NA" ? null : double.Parse(entity[40]);
-                    combine.QuantimeterCalibrationFactor = double.Parse(entity[41]);
-                    combine.SeparationSensitivityInPercentage = double.Parse(entity[42]);
-                    combine.SieveSensitivityInPercentage = double.Parse(entity[43]);
+                    combine.Date = ParseDateTimeValue(entity[0]); // DateTime.Parse(entity[0]);
+                    combine.SerialNumber = ParseStringValue(entity[1]);
+                    combine.GPSLongitude = ParseDoubleValue(entity[2]); // double.Parse(entity[2]);
+                    combine.GPSLatitude = ParseDoubleValue(entity[3]); //double.Parse(entity[3]);
+                    combine.TotalWorkingHours = ParseDoubleValue(entity[4]); // double.Parse(entity[4]);
+                    combine.GroundSpeedInKmh = ParseDoubleValue(entity[5]); //double.Parse(entity[5]);
+                    combine.EngineSpeedInRpm = ParseIntValue(entity[6]); // int.Parse(entity[6]);
+                    combine.EngineLoadInPercentage = ParseDoubleValue(entity[7]); //double.Parse(entity[7]);
+                    combine.DrumSpeedInRpm = ParseIntValue(entity[8]); // int.Parse(entity[8]);
+                    combine.FanSpeedInRpm = ParseIntValue(entity[9]); // int.Parse(entity[9]);
+                    combine.RotorStrawWalkerSpeedInRpm = ParseIntValue(entity[10]); // int.Parse(entity[10]);
+                    combine.SeparationLossesInPercentage = ParseNullableDoubleValue(entity[11]); //ParseNullablDoubleNumber(entity[11], nameof(CombineTelemetry.SeparationLossesInPercentages));  // entity[11] == "NA" ? null : double.Parse(entity[11]);
+                    combine.SieveLossesInPercentage = ParseNullableDoubleValue(entity[12]); //entity[12] == "NA" ? null : double.Parse(entity[12]);
+                    combine.Chopper = ParseBoolValue(entity[13],
+                        _boolValues[nameof(CombineTelemetry.Chopper)][0],
+                        _boolValues[nameof(CombineTelemetry.Chopper)][1]); //entity[13] == "on" ? true : false;
+                    combine.DieselTankLevelInPercentage = ParseDoubleValue(entity[14]); // double.Parse(entity[14]);
+                    combine.NumberOfPartialWidths = ParseShortValue(entity[15]); // short.Parse(entity[15]);
+                    combine.FrontAttachment = ParseBoolValue(entity[16],
+                        _boolValues[nameof(CombineTelemetry.FrontAttachment)][0],
+                        _boolValues[nameof(CombineTelemetry.FrontAttachment)][1]); // entity[16] == "on" ? true : false;
+                    combine.MaxNumberOfPartialWidths = ParseShortValue(entity[17]); //short.Parse(entity[17]);
+                    combine.FeedRakeSpeedInRpm = ParseIntValue(entity[18]); // int.Parse(entity[18]);
+                    combine.WorkingPosition = ParseBoolValue(entity[19],
+                        _boolValues[nameof(CombineTelemetry.WorkingPosition)][0],
+                        _boolValues[nameof(CombineTelemetry.WorkingPosition)][1]); // entity[19] == "on" ? true : false;
+                    combine.GrainTankUnloading = ParseBoolValue(entity[20],
+                        _boolValues[nameof(CombineTelemetry.GrainTankUnloading)][0],
+                        _boolValues[nameof(CombineTelemetry.GrainTankUnloading)][1]); // entity[20] == "on" ? true : false;
+                    combine.MainDriveStatus = ParseBoolValue(entity[21],
+                        _boolValues[nameof(CombineTelemetry.MainDriveStatus)][0],
+                        _boolValues[nameof(CombineTelemetry.MainDriveStatus)][1]); //entity[21] == "on" ? true : false;
+                    combine.ConcavePositionInMM = ParseShortValue(entity[22]); //short.Parse(entity[22]);
+                    combine.UpperSievePositionInMM = ParseShortValue(entity[23]); // short.Parse(entity[23]);
+                    combine.LowerSievePositionInMM = ParseShortValue(entity[24]); // short.Parse(entity[24]);
+                    combine.GrainTank70 = ParseBoolValue(entity[25],
+                        _boolValues[nameof(CombineTelemetry.GrainTank70)][0],
+                        _boolValues[nameof(CombineTelemetry.GrainTank70)][1]); //entity[25] == "on" ? true : false;
+                    combine.GrainTank100 = ParseBoolValue(entity[26],
+                        _boolValues[nameof(CombineTelemetry.GrainTank100)][0],
+                        _boolValues[nameof(CombineTelemetry.GrainTank100)][1]); //entity[26] == "on" ? true : false;
+                    combine.GrainMoistureContentInPercentage = ParseNullableDoubleValue(entity[27]); // entity[27] == "NA" ? null : double.Parse(entity[27]);
+                    combine.ThroughputTonsPerHour = ParseDoubleValue(entity[28]); //double.Parse(entity[28]);
+                    combine.RadialSpreaderSpeedInRpm = ParseNullableIntValue(entity[29]); // entity[29] == "NA" ? null : int.Parse(entity[29]);
+                    combine.GrainInReturnsInPercentage = ParseDoubleValue(entity[30]); // double.Parse(entity[30]);
+                    combine.ChannelPositionInPercentage = ParseDoubleValue(entity[31]); //double.Parse(entity[31]);
+                    combine.YieldMeasurement = ParseBoolValue(entity[32],
+                        _boolValues[nameof(CombineTelemetry.GrainTank70)][0],
+                        _boolValues[nameof(CombineTelemetry.GrainTank70)][1]); // entity[32] == "on" ? true : false;
+                    combine.ReturnsAuferMeasurementInPercentage = ParseDoubleValue(entity[33]); // double.Parse(entity[33]);
+                    combine.MoistureMeasurement = ParseBoolValue(entity[34],
+                        _boolValues[nameof(CombineTelemetry.MoistureMeasurement)][0],
+                        _boolValues[nameof(CombineTelemetry.MoistureMeasurement)][1]); //  entity[34] == "on" ? true : false;
+                    combine.TypeOfCrop = ParseEnumValue<CropType>(entity[35]); // ParseCropType(entity[35]); // CropType.SUNFLOWERS; // [35]
+                    combine.SpecialCropWeightInGrams = ParseIntValue(entity[36]); // int.Parse(entity[36]);
+                    combine.AutoPilotStatus = ParseBoolValue(entity[37],
+                        _boolValues[nameof(CombineTelemetry.AutoPilotStatus)][0],
+                        _boolValues[nameof(CombineTelemetry.AutoPilotStatus)][1]); //  entity[34] == "on" ? true : false;
+                    combine.CruisePilotStatus = ParseEnumValue<CruisePilotStatus>(entity[38]); // ParseCruisePilotStatus(entity[38]); // CruisePilotStatus.STATUS_0; // [38]
+                    combine.RateOfWorkInHaPerHour = ParseDoubleValue(entity[39]); // double.Parse(entity[39]);
+                    combine.YieldInTonsPerHour = ParseNullableDoubleValue(entity[40]); // entity[40] == "NA" ? null : double.Parse(entity[40]);
+                    combine.QuantimeterCalibrationFactor = ParseDoubleValue(entity[41]); // double.Parse(entity[41]);
+                    combine.SeparationSensitivityInPercentage = ParseDoubleValue(entity[42]); // double.Parse(entity[42]);
+                    combine.SieveSensitivityInPercentage = ParseDoubleValue(entity[43]); // double.Parse(entity[43]);
                 }
                 catch (Exception e)
                 {
@@ -108,90 +143,110 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
             return combineTelemetry;
         }
 
-        private double ParseDoubleNumber(string number)
+        private int? ParseNullableIntValue(string field)
         {
-            if (double.TryParse(number, out var parsedValue))
-                return parsedValue;
-
-            return 0;
-        }
-
-        private int ParseIntNumber(string number)
-        {
-            if (int.TryParse(number, out var parsedValue))
-                return parsedValue;
-
-            return 0;
-        }
-
-        private double? ParseNullablDoubleNumber(string number, string? columnKey = null)
-        {
-            if (columnKey != null && _columnsWithSpecialValues.TryGetValue(columnKey, out var val))
-            {
-                if (val.Split(';')[0] == number)
-                    return null;
-            }
-
-            if (double.TryParse(number, out var parsedValue))
-                return parsedValue;
-
-            return null;
-        }
-
-        private int? ParseNullableIntNumber(string number, string? columnKey = null)
-        {
-            if (columnKey != null && _columnsWithSpecialValues.TryGetValue(columnKey, out var val))
-            {
-                if (val.Split(';')[0] == number)
-                    return null;
-            }
-
-            if (int.TryParse(number, out var parsedValue))
-                return parsedValue;
-
-            return null;
-        }
-
-        private bool? ParseNullableBoolValue(string value, string columnKey)
-        {
-            if (_columnsWithSpecialValues.TryGetValue(columnKey, out var val))
-            {
-                if (val.Split(';')[0] == value)
-                    return true;
-                if (val.Split(';')[1] == value)
-                    return false;
+            if (field == "NA")
                 return null;
-            }
 
-            return null;
+            return ParseIntValue(field);
+
+            //if (!int.TryParse(field, out var result))
+            //    throw new ArgumentException("Value cannot be converted to int");
+
+            //return result;
         }
 
-        private CropType ParseCropType(string value)
+        private int ParseIntValue(string field)
         {
-            if (_columnsWithSpecialValues.TryGetValue(nameof(Combine.TypeOfCrop), out var val))
-            {
-                foreach (CropType e in Enum.GetValues(typeof(CropType)))
-                {
-                    if (e.GetDescription() == value)
-                        return e;
-                }
-            }
+            if (!int.TryParse(field, out var result))
+                throw new ArgumentException("Value cannot be converted to int");
 
-            throw new ArgumentException();
+            return result;
         }
 
-        private CruisePilotStatus ParseCruisePilotStatus(string value)
+        private short ParseShortValue(string field)
         {
-            if (_columnsWithSpecialValues.TryGetValue(nameof(Combine.CruisePilotStatus), out var val))
-            {
-                foreach (CruisePilotStatus e in Enum.GetValues(typeof(CruisePilotStatus)))
-                {
-                    if (e.GetDescription() == value)
-                        return e;
-                }
-            }
+            if (!short.TryParse(field, out var result))
+                throw new ArgumentException("Value cannot be converted to short");
 
-            throw new ArgumentException();
+            return result;
+        }
+
+        private short? ParseNullabeShortValue(string field)
+        {
+            if (field == "NA")
+                return null;
+
+            return ParseShortValue(field);
+        }
+
+        private bool ParseBoolValue(string field, string expectedTrue, string expectedFalse)
+        {
+            if (field.Equals(expectedTrue, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (field.Equals(expectedFalse, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            throw new ArgumentException("Value cannot be coverted to bool");
+        }
+
+        private bool? ParseNullableBoolValue(string field, string expectedTrue, string expectedFalse)
+        {
+            if (field == "NA")
+                return null;
+
+            return ParseBoolValue(field, expectedTrue, expectedFalse);
+            //if (field.Equals(expectedTrue, StringComparison.OrdinalIgnoreCase))
+            //    return true;
+            //if (field.Equals(expectedFalse, StringComparison.OrdinalIgnoreCase))
+            //    return false;
+
+            //throw new ArgumentException("Value cannot be coverted to bool");
+        }
+
+        private string ParseStringValue(string field)
+        {
+            if (string.IsNullOrEmpty(field))
+                throw new ArgumentException("Value cannot be converted to string");
+
+            return field;
+        }
+
+        private DateTime ParseDateTimeValue(string field)
+        {
+            if (!DateTime.TryParse(field, out var result))
+                throw new ArgumentException("Value cannot be converted to DateTime");
+
+            return result;
+        }
+
+        private double ParseDoubleValue(string field)
+        {
+            if (!double.TryParse(field, out var result))
+                throw new ArgumentException("Value cannot be converted to double");
+
+            return result;
+        }
+
+        private double? ParseNullableDoubleValue(string field)
+        {
+            if (field == "NA")
+                return null;
+
+            return ParseDoubleValue(field);
+            //if (!double.TryParse(field, out var result))
+            //    throw new ArgumentException("Value cannot be converted to double");
+
+            //return result;
+        }
+
+        private static T ParseEnumValue<T>(string columnValue) where T : struct, Enum
+        {
+            ;
+            if (!Enum.TryParse(typeof(T), columnValue, true, out var value))
+                throw new ArgumentException("Value cannot be converted to enum");
+
+            return (T)value;
         }
     }
 }

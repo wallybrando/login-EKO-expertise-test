@@ -5,6 +5,6 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces.Repositories
 {
     public interface ICombineTelemetryRepository
     {
-        Task<bool> InsertTelemetryAsync(Combine telemetry, IDbConnection? connection = null, IDbTransaction? transaction = null);
+        Task<bool> InsertTelemetryAsync(IEnumerable<CombineTelemetry> telemetry, IDbConnection? connection = null, IDbTransaction? transaction = null);
     }
 }

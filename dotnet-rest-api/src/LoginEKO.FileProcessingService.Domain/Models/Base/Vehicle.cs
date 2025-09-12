@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Models.Base
 {
-    public abstract class Vehicle //: BaseModel
+    public abstract class Vehicle : BaseModel
     {
         // Column B
         public string SerialNumber { get; set; } // common

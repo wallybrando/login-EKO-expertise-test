@@ -38,6 +38,8 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
             dataSourceBuilder.MapEnum<ParkingBreakStatus>("parking_break_status_type");
             dataSourceBuilder.MapEnum<TransverseDifferentialLockStatus>("transverse_differential_lock_status_type");
             dataSourceBuilder.MapEnum<WheelDriveStatus>("wheel_drive_status_type");
+            dataSourceBuilder.MapEnum<CropType>("crop_type");
+            dataSourceBuilder.MapEnum<CruisePilotStatus>("cruise_pilot_status_type");
 
             var dataSource = dataSourceBuilder.Build();
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(dataSource));

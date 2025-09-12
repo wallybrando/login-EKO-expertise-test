@@ -7,6 +7,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
     public class TractorTelemetryRepository : ITractorTelemetryRepository
     {
         private readonly ApplicationContext _dbContext;
+
         public TractorTelemetryRepository(ApplicationContext dbContext)
         {
             _dbContext = dbContext;

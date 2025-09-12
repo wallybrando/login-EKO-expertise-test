@@ -77,7 +77,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                         telemetryCreated = await _tractorTelemetryRepository.InsertTelemetryAsync((IEnumerable<TractorTelemetry>)transformedData, connection, transaction);
                         break;
                     case VehicleType.COMBINE:
-                        telemetryCreated = await _combineTelemetryRepository.InsertTelemetryAsync((Combine)transformedData, connection, transaction);
+                        telemetryCreated = await _combineTelemetryRepository.InsertTelemetryAsync((IEnumerable<CombineTelemetry>)transformedData, connection, transaction);
                         break;
                     case VehicleType.UNKNOWN:
                     default:

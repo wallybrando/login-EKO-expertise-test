@@ -16,7 +16,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Database
 
         public DbSet<FileMetadata> FileMetadata { get; set; }
         public DbSet<TractorTelemetry> TractorTelemetries { get; set; }
-        //public DbSet<CombineTeleme>
+        public DbSet<CombineTelemetry> CombineTelemetries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,8 +24,12 @@ namespace LoginEKO.FileProcessingService.Persistence.Database
             modelBuilder.HasPostgresEnum<TransverseDifferentialLockStatus>(name: "transverse_differential_lock_status_type");
             modelBuilder.HasPostgresEnum<WheelDriveStatus>(name: "wheel_drive_status_type");
 
+            modelBuilder.HasPostgresEnum<CropType>(name: "crop_type");
+            modelBuilder.HasPostgresEnum<CruisePilotStatus>(name: "cruise_pilot_status_type");
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(FileMetadataEntityConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TractorTelemetryEntityConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CombineTelemetryEntityConfiguration).Assembly);
 
             base.OnModelCreating(modelBuilder);
         }

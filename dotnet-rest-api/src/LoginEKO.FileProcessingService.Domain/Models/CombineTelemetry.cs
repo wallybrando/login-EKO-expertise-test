@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace LoginEKO.FileProcessingService.Domain.Models
 {
-    public class Combine : Vehicle
+    public class CombineTelemetry : Vehicle
     {
         // Column B
         //public string SerialNumber { get; set; } // done
@@ -31,7 +31,7 @@ namespace LoginEKO.FileProcessingService.Domain.Models
         // Column K
         public int RotorStrawWalkerSpeedInRpm { get; set; } // done
         // Column L
-        public double? SeparationLossesInPercentages { get; set; } // done
+        public double? SeparationLossesInPercentage { get; set; } // done
         // Column M
         public double? SieveLossesInPercentage { get; set; } // done
         // Column N
@@ -76,6 +76,9 @@ namespace LoginEKO.FileProcessingService.Domain.Models
         public bool YieldMeasurement { get; set; } // done
         // Column AH
         public double ReturnsAuferMeasurementInPercentage { get; set; } // done
+        
+        
+        
         // Column AI
         public bool MoistureMeasurement { get; set; } // done
         // Column AJ
