@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Interfaces.Services
 {
-    public interface IFileService
+    public interface IVehicleService
     {
-        Task<bool> UploadFileAsync(FileDto file);
-        Task<FileDto?> GetAsync(Guid id);
+        Task<bool> ImportTelemetryAsync(FileMetadata file);
     }
 }

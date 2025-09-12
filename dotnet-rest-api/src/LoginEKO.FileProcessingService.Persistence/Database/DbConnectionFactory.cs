@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Persistence.Database
 {
-    public interface IDbConnectionFactory
-    {
-        Task<IDbConnection> CreateConnectionAsync();
-    }
+    //public interface IDbConnectionFactory
+    //{
+    //    Task<IDbConnection> CreateConnectionAsync();
+    //}
 
     public class NpgsqlConnectionFactory : IDbConnectionFactory
     {

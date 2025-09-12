@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Models.Base
 {
-    public abstract class Vehicle
+    public abstract class Vehicle //: BaseModel
     {
         // Column B
         public string SerialNumber { get; set; } // common
@@ -23,5 +23,10 @@ namespace LoginEKO.FileProcessingService.Domain.Models.Base
         public double TotalWorkingHours { get; set; } // common
         // Column F
         public int EngineSpeedInRpm { get; set; } // common
+    }
+
+    public abstract class BaseModel
+    {
+        public Guid Id { get; set; }
     }
 }

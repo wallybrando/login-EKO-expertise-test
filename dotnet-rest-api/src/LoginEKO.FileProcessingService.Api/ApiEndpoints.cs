@@ -4,12 +4,11 @@
     {
         public const string ApiBase = "api";
 
-        public static class Files
+        public static class Vehicles
         {
-            public const string Base = $"{ApiBase}/files";
+            public const string Base = $"{ApiBase}/vehicles";
 
-            public const string Upload = Base;
-            public const string Get = $"{Base}/{{id}}";
+            public const string Import = $"{Base}/telemetry-file";
         }
     }
 }

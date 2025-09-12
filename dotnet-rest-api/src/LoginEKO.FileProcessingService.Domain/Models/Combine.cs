@@ -108,7 +108,7 @@ namespace LoginEKO.FileProcessingService.Domain.Models
 
     public enum CruisePilotStatus
     {
-        [Description("")]
+        [Description("0")]
         STATUS_0 = 0
     }
 }

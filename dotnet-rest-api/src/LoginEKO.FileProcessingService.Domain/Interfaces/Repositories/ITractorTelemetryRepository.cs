@@ -1,16 +1,15 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Interfaces.Repositories
 {
-    public interface IFileRepository
+    public interface ITractorTelemetryRepository
     {
-        Task<bool> UploadFileAsync(FileDto file);
-        Task<FileDto?> GetByIdAsync(Guid id);
-        Task<FileDto?> GetByFilenameAsync(string filename);
+        Task<bool> InsertTelemetryAsync(IEnumerable<TractorTelemetry> telemetry, IDbConnection? connection = null, IDbTransaction? transaction = null);
     }
 }

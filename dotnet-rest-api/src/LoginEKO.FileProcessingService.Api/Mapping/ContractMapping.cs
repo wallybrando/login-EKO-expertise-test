@@ -7,11 +7,10 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
 {
     public static class ContractMapping
     {
-        public static FileDto MapToFileDto(this UploadFileRequest request)
+        public static FileMetadata MapToFileDto(this UploadFileRequest request)
         {
-            return new FileDto
+            return new FileMetadata
             {
-                Id = Guid.NewGuid(),
                 Filename = request.File.FileName,
                 Extension = request.File.ContentType.Split('/').Last(),
                 SizeInBytes = request.File.Length,
@@ -20,7 +19,7 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
             };
         }
 
-        public static FileResponse MapToResponse(this FileDto file)
+        public static FileResponse MapToResponse(this FileMetadata file)
         {
             return new FileResponse
             {

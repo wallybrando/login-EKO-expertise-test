@@ -3,8 +3,9 @@ using System.ComponentModel;
 
 namespace LoginEKO.FileProcessingService.Domain.Models
 {
-    public class Tractor : Vehicle
+    public class TractorTelemetry : Vehicle
     {
+        public Guid Id { get; set; }
         // Column B
         //public string SerialNumber { get; set; } // common
 
@@ -66,7 +67,7 @@ namespace LoginEKO.FileProcessingService.Domain.Models
     public enum WheelDriveStatus
     {
         [Description("Inactive")]
-        INACTIVE = 0,
+        INACTIVE =  0,
         [Description("Active")]
         ACTIVE = 1,
         [Description("2")]

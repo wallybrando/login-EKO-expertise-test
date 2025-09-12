@@ -12,8 +12,9 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
         public static IServiceCollection AddDomain(this IServiceCollection services)
         {
             services.AddScoped<IVehicleDataTransformator, TractorDataTransformator>();
+            services.AddScoped<IVehicleDataTransformator, CombineDataTransformator>();
             services.AddScoped<ITextFileExtractor, CsvFileExtractor>();
-            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IVehicleService, VehicleService>();
             return services;
         }
     }
