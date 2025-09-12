@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace LoginEKO.FileProcessingService.Persistence.Database.Configuration
@@ -106,8 +105,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Database.Configuration
 
             builder.Property(p => p.ActualStatusOfCreeper)
                  .HasColumnName("actual_status_of_creeper")
-                 .HasColumnType("BOOLEAN")
-                 .IsRequired();
+                 .HasColumnType("BOOLEAN");
         }
     }
 }

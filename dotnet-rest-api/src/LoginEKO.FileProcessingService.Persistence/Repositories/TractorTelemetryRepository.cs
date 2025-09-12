@@ -1,11 +1,7 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Persistence.Database;
-using LoginEKO.FileProcessingService.Persistence.DML;
-using Microsoft.AspNetCore.Http.Features;
 using System.Data;
-using Z.Dapper.Plus;
-
 namespace LoginEKO.FileProcessingService.Persistence.Repositories
 {
     public class TractorTelemetryRepository : ITractorTelemetryRepository
@@ -30,28 +26,6 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
 
                 throw;
             }
-
-
-
-            int result;
-            if (connection != null)
-            {
-                if (transaction != null)
-                {
-                    try
-                    {
-                        await connection.UseBulkOptions(options => options.InsertIfNotExists = true).BulkInsertAsync("Customer_KeepIdentity", telemetry);
-                        return true;
-                    }
-                    catch (Exception ex)
-                    {
-
-                        throw;
-                    }
-
-                }
-            }
-            throw new NotImplementedException();
         }
     }
 }

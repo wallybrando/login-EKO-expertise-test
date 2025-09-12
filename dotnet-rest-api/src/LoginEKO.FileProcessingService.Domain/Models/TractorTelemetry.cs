@@ -53,7 +53,7 @@ namespace LoginEKO.FileProcessingService.Domain.Models
         public WheelDriveStatus AllWheelDriveStatus { get; set; }
         // Column S
         // Values Active, Inactive, NA
-        public bool /*CreeperStatus?*/ ActualStatusOfCreeper { get; set; }
+        public bool? /*CreeperStatus?*/ ActualStatusOfCreeper { get; set; }
     }
 
     public enum CreeperStatus
