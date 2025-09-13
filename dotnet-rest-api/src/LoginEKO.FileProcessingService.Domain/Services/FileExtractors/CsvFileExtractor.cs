@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace LoginEKO.FileProcessingService.Domain.Services.FileExtractors
 {
-    public class CsvFileExtractor : ITextFileExtractor
+    public class CsvFileExtractor : IFileExtractor
     {
         public FileType Type { get; init; }
 
@@ -18,45 +18,42 @@ namespace LoginEKO.FileProcessingService.Domain.Services.FileExtractors
             using var stream = file.OpenReadStream();
             using var reader = new StreamReader(stream);
 
-            var line = "";
+            var line = string.Empty;
             bool isHeader = true;
 
-            var columnsNumber = 0;
-            var counter = 1;
+            var fieldsCount = 0;
 
-            var extractedData = new List<string[]>();
+            var result = new List<string[]>();
             while ((line = await reader.ReadLineAsync()) != null)
             {
                 if (isHeader)
                 {
-                    columnsNumber = line.Split(';').Length;
+                    fieldsCount = line.Split(';').Length;
                     isHeader = false;
-                    counter++;
                     continue;
                 }
 
-                var values = new string[columnsNumber];
+                var splitedColumns = line.Split(',');
+                var telemetryData = splitedColumns[2].Split(';');
 
-                var columns = line.Split(',');
-                var actualData = columns[2].Split(';');
-
-                var dateAsString = $"{columns[0]} {columns[1]} {actualData[0]}";
+                var dateAsString = $"{splitedColumns[0]} {splitedColumns[1]} {telemetryData[0]}";
                 var date = DateTime.Parse(dateAsString);
 
-                for (int i = 0; i < columnsNumber; i++)
+                var columnValues = new string[fieldsCount];
+                for (int i = 0; i < fieldsCount; i++)
                 {
                     if (i == 0)
                     {
-                        values[i] = dateAsString;
+                        columnValues[i] = dateAsString;
                     }
                     else
-                        values[i] = actualData[i];
+                        columnValues[i] = telemetryData[i];
                 }
 
-                extractedData.Add(values);
+                result.Add(columnValues);
             }
 
-            return extractedData;
+            return result;
         }
     }
 }

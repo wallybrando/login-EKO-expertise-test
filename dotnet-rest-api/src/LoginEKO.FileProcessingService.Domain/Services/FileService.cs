@@ -3,40 +3,36 @@ using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
 using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
+using LoginEKO.FileProcessingService.Domain.Utils;
 using LoginEKO.FileProcessingService.Domain.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LoginEKO.FileProcessingService.Domain.Services
 {
-    public class VehicleService : IVehicleService
+    public class FileService : IFileService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ITractorTelemetryRepository _tractorTelemetryRepository;
         private readonly ICombineTelemetryRepository _combineTelemetryRepository;
-        private readonly IFileMetadataRepository _fileMetadataRepository;
-        private readonly IDbConnectionFactory _dbConnectionFactory;
+        private readonly IFileRepository _fileMetadataRepository;
 
-        public VehicleService(IServiceProvider serviceProvider,
+        public FileService(IServiceProvider serviceProvider,
             ITractorTelemetryRepository tractorTelemetryRepository,
             ICombineTelemetryRepository combineTelemetryRepository,
-            IFileMetadataRepository fileMetadataRepository,
-            IDbConnectionFactory dbConnectionFactory)
+            IFileRepository fileMetadataRepository)
         {
             _serviceProvider = serviceProvider;
             _tractorTelemetryRepository = tractorTelemetryRepository;
             _combineTelemetryRepository = combineTelemetryRepository;
             _fileMetadataRepository = fileMetadataRepository;
-            _dbConnectionFactory = dbConnectionFactory;
         }
 
-        public async Task<bool> ImportTelemetryAsync(FileMetadata file)
+        public async Task<bool> ImportVehicleTelemetryAsync(FileMetadata file)
         {
             var fileHashBytes = MD5Validator.ComputeHash(file.BinaryObject);
             var fileHash = MD5Validator.CreateHashStringFromHashBytes(fileHashBytes);
 
-            using var connection = await _dbConnectionFactory.CreateConnectionAsync();
-
-            var fileDb = await _fileMetadataRepository.GetByMD5HashAsync(fileHash, connection);
+            var fileDb = await _fileMetadataRepository.GetByMD5HashAsync(fileHash);
             if (fileDb != null)
             {
                 throw new ArgumentException("File has been corupted");
@@ -44,29 +40,35 @@ namespace LoginEKO.FileProcessingService.Domain.Services
 
             file.MD5Hash = fileHash;
 
-            var vehicleType = GetVehicleType(file.Filename);
-            if (vehicleType == VehicleType.UNKNOWN) throw new ArgumentException();
+            var vehicleType = FileManager.GetVehicleTypeFromFilename(file.Filename);
+            if (vehicleType == VehicleType.UNKNOWN)
+                throw new ArgumentException("Unknown vehicle");
 
-            var fileType = GetFileType(file.Extension);
-            if (fileType == FileType.UNKNOWN) throw new ArgumentException();
+            var fileType = FileManager.GetFileTypeFromExtension(file.Extension);
+            if (fileType == FileType.UNKNOWN)
+                throw new ArgumentException("Unknown file type");
 
-            var fileExtractor = _serviceProvider.GetServices<ITextFileExtractor>()
+            var fileExtractor = _serviceProvider.GetServices<IFileExtractor>()
                                                 .FirstOrDefault(x => x.Type == fileType)
                                                 ??
                                                 throw new ArgumentNullException();
 
-            var vehicleDataTransformator = _serviceProvider.GetServices<IVehicleDataTransformator>()
+            var vehicleDataTransformator = _serviceProvider.GetServices<IVehicleDataParser>()
                                                            .FirstOrDefault(x => x.Type == vehicleType)
                                                            ??
                                                            throw new ArgumentNullException();
 
             var extractedData = await fileExtractor.ExtractDataAsync(file.File);
-            var transformedData = vehicleDataTransformator.TransformVehicleData(extractedData);
+            var telemetries = vehicleDataTransformator.TransformVehicleData(extractedData);
 
-            using var transaction = connection.BeginTransaction();
+            if (extractedData.Count() != telemetries.Count())
+            {
+
+            }
+
             try
             {
-                var fileMetadataCreated = await _fileMetadataRepository.CreateFileMetadataAsync(file, connection, transaction);
+                var fileMetadataCreated = await _fileMetadataRepository.CreateFileMetadataAsync(file);
                 if (!fileMetadataCreated)
                     return false;
 
@@ -74,47 +76,22 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                 switch (vehicleType)
                 {
                     case VehicleType.TRACTOR:
-                        telemetryCreated = await _tractorTelemetryRepository.InsertTelemetryAsync((IEnumerable<TractorTelemetry>)transformedData, connection, transaction);
+                        telemetryCreated = await _tractorTelemetryRepository.InsertTelemetryAsync((IEnumerable<TractorTelemetry>)telemetries);
                         break;
                     case VehicleType.COMBINE:
-                        telemetryCreated = await _combineTelemetryRepository.InsertTelemetryAsync((IEnumerable<CombineTelemetry>)transformedData, connection, transaction);
+                        telemetryCreated = await _combineTelemetryRepository.InsertTelemetryAsync((IEnumerable<CombineTelemetry>)telemetries);
                         break;
-                    case VehicleType.UNKNOWN:
-                    default:
-                        throw new ArgumentException();
                 }
 
                 if (!telemetryCreated)
                     throw new ArgumentException();
 
-                transaction.Commit();
-
                 return telemetryCreated;
             }
             catch (Exception ex)
             {
-                transaction.Rollback();
                 return false;
             }
-        }
-
-        private VehicleType GetVehicleType(string filename)
-        {
-            if (filename.StartsWith("LD_A", StringComparison.Ordinal))
-                return VehicleType.TRACTOR;
-            if (filename.StartsWith("LD_C", StringComparison.Ordinal))
-                return VehicleType.COMBINE;
-
-            return VehicleType.UNKNOWN;
-        }
-
-        private FileType GetFileType(string fileType)
-        {
-            fileType = fileType.Split('/').Last();
-            if (fileType.Equals("CSV", StringComparison.OrdinalIgnoreCase))
-                return FileType.CSV;
-
-            return FileType.UNKNOWN;
         }
     }
 }

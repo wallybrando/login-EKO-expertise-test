@@ -6,20 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 namespace LoginEKO.FileProcessingService.Api.Controllers
 {
     [ApiController]
-    public class VehiclesController : ControllerBase
+    public class FilesController : ControllerBase
     {
-        private readonly IVehicleService _fileService;
+        private readonly IFileService _fileService;
 
-        public VehiclesController(IVehicleService fileService)
+        public FilesController(IFileService fileService)
         {
             _fileService = fileService;
         }
 
         [HttpPost(ApiEndpoints.Vehicles.Import)]
-        public async Task<IActionResult> ImportTelemetryAsync([FromForm] UploadFileRequest request)
+        public async Task<IActionResult> ImportVehicleTelemetryFileAsync([FromForm] UploadFileRequest request)
         {
             var file = request.MapToFileDto();
-            await _fileService.ImportTelemetryAsync(file);
+            await _fileService.ImportVehicleTelemetryAsync(file);
             var response = file.MapToResponse();
 
             return Created($"{ApiEndpoints.Vehicles.Base}/{response.Id}", response);

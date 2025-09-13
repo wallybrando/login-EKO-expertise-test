@@ -2,10 +2,9 @@
 
 namespace LoginEKO.FileProcessingService.Domain.Models.Enums
 {
-    public enum FileType
+    public enum TransverseDifferentialLockStatus
     {
-        [Description("CSV")]
-        CSV = 1,
-        UNKNOWN
+        [Description("0")]
+        STATUS_0 = 0
     }
 }

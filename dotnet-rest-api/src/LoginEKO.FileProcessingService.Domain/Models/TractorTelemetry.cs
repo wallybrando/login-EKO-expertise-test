@@ -1,26 +1,11 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Models.Base;
+using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using System.ComponentModel;
 
 namespace LoginEKO.FileProcessingService.Domain.Models
 {
     public class TractorTelemetry : Vehicle
     {
-        //public Guid Id { get; set; }
-        // Column B
-        //public string SerialNumber { get; set; } // common
-
-        // Column A
-        //public DateTime Date { get; set; } // common
-        // Column C
-        // double from book reference
-        //public double GPSLongitude { get; set; } // common
-        // Column D
-        // double from book reference
-        //public double GPSLatitude { get; set; } // common
-        // Column E
-        //public double TotalWorkingHours { get; set; } // common
-        // Column F
-        //public int EngineSpeedInRpm { get; set; } // common
         // Column G
         public double EngineLoadInPercentage { get; set; }
         // Column H
@@ -64,25 +49,25 @@ namespace LoginEKO.FileProcessingService.Domain.Models
         ACTIVE = 1
     }
 
-    public enum WheelDriveStatus
-    {
-        [Description("Inactive")]
-        INACTIVE =  0,
-        [Description("Active")]
-        ACTIVE = 1,
-        [Description("2")]
-        STATUS_2 = 2
-    }
+    //public enum WheelDriveStatus
+    //{
+    //    [Description("Inactive")]
+    //    INACTIVE =  0,
+    //    [Description("Active")]
+    //    ACTIVE = 1,
+    //    [Description("2")]
+    //    STATUS_2 = 2
+    //}
 
-    public enum TransverseDifferentialLockStatus
-    {
-        [Description("0")]
-        STATUS_0 = 0
-    }
+    //public enum TransverseDifferentialLockStatus
+    //{
+    //    [Description("0")]
+    //    STATUS_0 = 0
+    //}
 
-    public enum ParkingBreakStatus
-    {
-        [Description("3")]
-        STATUS_3 = 3
-    }
+    //public enum ParkingBreakStatus
+    //{
+    //    [Description("3")]
+    //    STATUS_3 = 3
+    //}
 }

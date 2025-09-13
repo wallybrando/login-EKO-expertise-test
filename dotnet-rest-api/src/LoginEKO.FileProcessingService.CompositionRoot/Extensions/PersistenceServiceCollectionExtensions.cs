@@ -1,6 +1,7 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Persistence;
 using LoginEKO.FileProcessingService.Persistence.Database;
 using LoginEKO.FileProcessingService.Persistence.Repositories;
@@ -20,13 +21,13 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
     {
         public static IServiceCollection AddDatabase(this IServiceCollection services, string connectionString)
         {
-            services.AddSingleton<IIdGenerator, IdGenerator>();
-            services.AddSingleton<DbInitializer>();
+            //services.AddSingleton<IIdGenerator, IdGenerator>();
+            //services.AddSingleton<DbInitializer>();
 
             services.AddEFDatabaseConfiguration(connectionString);
 
-            services.AddSingleton<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(connectionString));
-            services.AddScoped<IFileMetadataRepository, FileMetadataRepository>();
+            //services.AddSingleton<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(connectionString));
+            services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<ITractorTelemetryRepository, TractorTelemetryRepository>();
             services.AddScoped<ICombineTelemetryRepository, CombineTelemetryRepository>();
             return services;

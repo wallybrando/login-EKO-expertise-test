@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LoginEKO.FileProcessingService.Domain.Models.Base;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Models
 {
-    public class FileMetadata
+    public class FileMetadata : BaseModel
     {
-        public Guid Id { get; set; }
         public required string Filename { get; set; }
         public required string Extension { get; set; }
         public long SizeInBytes { get; set; }

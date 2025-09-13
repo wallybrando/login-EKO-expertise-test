@@ -6,9 +6,9 @@
 
         public static class Vehicles
         {
-            public const string Base = $"{ApiBase}/vehicles";
+            public const string Base = $"{ApiBase}/files";
 
-            public const string Import = $"{Base}/telemetry-file";
+            public const string Import = $"{Base}/import-vehicle-telemetry";
         }
     }
 }

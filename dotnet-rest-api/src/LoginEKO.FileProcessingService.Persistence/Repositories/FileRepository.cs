@@ -6,16 +6,16 @@ using System.Data;
 
 namespace LoginEKO.FileProcessingService.Persistence.Repositories
 {
-    public class FileMetadataRepository : IFileMetadataRepository
+    public class FileRepository : IFileRepository
     {
         private readonly ApplicationContext _dbContext;
 
-        public FileMetadataRepository(ApplicationContext dbContext)
+        public FileRepository(ApplicationContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<FileMetadata?> GetByMD5HashAsync(string md5Hash, IDbConnection? connection = null)
+        public async Task<FileMetadata?> GetByMD5HashAsync(string md5Hash)
         {
             if (string.IsNullOrEmpty(md5Hash))
                 throw new ArgumentException();
@@ -25,7 +25,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
             return entity;
         }
 
-        public async Task<bool> CreateFileMetadataAsync(FileMetadata file, IDbConnection? connection = null, IDbTransaction? transaction = null)
+        public async Task<bool> CreateFileMetadataAsync(FileMetadata file)
         {
             file.CreatedDate = DateTime.Now;
             _dbContext.FileMetadata.Add(file);

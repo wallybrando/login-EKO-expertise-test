@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Interfaces
 {
-    public interface ITextFileExtractor
+    public interface IFileExtractor
     {
         FileType Type { get; init; }
         Task<IEnumerable<string[]>> ExtractDataAsync(IFormFile file);

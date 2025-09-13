@@ -1,5 +1,6 @@
 ﻿using System;
 using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

@@ -1,27 +1,13 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Models.Base;
+using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using System.ComponentModel;
 
 namespace LoginEKO.FileProcessingService.Domain.Models
 {
     public class CombineTelemetry : Vehicle
     {
-        // Column B
-        //public string SerialNumber { get; set; } // done
-
-        // Column A
-        //public DateTime Date { get; set; } // done
-        // Column C
-        // double from book reference
-        // double GPSLongitude { get; set; } // done
-        // Column D
-        // double from book reference
-        //public double GPSLatitude { get; set; } // done
-        // Column E
-        // double TotalWorkingHours { get; set; } // done
         // Column F
         public double GroundSpeedInKmh { get; set; } // done
-        // Column G
-        //public int EngineSpeedInRpm { get; set; } // done
         // Column H
         public double EngineLoadInPercentage { get; set; } // done
         // Column I
@@ -76,9 +62,6 @@ namespace LoginEKO.FileProcessingService.Domain.Models
         public bool YieldMeasurement { get; set; } // done
         // Column AH
         public double ReturnsAuferMeasurementInPercentage { get; set; } // done
-        
-        
-        
         // Column AI
         public bool MoistureMeasurement { get; set; } // done
         // Column AJ
@@ -101,17 +84,17 @@ namespace LoginEKO.FileProcessingService.Domain.Models
         public double SieveSensitivityInPercentage { get; set; }  // done
     }
 
-    public enum CropType
-    {
-        [Description("Maize")]
-        MAIZE = 1,
-        [Description("Sunflowers")]
-        SUNFLOWERS = 2
-    }
+    //public enum CropType
+    //{
+    //    [Description("Maize")]
+    //    MAIZE = 1,
+    //    [Description("Sunflowers")]
+    //    SUNFLOWERS = 2
+    //}
 
-    public enum CruisePilotStatus
-    {
-        [Description("0")]
-        STATUS_0 = 0
-    }
+    //public enum CruisePilotStatus
+    //{
+    //    [Description("0")]
+    //    STATUS_0 = 0
+    //}
 }

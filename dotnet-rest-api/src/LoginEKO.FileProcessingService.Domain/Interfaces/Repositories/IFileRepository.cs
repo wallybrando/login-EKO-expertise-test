@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Interfaces.Repositories
 {
-    public interface IFileMetadataRepository
+    public interface IFileRepository
     {
-        Task<FileMetadata?> GetByMD5HashAsync(string md5Hash, IDbConnection connection);
-        Task<bool> CreateFileMetadataAsync(FileMetadata file, IDbConnection? connection = null, IDbTransaction? transaction = null);
+        Task<FileMetadata?> GetByMD5HashAsync(string md5Hash);
+        Task<bool> CreateFileMetadataAsync(FileMetadata file);
     }
 }

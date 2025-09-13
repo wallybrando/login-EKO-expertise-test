@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Interfaces
 {
-    public interface IVehicleDataTransformator
+    public interface IVehicleDataParser
     {
         VehicleType Type { get; init; }
         IEnumerable<Vehicle> TransformVehicleData(IEnumerable<string[]> data);

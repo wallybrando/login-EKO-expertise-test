@@ -24,9 +24,4 @@ namespace LoginEKO.FileProcessingService.Domain.Models.Base
         // Column F
         public int EngineSpeedInRpm { get; set; } // common
     }
-
-    public abstract class BaseModel
-    {
-        public Guid Id { get; set; }
-    }
 }

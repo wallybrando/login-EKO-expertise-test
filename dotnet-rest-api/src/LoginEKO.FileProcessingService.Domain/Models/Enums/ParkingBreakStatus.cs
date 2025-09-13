@@ -2,10 +2,9 @@
 
 namespace LoginEKO.FileProcessingService.Domain.Models.Enums
 {
-    public enum FileType
+    public enum ParkingBreakStatus
     {
-        [Description("CSV")]
-        CSV = 1,
-        UNKNOWN
+        [Description("3")]
+        STATUS_3 = 3
     }
 }

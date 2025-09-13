@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LoginEKO.FileProcessingService.Domain.Interfaces
+namespace LoginEKO.FileProcessingService.Domain.Models.Base
 {
-    public interface IIdGenerator
+    public abstract class BaseModel
     {
-        Guid GenerateId();
+        public Guid Id { get; set; }
     }
 }

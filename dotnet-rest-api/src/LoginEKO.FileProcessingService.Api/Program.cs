@@ -36,8 +36,8 @@ namespace LoginEKO.FileProcessingService.Api
 
             app.MapControllers();
 
-            var dbInitializer = app.Services.GetRequiredService<DbInitializer>();
-            await dbInitializer.InitializeAsync();
+            //var dbInitializer = app.Services.GetRequiredService<DbInitializer>();
+            //await dbInitializer.InitializeAsync();
 
             app.Run();
         }
