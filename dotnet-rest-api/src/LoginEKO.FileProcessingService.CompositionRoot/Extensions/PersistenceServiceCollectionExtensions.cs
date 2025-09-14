@@ -24,6 +24,7 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
             services.AddEFDatabaseConfiguration(connectionString);
 
             services.AddScoped<IFilterExpressionBuilder<TractorTelemetry>, FilterExpressionBuilder<TractorTelemetry>>();
+            services.AddScoped<IFilterExpressionBuilder<CombineTelemetry>, FilterExpressionBuilder<CombineTelemetry>>();
 
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<ITractorTelemetryRepository, TractorTelemetryRepository>();
