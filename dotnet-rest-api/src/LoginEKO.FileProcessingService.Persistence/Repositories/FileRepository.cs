@@ -25,13 +25,13 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
             return entity;
         }
 
-        public async Task<bool> CreateFileMetadataAsync(FileMetadata file)
+        public async Task<int> ImportFileAsync(FileMetadata file)
         {
             file.CreatedDate = DateTime.Now;
             _dbContext.FileMetadata.Add(file);
             var result = await _dbContext.SaveChangesAsync();
 
-            return result > 0;
+            return result;
         }
     }
 }

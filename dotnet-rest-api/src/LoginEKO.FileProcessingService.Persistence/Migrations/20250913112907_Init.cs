@@ -1,5 +1,4 @@
 ﻿using System;
-using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -19,6 +18,23 @@ namespace LoginEKO.FileProcessingService.Persistence.Migrations
                 .Annotation("Npgsql:Enum:parking_break_status_type", "status_3")
                 .Annotation("Npgsql:Enum:transverse_differential_lock_status_type", "status_0")
                 .Annotation("Npgsql:Enum:wheel_drive_status_type", "inactive,active,status_2");
+
+            migrationBuilder.CreateTable(
+                name: "file_metadata",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    filename = table.Column<string>(type: "TEXT", nullable: false),
+                    extension = table.Column<string>(type: "TEXT", nullable: false),
+                    size_in_bytes = table.Column<long>(type: "BIGINT", nullable: false),
+                    binary_object = table.Column<byte[]>(type: "BYTEA", nullable: false),
+                    md5_hash = table.Column<string>(type: "TEXT", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_file_metadata", x => x.id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "combine_telemetry",
@@ -63,6 +79,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Migrations
                     quantimeter_calibration_factor = table.Column<double>(type: "DOUBLE PRECISION", nullable: false),
                     separation_sensitivity_in_percentage = table.Column<double>(type: "DOUBLE PRECISION", nullable: false),
                     sieve_sensitivity_in_percentage = table.Column<double>(type: "DOUBLE PRECISION", nullable: false),
+                    file_metadata_id = table.Column<Guid>(type: "UUID", nullable: false),
                     serial_number = table.Column<string>(type: "TEXT", nullable: false),
                     date = table.Column<DateTime>(type: "TIMESTAMP", nullable: false),
                     gps_longitude = table.Column<double>(type: "DOUBLE PRECISION", nullable: false),
@@ -73,23 +90,12 @@ namespace LoginEKO.FileProcessingService.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_combine_telemetry", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "file_metadata",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    filename = table.Column<string>(type: "TEXT", nullable: false),
-                    extension = table.Column<string>(type: "TEXT", nullable: false),
-                    size_in_bytes = table.Column<long>(type: "BIGINT", nullable: false),
-                    binary_object = table.Column<byte[]>(type: "BYTEA", nullable: false),
-                    md5_hash = table.Column<string>(type: "TEXT", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TIMESTAMP", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_file_metadata", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_combine_telemetry_file_metadata_file_metadata_id",
+                        column: x => x.file_metadata_id,
+                        principalTable: "file_metadata",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -110,6 +116,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Migrations
                     transverse_differential_lock_status = table.Column<TransverseDifferentialLockStatus>(type: "transverse_differential_lock_status_type", nullable: false),
                     all_wheel_drive_status = table.Column<WheelDriveStatus>(type: "wheel_drive_status_type", nullable: false),
                     actual_status_of_creeper = table.Column<bool>(type: "BOOLEAN", nullable: true),
+                    file_metadata_id = table.Column<Guid>(type: "UUID", nullable: false),
                     serial_number = table.Column<string>(type: "TEXT", nullable: false),
                     date = table.Column<DateTime>(type: "TIMESTAMP", nullable: false),
                     gps_longitude = table.Column<double>(type: "DOUBLE PRECISION", nullable: false),
@@ -120,7 +127,23 @@ namespace LoginEKO.FileProcessingService.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tractor_telemetry", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_tractor_telemetry_file_metadata_file_metadata_id",
+                        column: x => x.file_metadata_id,
+                        principalTable: "file_metadata",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_combine_telemetry_file_metadata_id",
+                table: "combine_telemetry",
+                column: "file_metadata_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tractor_telemetry_file_metadata_id",
+                table: "tractor_telemetry",
+                column: "file_metadata_id");
         }
 
         /// <inheritdoc />
@@ -130,10 +153,10 @@ namespace LoginEKO.FileProcessingService.Persistence.Migrations
                 name: "combine_telemetry");
 
             migrationBuilder.DropTable(
-                name: "file_metadata");
+                name: "tractor_telemetry");
 
             migrationBuilder.DropTable(
-                name: "tractor_telemetry");
+                name: "file_metadata");
         }
     }
 }

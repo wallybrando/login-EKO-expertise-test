@@ -12,10 +12,14 @@ namespace LoginEKO.FileProcessingService.Persistence.Database.Configuration
         {
             builder.ToTable("tractor_telemetry");
 
-            builder.Property(t => t.Id)
+            builder.Property(p => p.Id)
                 .HasColumnName("id")
                 .HasValueGenerator((Id, type) => new SequentialGuidValueGenerator())
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
+
+            builder.HasOne(p => p.FileMetadata)
+                .WithMany(p => p.TractorTelemetries)
+                .HasForeignKey(p => p.FileMetadataId);
 
             builder.Property(p => p.SerialNumber)
                  .HasColumnName("serial_number")
@@ -106,6 +110,10 @@ namespace LoginEKO.FileProcessingService.Persistence.Database.Configuration
             builder.Property(p => p.ActualStatusOfCreeper)
                  .HasColumnName("actual_status_of_creeper")
                  .HasColumnType("BOOLEAN");
+
+            builder.Property(p => p.FileMetadataId)
+                .HasColumnName("file_metadata_id")
+                .HasColumnType("UUID");
         }
     }
 }

@@ -39,6 +39,9 @@ namespace LoginEKO.FileProcessingService.Domain.Models
         // Column S
         // Values Active, Inactive, NA
         public bool? /*CreeperStatus?*/ ActualStatusOfCreeper { get; set; }
+
+        public Guid FileMetadataId { get; set; }
+        public FileMetadata FileMetadata { get; set; }
     }
 
     public enum CreeperStatus

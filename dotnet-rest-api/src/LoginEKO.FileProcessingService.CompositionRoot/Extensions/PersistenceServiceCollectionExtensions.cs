@@ -21,12 +21,10 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
     {
         public static IServiceCollection AddDatabase(this IServiceCollection services, string connectionString)
         {
-            //services.AddSingleton<IIdGenerator, IdGenerator>();
-            //services.AddSingleton<DbInitializer>();
-
             services.AddEFDatabaseConfiguration(connectionString);
 
-            //services.AddSingleton<IDbConnectionFactory>(_ => new NpgsqlConnectionFactory(connectionString));
+            services.AddScoped<IFilterExpressionBuilder<TractorTelemetry>, FilterExpressionBuilder<TractorTelemetry>>();
+
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<ITractorTelemetryRepository, TractorTelemetryRepository>();
             services.AddScoped<ICombineTelemetryRepository, CombineTelemetryRepository>();
@@ -36,6 +34,7 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
         private static IServiceCollection AddEFDatabaseConfiguration(this IServiceCollection services, string connectionString)
         {
             var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+
             dataSourceBuilder.MapEnum<ParkingBreakStatus>("parking_break_status_type");
             dataSourceBuilder.MapEnum<TransverseDifferentialLockStatus>("transverse_differential_lock_status_type");
             dataSourceBuilder.MapEnum<WheelDriveStatus>("wheel_drive_status_type");
@@ -44,6 +43,7 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
 
             var dataSource = dataSourceBuilder.Build();
             services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(dataSource));
+
             return services;
         }
     }

@@ -1,5 +1,7 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
+using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Services;
 using LoginEKO.FileProcessingService.Domain.Services.DataTransformators;
 using LoginEKO.FileProcessingService.Domain.Services.FileExtractors;
@@ -13,8 +15,13 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
         {
             services.AddScoped<IVehicleDataParser, TractorDataParser>();
             services.AddScoped<IVehicleDataParser, CombineDataParser>();
+
             services.AddScoped<IFileExtractor, CsvFileExtractor>();
+            
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<ITelemetryService, TelemetryService>();
+
+            services.AddSingleton<SchemaRegistry, TractorSchemaRegistry>();
             return services;
         }
     }

@@ -17,5 +17,8 @@ namespace LoginEKO.FileProcessingService.Domain.Models
         public required IFormFile File { get; set; }
         public string MD5Hash { get; set; }
         public DateTime CreatedDate { get; set; }
+
+        public virtual ICollection<TractorTelemetry> TractorTelemetries { get; set; }
+        public virtual ICollection<CombineTelemetry> CombineTelemetries { get; set; }
     }
 }

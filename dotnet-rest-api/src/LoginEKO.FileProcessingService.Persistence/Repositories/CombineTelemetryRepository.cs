@@ -1,12 +1,9 @@
-﻿using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
+﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
+using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Persistence.Database;
-using System;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Persistence.Repositories
 {
@@ -14,23 +11,35 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
     {
         private readonly ApplicationContext _dbContext;
 
-        public CombineTelemetryRepository(ApplicationContext dbContext)
+        private readonly IFilterExpressionBuilder<CombineTelemetry> _filterExpressionBuilder;
+
+        public CombineTelemetryRepository(ApplicationContext dbContext, IFilterExpressionBuilder<CombineTelemetry> filterExpressionBuilder)
         {
             _dbContext = dbContext;
+            _filterExpressionBuilder = filterExpressionBuilder;
         }
 
-        public async Task<bool> InsertTelemetryAsync(IEnumerable<CombineTelemetry> telemetry, IDbConnection? connection = null, IDbTransaction? transaction = null)
+        public async Task<ICollection<CombineTelemetry>> GetAsync(PaginatedFilter paginatedFilter)
         {
+            var query = _dbContext.CombineTelemetries.OrderBy(x => x.Date).AsQueryable();
+
+            var filterExpressions = _filterExpressionBuilder.ApplyFilters(paginatedFilter.Filters);
+            foreach (var expression in filterExpressions)
+            {
+                query = query.Where(expression);
+            }
+
             try
             {
-                await _dbContext.CombineTelemetries.AddRangeAsync(telemetry);
-                var affectedRows = await _dbContext.SaveChangesAsync();
+                var records = await query.AsNoTracking()
+                    .Skip((paginatedFilter.PageNumber!.Value - 1) * paginatedFilter.PageSize!.Value)
+                    .Take(paginatedFilter.PageSize!.Value)
+                    .ToListAsync();
 
-                return affectedRows > 0;
+                return records;
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }

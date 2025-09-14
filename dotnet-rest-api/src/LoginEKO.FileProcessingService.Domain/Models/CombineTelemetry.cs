@@ -82,6 +82,9 @@ namespace LoginEKO.FileProcessingService.Domain.Models
         public double SeparationSensitivityInPercentage { get; set; } // done
         // Column AR
         public double SieveSensitivityInPercentage { get; set; }  // done
+
+        public Guid FileMetadataId { get; set; }
+        public FileMetadata FileMetadata { get; set; }
     }
 
     //public enum CropType

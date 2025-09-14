@@ -12,22 +12,15 @@ namespace LoginEKO.FileProcessingService.Domain.Services
     public class FileService : IFileService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ITractorTelemetryRepository _tractorTelemetryRepository;
-        private readonly ICombineTelemetryRepository _combineTelemetryRepository;
         private readonly IFileRepository _fileMetadataRepository;
 
-        public FileService(IServiceProvider serviceProvider,
-            ITractorTelemetryRepository tractorTelemetryRepository,
-            ICombineTelemetryRepository combineTelemetryRepository,
-            IFileRepository fileMetadataRepository)
+        public FileService(IServiceProvider serviceProvider, IFileRepository fileMetadataRepository)
         {
             _serviceProvider = serviceProvider;
-            _tractorTelemetryRepository = tractorTelemetryRepository;
-            _combineTelemetryRepository = combineTelemetryRepository;
             _fileMetadataRepository = fileMetadataRepository;
         }
 
-        public async Task<bool> ImportVehicleTelemetryAsync(FileMetadata file)
+        public async Task<int> ImportVehicleTelemetryAsync(FileMetadata file)
         {
             var fileHashBytes = MD5Validator.ComputeHash(file.BinaryObject);
             var fileHash = MD5Validator.CreateHashStringFromHashBytes(fileHashBytes);
@@ -59,39 +52,25 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                                                            throw new ArgumentNullException();
 
             var extractedData = await fileExtractor.ExtractDataAsync(file.File);
+            if (extractedData.Count() == 0)
+                return 0;
+
             var telemetries = vehicleDataTransformator.TransformVehicleData(extractedData);
-
-            if (extractedData.Count() != telemetries.Count())
+            switch (vehicleType)
             {
-
+                case VehicleType.TRACTOR: file.TractorTelemetries = (ICollection<TractorTelemetry>) telemetries;
+                    break;
+                case VehicleType.COMBINE: file.CombineTelemetries = (ICollection<CombineTelemetry>)telemetries;
+                    break;
             }
 
-            try
-            {
-                var fileMetadataCreated = await _fileMetadataRepository.CreateFileMetadataAsync(file);
-                if (!fileMetadataCreated)
-                    return false;
+            var telemetryRecordsImported = await _fileMetadataRepository.ImportFileAsync(file);
 
-                var telemetryCreated = false;
-                switch (vehicleType)
-                {
-                    case VehicleType.TRACTOR:
-                        telemetryCreated = await _tractorTelemetryRepository.InsertTelemetryAsync((IEnumerable<TractorTelemetry>)telemetries);
-                        break;
-                    case VehicleType.COMBINE:
-                        telemetryCreated = await _combineTelemetryRepository.InsertTelemetryAsync((IEnumerable<CombineTelemetry>)telemetries);
-                        break;
-                }
+            if (telemetryRecordsImported == 0)
+                return 0;
 
-                if (!telemetryCreated)
-                    throw new ArgumentException();
-
-                return telemetryCreated;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            // minus 1 because one affected row is for filemetadata insert
+            return telemetryRecordsImported - 1;
         }
     }
 }

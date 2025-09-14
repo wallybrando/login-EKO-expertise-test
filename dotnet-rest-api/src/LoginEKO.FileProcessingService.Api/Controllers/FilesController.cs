@@ -15,14 +15,20 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
             _fileService = fileService;
         }
 
-        [HttpPost(ApiEndpoints.Vehicles.Import)]
+        [HttpPost(ApiEndpoints.Files.Import)]
         public async Task<IActionResult> ImportVehicleTelemetryFileAsync([FromForm] UploadFileRequest request)
         {
-            var file = request.MapToFileDto();
-            await _fileService.ImportVehicleTelemetryAsync(file);
-            var response = file.MapToResponse();
+            var file = request.MapToFileMetadata();
+            var numberOfImports = await _fileService.ImportVehicleTelemetryAsync(file);
 
-            return Created($"{ApiEndpoints.Vehicles.Base}/{response.Id}", response);
+            if (numberOfImports == 0)
+            {
+                return NoContent();
+            }
+
+            var response = file.MapToResponse();
+            response.NumberOfImports = numberOfImports;
+            return Accepted($"{ApiEndpoints.Files.Base}/{response.Id}", response);
         }
     }
 }

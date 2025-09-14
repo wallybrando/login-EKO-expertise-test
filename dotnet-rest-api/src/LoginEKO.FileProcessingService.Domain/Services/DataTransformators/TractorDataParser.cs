@@ -46,9 +46,9 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
                     tractor.SpeedRearPtoInRpm = DataHelper.ConvertToInt(entity[12]);
                     tractor.CurrentGearShift = DataHelper.ConvertToNullabeShort(entity[13]);
                     tractor.AmbientTemperatureInCelsius = DataHelper.ConvertToDouble(entity[14]);
-                    tractor.ParkingBreakStatus = DataHelper.ParseEnumValue<ParkingBreakStatus>(entity[15]);
-                    tractor.TransverseDifferentialLockStatus = DataHelper.ParseEnumValue<TransverseDifferentialLockStatus>(entity[16]);
-                    tractor.AllWheelDriveStatus = DataHelper.ParseEnumValue<WheelDriveStatus>(entity[17]);
+                    tractor.ParkingBreakStatus = DataHelper.ConvertToEnum<ParkingBreakStatus>(entity[15]);
+                    tractor.TransverseDifferentialLockStatus = DataHelper.ConvertToEnum<TransverseDifferentialLockStatus>(entity[16]);
+                    tractor.AllWheelDriveStatus = DataHelper.ConvertToEnum<WheelDriveStatus>(entity[17]);
                     tractor.ActualStatusOfCreeper = DataHelper.ConvertToNullableBool(entity[18],
                                                                            _boolValues[nameof(TractorTelemetry.ActualStatusOfCreeper)][0],
                                                                            _boolValues[nameof(TractorTelemetry.ActualStatusOfCreeper)][1]);

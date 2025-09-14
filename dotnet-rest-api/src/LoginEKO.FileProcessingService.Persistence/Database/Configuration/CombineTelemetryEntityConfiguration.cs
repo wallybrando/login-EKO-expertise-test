@@ -22,6 +22,10 @@ namespace LoginEKO.FileProcessingService.Persistence.Database.Configuration
                 .HasValueGenerator((Id, type) => new SequentialGuidValueGenerator())
                 .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
 
+            builder.HasOne(p => p.FileMetadata)
+                    .WithMany(p => p.CombineTelemetries)
+                    .HasForeignKey(p => p.FileMetadataId);
+
             builder.Property(p => p.SerialNumber)
                  .HasColumnName("serial_number")
                  .HasColumnType("TEXT")
@@ -235,6 +239,10 @@ namespace LoginEKO.FileProcessingService.Persistence.Database.Configuration
                  .HasColumnName("sieve_sensitivity_in_percentage")
                  .HasColumnType("DOUBLE PRECISION")
                  .IsRequired();
+
+            builder.Property(p => p.FileMetadataId)
+                .HasColumnName("file_metadata_id")
+                .HasColumnType("UUID");
         }
     }
 }

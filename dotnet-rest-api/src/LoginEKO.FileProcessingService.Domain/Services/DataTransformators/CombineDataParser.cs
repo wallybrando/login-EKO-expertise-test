@@ -92,12 +92,12 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
                     combine.MoistureMeasurement = DataHelper.ConvertToBool(entity[34],
                         _boolValues[nameof(CombineTelemetry.MoistureMeasurement)][0],
                         _boolValues[nameof(CombineTelemetry.MoistureMeasurement)][1]); //  entity[34] == "on" ? true : false;
-                    combine.TypeOfCrop = DataHelper.ParseEnumValue<CropType>(entity[35]); // ParseCropType(entity[35]); // CropType.SUNFLOWERS; // [35]
+                    combine.TypeOfCrop = DataHelper.ConvertToEnum<CropType>(entity[35]); // ParseCropType(entity[35]); // CropType.SUNFLOWERS; // [35]
                     combine.SpecialCropWeightInGrams = DataHelper.ConvertToInt(entity[36]); // int.Parse(entity[36]);
                     combine.AutoPilotStatus = DataHelper.ConvertToBool(entity[37],
                         _boolValues[nameof(CombineTelemetry.AutoPilotStatus)][0],
                         _boolValues[nameof(CombineTelemetry.AutoPilotStatus)][1]); //  entity[34] == "on" ? true : false;
-                    combine.CruisePilotStatus = DataHelper.ParseEnumValue<CruisePilotStatus>(entity[38]); // ParseCruisePilotStatus(entity[38]); // CruisePilotStatus.STATUS_0; // [38]
+                    combine.CruisePilotStatus = DataHelper.ConvertToEnum<CruisePilotStatus>(entity[38]); // ParseCruisePilotStatus(entity[38]); // CruisePilotStatus.STATUS_0; // [38]
                     combine.RateOfWorkInHaPerHour = DataHelper.ConvertToDouble(entity[39]); // double.Parse(entity[39]);
                     combine.YieldInTonsPerHour = DataHelper.ConvertToNullableDouble(entity[40]); // entity[40] == "NA" ? null : double.Parse(entity[40]);
                     combine.QuantimeterCalibrationFactor = DataHelper.ConvertToDouble(entity[41]); // double.Parse(entity[41]);
