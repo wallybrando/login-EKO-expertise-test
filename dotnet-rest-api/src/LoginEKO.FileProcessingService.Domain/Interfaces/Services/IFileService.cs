@@ -10,6 +10,6 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces.Services
 {
     public interface IFileService
     {
-        Task<int> ImportVehicleTelemetryAsync(FileMetadata file);
+        Task<int> ImportVehicleTelemetryAsync(FileMetadata file, CancellationToken token = default);
     }
 }

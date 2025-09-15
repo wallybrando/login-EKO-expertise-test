@@ -10,6 +10,6 @@ namespace LoginEKO.FileProcessingService.Domain.Models
     {
         public required string Field { get; set; }
         public required string Operation { get; set; }
-        public required object Value { get; set; }
+        public required object? Value { get; set; }
     }
 }

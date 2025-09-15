@@ -3,16 +3,20 @@ using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
 {
     public class CombineDataParser : IVehicleDataParser
     {
+        private readonly ILogger<CombineDataParser> _logger;
         public VehicleType Type { get; init; }
         private readonly IDictionary<string, string[]> _boolValues;
-        
-        public CombineDataParser()
+
+        public CombineDataParser(ILogger<CombineDataParser> logger)
         {
+            _logger = logger;
+
             Type = VehicleType.COMBINE;
 
             _boolValues = new Dictionary<string, string[]>()
@@ -31,6 +35,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
 
         public IEnumerable<Vehicle> TransformVehicleData(IEnumerable<string[]> data)
         {
+            _logger.LogTrace("TransformVehicleData() data=combine data collection");
             var combineTelemetry = new List<CombineTelemetry>();
 
             foreach (var entity in data)
@@ -86,13 +91,14 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
                 }
                 catch (Exception e)
                 {
-
+                    _logger.LogError("Failed to parse data");
                     throw;
                 }
 
                 combineTelemetry.Add(combine);
             }
 
+            _logger.LogDebug("Successfully transformed data");
             return combineTelemetry;
         }
     }

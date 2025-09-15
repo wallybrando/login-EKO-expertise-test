@@ -19,7 +19,8 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
             services.AddScoped<IFileExtractor, CsvFileExtractor>();
             
             services.AddScoped<IFileService, FileService>();
-            services.AddScoped<ITelemetryService, TelemetryService>();
+            services.AddScoped<ITractorTelemetryService, TractorTelemetryService>();
+            services.AddScoped<ICombineTelemetryService, CombineTelemetryService>();
 
             services.AddSingleton<SchemaRegistry, TractorSchemaRegistry>();
             return services;

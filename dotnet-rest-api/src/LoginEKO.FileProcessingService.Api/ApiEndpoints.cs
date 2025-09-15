@@ -2,7 +2,7 @@
 {
     public static class ApiEndpoints
     {
-        public const string ApiBase = "api";
+        private const string ApiBase = "api";
 
         public static class Files
         {
@@ -15,8 +15,10 @@
         {
             public const string Base = $"{ApiBase}/telemetries";
 
+            public const string All = $"{Base}";
             public const string Tractors = $"{Base}/tractors";
             public const string Combines = $"{Base}/combines";
+
         }
     }
 }

@@ -3,17 +3,20 @@ using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
 {
     public class TractorDataParser : IVehicleDataParser
     {
+        private readonly ILogger<TractorDataParser> _logger;
         public VehicleType Type { get; init; }
 
         private readonly IDictionary<string, string[]> _boolValues;
 
-        public TractorDataParser()
+        public TractorDataParser(ILogger<TractorDataParser> logger)
         {
+            _logger = logger;
             Type = VehicleType.TRACTOR;
 
             _boolValues = new Dictionary<string, string[]>()
@@ -24,6 +27,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
 
         public IEnumerable<Vehicle> TransformVehicleData(IEnumerable<string[]> data)
         {
+            _logger.LogTrace("TransformVehicleData() data=tractor data collection");
             var tractorsTelemetry = new List<TractorTelemetry>();
             foreach (var entity in data)
             {
@@ -55,100 +59,15 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
                 }
                 catch (Exception e)
                 {
-
+                    _logger.LogError("Failed to parse data");
                     throw;
                 }
 
                 tractorsTelemetry.Add(tractor);
             }
 
+            _logger.LogDebug("Successfully transformed data to");
             return tractorsTelemetry;
         }
-
-        //private int? ParseNullableIntValue(string field)
-        //{
-        //    if (field == "NA")
-        //        return null;
-
-        //    if (!int.TryParse(field, out var result))
-        //        throw new ArgumentException("Value cannot be converted to int");
-
-        //    return result;
-        //}
-
-        //private int ParseIntValue(string field)
-        //{
-        //    if (!int.TryParse(field, out var result))
-        //        throw new ArgumentException("Value cannot be converted to int");
-
-        //    return result;
-        //}
-
-        //private short? ParseNullabeShortValue(string field)
-        //{
-        //    if (field == "NA")
-        //        return null;
-
-        //    if (!short.TryParse(field, out var result))
-        //        throw new ArgumentException("Value cannot be converted to short");
-
-        //    return result;
-        //}
-
- //       private bool? ParseNullableBoolValue(string field, string expectedTrue, string expectedFalse)
- //       {
- //           if (field == "NA")
- //               return null;
- //           if (field.Equals(expectedTrue, StringComparison.OrdinalIgnoreCase))
- //               return true;
- //           if (field.Equals(expectedFalse, StringComparison.OrdinalIgnoreCase))
- //               return false;
-
- //           throw new ArgumentException("Value cannot be coverted to bool");
- //       }
-
- //       private string ParseStringValue(string field)
- //       {
- //           if (string.IsNullOrEmpty(field))
- //               throw new ArgumentException("Value cannot be converted to string");
-
- //           return field;
- //       }
-
- //       private DateTime ParseDateTimeValue(string field)
- //       {
- //           if (!DateTime.TryParse(field, out var result))
- //               throw new ArgumentException("Value cannot be converted to DateTime");
-
- //           return result;
- //       }
-
- //       private double ParseDoubleValue(string columnValue)
- //       {
- //           if (!double.TryParse(columnValue, out var result))
- //               throw new ArgumentException("Value cannot be converted to double");
-
- //           return result;
- //       }
-
- //       private double? ParseNullableDoubleValue(string columnValue)
- //       {
- //           if (columnValue == "NA")
- //               return null;
-
- //           if (!double.TryParse(columnValue, out var result))
- //               throw new ArgumentException("Value cannot be converted to double");
-
- //           return result;
- //       }
-
- //       private static T ParseEnumValue<T>(string columnValue) where T : struct, Enum
- //       {
- //;
- //           if (!Enum.TryParse(typeof(T), columnValue, true, out var value))
- //               throw new ArgumentException("Value cannot be converted to enum");
-
- //           return (T)value; 
- //       }
     }
 }

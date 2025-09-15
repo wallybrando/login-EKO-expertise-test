@@ -6,6 +6,7 @@ using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
 using LoginEKO.FileProcessingService.Domain.Validators;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace LoginEKO.FileProcessingService.Domain.Services
 {
@@ -13,49 +14,58 @@ namespace LoginEKO.FileProcessingService.Domain.Services
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IFileRepository _fileMetadataRepository;
+        private readonly ILogger<FileService> _logger;
 
-        public FileService(IServiceProvider serviceProvider, IFileRepository fileMetadataRepository)
+        public FileService(IServiceProvider serviceProvider, IFileRepository fileMetadataRepository, ILogger<FileService> logger)
         {
             _serviceProvider = serviceProvider;
             _fileMetadataRepository = fileMetadataRepository;
+            _logger = logger;
         }
 
-        public async Task<int> ImportVehicleTelemetryAsync(FileMetadata file)
+        public async Task<int> ImportVehicleTelemetryAsync(FileMetadata file, CancellationToken token = default)
         {
             var fileHashBytes = MD5Validator.ComputeHash(file.BinaryObject);
             var fileHash = MD5Validator.CreateHashStringFromHashBytes(fileHashBytes);
 
-            var fileDb = await _fileMetadataRepository.GetByMD5HashAsync(fileHash);
+            var fileDb = await _fileMetadataRepository.GetByMD5HashAsync(fileHash, token);
             if (fileDb != null)
             {
-                throw new ArgumentException("File has been corupted");
+                _logger.LogError("File has been corrupted");
+                throw new ArgumentException("File has been corrupted");
             }
 
             file.MD5Hash = fileHash;
 
             var vehicleType = FileManager.GetVehicleTypeFromFilename(file.Filename);
             if (vehicleType == VehicleType.UNKNOWN)
-                throw new ArgumentException("Unknown vehicle");
+            {
+                _logger.LogError("Filename format is invalid");
+                throw new ArgumentException("Invalid filename format");
+            }
 
             var fileType = FileManager.GetFileTypeFromExtension(file.Extension);
             if (fileType == FileType.UNKNOWN)
+            {
+                _logger.LogError("File type is not supported");
                 throw new ArgumentException("Unknown file type");
+            }
 
             var fileExtractor = _serviceProvider.GetServices<IFileExtractor>()
                                                 .FirstOrDefault(x => x.Type == fileType)
                                                 ??
-                                                throw new ArgumentNullException();
+                                                throw new ArgumentNullException("fileExtractor");
 
-            var vehicleDataTransformator = _serviceProvider.GetServices<IVehicleDataParser>()
+            var vehicleDataParser = _serviceProvider.GetServices<IVehicleDataParser>()
                                                            .FirstOrDefault(x => x.Type == vehicleType)
                                                            ??
-                                                           throw new ArgumentNullException();
+                                                           throw new ArgumentNullException("vehicleDataParser");
 
-            var extractedData = await fileExtractor.ExtractDataAsync(file.File);
+            var extractedData = await fileExtractor.ExtractDataAsync(file.File, token);
             if (extractedData.Count() == 0)
                 return 0;
 
-            var telemetries = vehicleDataTransformator.TransformVehicleData(extractedData);
+            var telemetries = vehicleDataParser.TransformVehicleData(extractedData);
             switch (vehicleType)
             {
                 case VehicleType.TRACTOR: file.TractorTelemetries = (ICollection<TractorTelemetry>) telemetries;
@@ -64,7 +74,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                     break;
             }
 
-            var telemetryRecordsImported = await _fileMetadataRepository.ImportFileAsync(file);
+            var telemetryRecordsImported = await _fileMetadataRepository.ImportFileAsync(file, token);
 
             if (telemetryRecordsImported == 0)
                 return 0;

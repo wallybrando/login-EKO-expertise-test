@@ -2,6 +2,7 @@
 using LoginEKO.FileProcessingService.Contracts.Responses;
 using LoginEKO.FileProcessingService.Domain.Extensions;
 using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
 using System.Runtime.CompilerServices;
@@ -51,15 +52,18 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
             {
                 Field = request.Field.ToLower(),
                 Operation = request.Operation ?? FilterOperation.EQUALS.GetDescription().ToLower(),
-                Value = request.Value
+                Value = request.Value 
             };
         }
 
-        public static PaginatedFilter MapToPaginatedFilter(this IEnumerable<FilterRequest> filters)
+        public static PaginatedFilter MapToPaginatedFilter(this IEnumerable<FilterRequest> filters, int? pageNumber, int? pageSize)
         {
             return new PaginatedFilter
             {
-                Filters = filters.Select(MapToFilter)
+                Filters = filters.Select(MapToFilter),
+                PageNumber = pageNumber.HasValue ? pageNumber.Value : 1,
+                PageSize = pageSize.HasValue ? pageSize.Value : throw new ArgumentException("Page size must be between 1 and 100"),
+
             };
         }
 

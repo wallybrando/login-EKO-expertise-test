@@ -3,6 +3,7 @@ using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace LoginEKO.FileProcessingService.Persistence
@@ -10,9 +11,12 @@ namespace LoginEKO.FileProcessingService.Persistence
     public class FilterExpressionBuilder<T> : IFilterExpressionBuilder<T>
     {
         private readonly SchemaRegistry _schemaRegistry;
-        public FilterExpressionBuilder(SchemaRegistry schemaRegistry)
+        private readonly ILogger<FilterExpressionBuilder<T>> _logger;
+
+        public FilterExpressionBuilder(SchemaRegistry schemaRegistry, ILogger<FilterExpressionBuilder<T>> logger)
         {
             _schemaRegistry = schemaRegistry;
+            _logger = logger;
         }
 
         public IEnumerable<Expression<Func<T, bool>>> ApplyFilters(IEnumerable<Filter> filters)
@@ -64,6 +68,7 @@ namespace LoginEKO.FileProcessingService.Persistence
                 }
                 catch (Exception)
                 {
+                    _logger.LogError("Invalid value for field {Field}", filter.Field);
                     throw new ArgumentException("Invalid filter value");
                 }
             }

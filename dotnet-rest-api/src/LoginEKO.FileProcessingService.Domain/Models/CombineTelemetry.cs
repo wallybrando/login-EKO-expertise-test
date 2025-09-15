@@ -1,6 +1,5 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
-using System.ComponentModel;
 
 namespace LoginEKO.FileProcessingService.Domain.Models
 {
