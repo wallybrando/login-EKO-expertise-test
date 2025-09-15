@@ -19,7 +19,7 @@ namespace LoginEKO.FileProcessingService.Domain.Extensions
 
         public static bool OperationApplicable(this Filter filter)
         {
-            var operation = DataHelper.ConvertToEnum<FilterOperation>(filter.Operation);
+            var operation = DataConverter.ToEnum<FilterOperation>(filter.Operation);
 
             return operation != FilterOperation.UNKNOWN;
         }

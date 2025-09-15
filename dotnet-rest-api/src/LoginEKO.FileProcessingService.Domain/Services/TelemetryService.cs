@@ -6,13 +6,11 @@ namespace LoginEKO.FileProcessingService.Domain.Services
 {
     public class TelemetryService : ITelemetryService
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly ITractorTelemetryRepository _tractorTelemetryRepository;
         private readonly ICombineTelemetryRepository _combineTelemetryRepository;
 
-        public TelemetryService(IServiceProvider serviceProvider, ITractorTelemetryRepository tractorTelemetryRepository, ICombineTelemetryRepository combineTelemetryRepository)
+        public TelemetryService(ITractorTelemetryRepository tractorTelemetryRepository, ICombineTelemetryRepository combineTelemetryRepository)
         {
-            _serviceProvider = serviceProvider;
             _tractorTelemetryRepository = tractorTelemetryRepository;
             _combineTelemetryRepository = combineTelemetryRepository;
         }

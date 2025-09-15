@@ -31,25 +31,25 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
 
                 try
                 {
-                    tractor.Date = DataHelper.ConvertToDateTime(entity[0]);
-                    tractor.SerialNumber = DataHelper.ConvertToString(entity[1]);
-                    tractor.GPSLongitude = DataHelper.ConvertToDouble(entity[2]);
-                    tractor.GPSLatitude = DataHelper.ConvertToDouble(entity[3]);
-                    tractor.TotalWorkingHours = DataHelper.ConvertToDouble(entity[4]);
-                    tractor.EngineSpeedInRpm = DataHelper.ConvertToInt(entity[5]); // int.Parse(entity[5]);
-                    tractor.EngineLoadInPercentage = DataHelper.ConvertToDouble(entity[6]);
-                    tractor.FuelConsumptionPerHour = DataHelper.ConvertToNullableDouble(entity[7]);
-                    tractor.GroundSpeedGearboxInKmh = DataHelper.ConvertToDouble(entity[8]);
-                    tractor.GroundSpeedRadarInKmh = DataHelper.ConvertToNullableInt(entity[9]);
-                    tractor.CoolantTemperatureInCelsius = DataHelper.ConvertToInt(entity[10]);
-                    tractor.SpeedFrontPtoInRpm = DataHelper.ConvertToInt(entity[11]);
-                    tractor.SpeedRearPtoInRpm = DataHelper.ConvertToInt(entity[12]);
-                    tractor.CurrentGearShift = DataHelper.ConvertToNullabeShort(entity[13]);
-                    tractor.AmbientTemperatureInCelsius = DataHelper.ConvertToDouble(entity[14]);
-                    tractor.ParkingBreakStatus = DataHelper.ConvertToEnum<ParkingBreakStatus>(entity[15]);
-                    tractor.TransverseDifferentialLockStatus = DataHelper.ConvertToEnum<TransverseDifferentialLockStatus>(entity[16]);
-                    tractor.AllWheelDriveStatus = DataHelper.ConvertToEnum<WheelDriveStatus>(entity[17]);
-                    tractor.ActualStatusOfCreeper = DataHelper.ConvertToNullableBool(entity[18],
+                    tractor.Date = DataConverter.ToDateTime(entity[0]);
+                    tractor.SerialNumber = DataConverter.ToString(entity[1]);
+                    tractor.GPSLongitude = DataConverter.ToDouble(entity[2]);
+                    tractor.GPSLatitude = DataConverter.ToDouble(entity[3]);
+                    tractor.TotalWorkingHours = DataConverter.ToDouble(entity[4]);
+                    tractor.EngineSpeedInRpm = DataConverter.ToInt(entity[5]); // int.Parse(entity[5]);
+                    tractor.EngineLoadInPercentage = DataConverter.ToDouble(entity[6]);
+                    tractor.FuelConsumptionPerHour = DataConverter.ToNullableDouble(entity[7]);
+                    tractor.GroundSpeedGearboxInKmh = DataConverter.ToDouble(entity[8]);
+                    tractor.GroundSpeedRadarInKmh = DataConverter.ToNullableInt(entity[9]);
+                    tractor.CoolantTemperatureInCelsius = DataConverter.ToInt(entity[10]);
+                    tractor.SpeedFrontPtoInRpm = DataConverter.ToInt(entity[11]);
+                    tractor.SpeedRearPtoInRpm = DataConverter.ToInt(entity[12]);
+                    tractor.CurrentGearShift = DataConverter.ToNullabeShort(entity[13]);
+                    tractor.AmbientTemperatureInCelsius = DataConverter.ToDouble(entity[14]);
+                    tractor.ParkingBreakStatus = DataConverter.ToEnum<ParkingBreakStatus>(entity[15]);
+                    tractor.TransverseDifferentialLockStatus = DataConverter.ToEnum<TransverseDifferentialLockStatus>(entity[16]);
+                    tractor.AllWheelDriveStatus = DataConverter.ToEnum<WheelDriveStatus>(entity[17]);
+                    tractor.ActualStatusOfCreeper = DataConverter.ToNullableBool(entity[18],
                                                                            _boolValues[nameof(TractorTelemetry.ActualStatusOfCreeper)][0],
                                                                            _boolValues[nameof(TractorTelemetry.ActualStatusOfCreeper)][1]);
                 }

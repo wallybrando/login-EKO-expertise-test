@@ -67,29 +67,43 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
         {
             return new TractorTelemetryResponse
             {
-                SerialNumber = DataHelper.ConvertToString(telemetry.SerialNumber),
-                Date = DataHelper.DateTimeToString(telemetry.Date),
-                GPSLongitude = DataHelper.DoubleToString(telemetry.GPSLongitude),
-                GPSLatitude = DataHelper.DoubleToString(telemetry.GPSLatitude),
-                TotalWorkingHours = DataHelper.DoubleToString(telemetry.TotalWorkingHours),
-                EngineSpeedInRpm = DataHelper.IntToString(telemetry.EngineSpeedInRpm),
-                EngineLoadInPercentage = DataHelper.DoubleToString(telemetry.EngineLoadInPercentage),
-                FuelConsumptionPerHour = DataHelper.NullableDoubleToString(telemetry.FuelConsumptionPerHour),
-                GroundSpeedGearboxInKmh = DataHelper.DoubleToString(telemetry.GroundSpeedGearboxInKmh),
-                GroundSpeedRadarInKmh = DataHelper.NullableIntToString(telemetry.GroundSpeedRadarInKmh),
-                CoolantTemperatureInCelsius = DataHelper.IntToString(telemetry.CoolantTemperatureInCelsius),
-                SpeedFrontPtoInRpm = DataHelper.IntToString(telemetry.SpeedFrontPtoInRpm),
-                SpeedRearPtoInRpm = DataHelper.IntToString(telemetry.SpeedRearPtoInRpm),
-                CurrentGearShift = DataHelper.NullableShortToString(telemetry.CurrentGearShift),
-                AmbientTemperatureInCelsius = DataHelper.DoubleToString(telemetry.AmbientTemperatureInCelsius),
-                ParkingBreakStatus = DataHelper.EnumToString(telemetry.ParkingBreakStatus),
-                TransverseDifferentialLockStatus = DataHelper.EnumToString(telemetry.TransverseDifferentialLockStatus),
-                AllWheelDriveStatus = DataHelper.EnumToString(telemetry.AllWheelDriveStatus),
-                ActualStatusOfCreeper = DataHelper.NullableBoolToString(telemetry.ActualStatusOfCreeper, "Active", "Inactive")
+                SerialNumber = DataConverter.ToString(telemetry.SerialNumber),
+                Date = DataConverter.ToString(telemetry.Date),
+                GPSLongitude = DataConverter.ToString(telemetry.GPSLongitude),
+                GPSLatitude = DataConverter.ToString(telemetry.GPSLatitude),
+                TotalWorkingHours = DataConverter.ToString(telemetry.TotalWorkingHours),
+                EngineSpeedInRpm = DataConverter.ToString(telemetry.EngineSpeedInRpm),
+                EngineLoadInPercentage = DataConverter.ToString(telemetry.EngineLoadInPercentage),
+                FuelConsumptionPerHour = DataConverter.ToString(telemetry.FuelConsumptionPerHour),
+                GroundSpeedGearboxInKmh = DataConverter.ToString(telemetry.GroundSpeedGearboxInKmh),
+                GroundSpeedRadarInKmh = DataConverter.ToString(telemetry.GroundSpeedRadarInKmh),
+                CoolantTemperatureInCelsius = DataConverter.ToString(telemetry.CoolantTemperatureInCelsius),
+                SpeedFrontPtoInRpm = DataConverter.ToString(telemetry.SpeedFrontPtoInRpm),
+                SpeedRearPtoInRpm = DataConverter.ToString(telemetry.SpeedRearPtoInRpm),
+                CurrentGearShift = DataConverter.ToString(telemetry.CurrentGearShift),
+                AmbientTemperatureInCelsius = DataConverter.ToString(telemetry.AmbientTemperatureInCelsius),
+                ParkingBreakStatus = DataConverter.EnumToString(telemetry.ParkingBreakStatus),
+                TransverseDifferentialLockStatus = DataConverter.EnumToString(telemetry.TransverseDifferentialLockStatus),
+                AllWheelDriveStatus = DataConverter.EnumToString(telemetry.AllWheelDriveStatus),
+                ActualStatusOfCreeper = DataConverter.ToString(telemetry.ActualStatusOfCreeper, "Active", "Inactive")
             };
         }
 
         public static IEnumerable<TractorTelemetryResponse> MapToResponse(this IEnumerable<TractorTelemetry> telemetries)
+        {
+            return telemetries.Select(MapToResponse);
+        }
+
+        public static CombineTelemetryResponse MapToResponse(this CombineTelemetry telemetry)
+        {
+            return new CombineTelemetryResponse();
+            //return new CombineTelemetryResponse
+            //{
+            //    SerialNumber = Data
+            //}
+        }
+
+        public static IEnumerable<CombineTelemetryResponse> MapToResponse(this IEnumerable<CombineTelemetry> telemetries)
         {
             return telemetries.Select(MapToResponse);
         }

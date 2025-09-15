@@ -32,9 +32,16 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
         }
 
         [HttpPost(ApiEndpoints.Telemetries.Combines)]
-        public async Task<IActionResult> GetAllCombineTelemetriesAsync([FromBody] ICollection<FilterRequest> request)
+        public async Task<IActionResult> GetAllCombineTelemetriesAsync([FromBody] IEnumerable<FilterRequest> request, [FromQuery] int? pageNumber, int? pageSize)
         {
-            return Ok();
+            var filter = request.MapToPaginatedFilter();
+            filter.PageNumber = pageNumber;
+            filter.PageSize = pageSize;
+
+            var result = await _telemetryService.GetCombineTelemetriesAsync(filter);
+            var response = result.MapToResponse();
+
+            return Ok(result);
         }
     }
 }

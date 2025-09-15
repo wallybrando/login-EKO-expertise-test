@@ -1,10 +1,5 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Models.Base
 {
@@ -33,7 +28,7 @@ namespace LoginEKO.FileProcessingService.Domain.Models.Base
 
             try
             {
-                operation = DataHelper.ConvertToEnum<FilterOperation>(suppliedOperation);
+                operation = DataConverter.ToEnum<FilterOperation>(suppliedOperation);
             }
             catch
             {

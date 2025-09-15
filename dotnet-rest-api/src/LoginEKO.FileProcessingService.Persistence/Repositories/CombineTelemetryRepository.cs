@@ -21,19 +21,32 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
 
         public async Task<ICollection<CombineTelemetry>> GetAsync(PaginatedFilter paginatedFilter)
         {
-            var query = _dbContext.CombineTelemetries.OrderBy(x => x.Date).AsQueryable();
+            if (!paginatedFilter.PageNumber.HasValue)
+                paginatedFilter.PageNumber = 1;
 
-            var filterExpressions = _filterExpressionBuilder.ApplyFilters(paginatedFilter.Filters);
-            foreach (var expression in filterExpressions)
-            {
-                query = query.Where(expression);
-            }
+            if (!paginatedFilter.PageSize.HasValue)
+                paginatedFilter.PageSize = 10;
+
+            //var query = _dbContext.CombineTelemetries.OrderBy(x => x.Date).AsQueryable();
+
+            //var filterExpressions = _filterExpressionBuilder.ApplyFilters(paginatedFilter.Filters);
+            //foreach (var expression in filterExpressions)
+            //{
+            //    query = query.Where(expression);
+            //}
 
             try
             {
-                var records = await query.AsNoTracking()
-                    .Skip((paginatedFilter.PageNumber!.Value - 1) * paginatedFilter.PageSize!.Value)
-                    .Take(paginatedFilter.PageSize!.Value)
+                //var records = await query.AsNoTracking()
+                //    .Skip((paginatedFilter.PageNumber.Value - 1) * paginatedFilter.PageSize.Value)
+                //    .Take(paginatedFilter.PageSize.Value)
+                //    .ToListAsync();
+
+                var records = await _dbContext.CombineTelemetries
+                    .AsNoTracking()
+                    .OrderBy(x => x.Date)
+                    .Skip((paginatedFilter.PageNumber.Value - 1) * paginatedFilter.PageSize.Value)
+                    .Take(paginatedFilter.PageSize.Value)
                     .ToListAsync();
 
                 return records;
