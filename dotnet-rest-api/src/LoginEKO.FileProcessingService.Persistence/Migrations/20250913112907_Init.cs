@@ -68,7 +68,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Migrations
                     grain_in_returns_in_percentage = table.Column<double>(type: "DOUBLE PRECISION", nullable: false),
                     channel_position_in_percentage = table.Column<double>(type: "DOUBLE PRECISION", nullable: false),
                     yield_measurement = table.Column<bool>(type: "BOOLEAN", nullable: false),
-                    returns_aufer_measurement_in_percentage = table.Column<double>(type: "DOUBLE PRECISION", nullable: false),
+                    returns_auger_measurement_in_percentage = table.Column<double>(type: "DOUBLE PRECISION", nullable: false),
                     moisture_measurement = table.Column<bool>(type: "BOOLEAN", nullable: false),
                     type_of_crop = table.Column<CropType>(type: "crop_type", nullable: false),
                     special_crop_weight_in_grams = table.Column<int>(type: "INT", nullable: false),

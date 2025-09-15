@@ -155,9 +155,9 @@ namespace LoginEKO.FileProcessingService.Persistence.Migrations
                         .HasColumnType("DOUBLE PRECISION")
                         .HasColumnName("rate_of_work_in_ha_per_hour");
 
-                    b.Property<double>("ReturnsAuferMeasurementInPercentage")
+                    b.Property<double>("ReturnsAugerMeasurementInPercentage")
                         .HasColumnType("DOUBLE PRECISION")
-                        .HasColumnName("returns_aufer_measurement_in_percentage");
+                        .HasColumnName("returns_auger_measurement_in_percentage");
 
                     b.Property<int>("RotorStrawWalkerSpeedInRpm")
                         .HasColumnType("INT")

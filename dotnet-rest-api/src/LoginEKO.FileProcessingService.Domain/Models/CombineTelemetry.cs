@@ -61,7 +61,7 @@ namespace LoginEKO.FileProcessingService.Domain.Models
         // Column AG
         public bool YieldMeasurement { get; set; } // done
         // Column AH
-        public double ReturnsAuferMeasurementInPercentage { get; set; } // done
+        public double ReturnsAugerMeasurementInPercentage { get; set; } // done
         // Column AI
         public bool MoistureMeasurement { get; set; } // done
         // Column AJ

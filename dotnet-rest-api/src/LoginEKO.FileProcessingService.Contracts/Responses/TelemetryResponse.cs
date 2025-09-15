@@ -132,7 +132,7 @@ namespace LoginEKO.FileProcessingService.Contracts.Responses
         // Column AG
         public string YieldMeasurement { get; init; } // done
         // Column AH
-        public string ReturnsAuferMeasurementInPercentage { get; init; } // done
+        public string ReturnsAugerMeasurementInPercentage { get; init; } // done
         // Column AI
         public string MoistureMeasurement { get; init; } // done
         // Column AJ

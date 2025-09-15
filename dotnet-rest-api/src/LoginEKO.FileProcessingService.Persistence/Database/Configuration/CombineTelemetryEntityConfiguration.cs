@@ -186,8 +186,8 @@ namespace LoginEKO.FileProcessingService.Persistence.Database.Configuration
                  .HasColumnType("BOOLEAN")
                  .IsRequired();
 
-            builder.Property(p => p.ReturnsAuferMeasurementInPercentage)
-                 .HasColumnName("returns_aufer_measurement_in_percentage")
+            builder.Property(p => p.ReturnsAugerMeasurementInPercentage)
+                 .HasColumnName("returns_auger_measurement_in_percentage")
                  .HasColumnType("DOUBLE PRECISION")
                  .IsRequired();
 

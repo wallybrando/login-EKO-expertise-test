@@ -41,7 +41,7 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
             var result = await _telemetryService.GetCombineTelemetriesAsync(filter);
             var response = result.MapToResponse();
 
-            return Ok(result);
+            return Ok(response);
         }
     }
 }
