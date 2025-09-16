@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginEKO.FileProcessingServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginEKO.FileProcessingService.CompositionRoot", "src\LoginEKO.FileProcessingService.CompositionRoot\LoginEKO.FileProcessingService.CompositionRoot.csproj", "{AC167197-E53C-4F11-90E7-402EE1992BDC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginEKO.FileProcessingService.Api.Tests", "tests\LoginEKO.FileProcessingService.Api.Tests\LoginEKO.FileProcessingService.Api.Tests.csproj", "{A8AD62C0-FFAB-4A4D-B9C1-606824EA34FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginEKO.FileProcessingService.Persistence.Tests", "tests\LoginEKO.FileProcessingService.Persistence.Tests\LoginEKO.FileProcessingService.Persistence.Tests.csproj", "{0209295A-D23A-436E-95AB-33589E7FF90E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{AC167197-E53C-4F11-90E7-402EE1992BDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC167197-E53C-4F11-90E7-402EE1992BDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC167197-E53C-4F11-90E7-402EE1992BDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8AD62C0-FFAB-4A4D-B9C1-606824EA34FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8AD62C0-FFAB-4A4D-B9C1-606824EA34FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8AD62C0-FFAB-4A4D-B9C1-606824EA34FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8AD62C0-FFAB-4A4D-B9C1-606824EA34FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0209295A-D23A-436E-95AB-33589E7FF90E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0209295A-D23A-436E-95AB-33589E7FF90E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0209295A-D23A-436E-95AB-33589E7FF90E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0209295A-D23A-436E-95AB-33589E7FF90E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

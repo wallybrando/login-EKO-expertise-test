@@ -1,8 +1,10 @@
-﻿using LoginEKO.FileProcessingService.Domain.Extensions;
+﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
+using LoginEKO.FileProcessingService.Domain.Extensions;
 using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
+using LoginEKO.FileProcessingService.Domain.Utils;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
@@ -29,10 +31,15 @@ namespace LoginEKO.FileProcessingService.Persistence
                 {
                     queryFilterStatements.Add(filterStatement!);
                 }
+                else
+                {
+                    _logger.LogWarning("Filter rejected: Field={Field} Operation={Operation} Value={Value}", filter.Field, filter.Operation, filter.Value);
+                }
             }
 
             return queryFilterStatements;
         }
+
 
         private bool TryCreateFilterExpression(Filter filter, out Expression<Func<T, bool>>? filterStatement)
         {
@@ -42,44 +49,63 @@ namespace LoginEKO.FileProcessingService.Persistence
                 return false;
             }
 
-            object? value;
-            if (filter.Value == null)
+            object? value = null;
+            if (filter.Value != null)
             {
-                value = null;
+                if (fieldType == typeof(Enum))
+                {
+                    if (!_schemaRegistry.TryGetEnumValue(filter.Field, filter.Value, out var val))
+                    {
+                        return false;
+                    }
 
+                    value = val;
+                        
+                    if (!_schemaRegistry.TryGetEnumType(filter.Field, out fieldType))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        value = TypeValidator.IsNullableType(fieldType) ? TypeValidator.ChangeTypeNullable(filter.Value.ToString(), fieldType) :
+                                Convert.ChangeType(filter.Value.ToString(), fieldType);
+                    }
+                    catch (Exception)
+                    {
+                        _logger.LogError("Invalid value for field {Field}", filter.Field);
+                        throw new FilterValidationException($"Invalid value for field {filter.Field}");
+                        //return false;
+                    }
+                }
             }
-            else
+
+            if (!_schemaRegistry.TryGetOperation(fieldType, filter.Operation, out var operation))
             {
-                try
-                {
-                    value = ConvertExtensions.IsNullableType(fieldType) ?
-                        ConvertExtensions.ChangeTypeNullable(filter.Value.ToString(), fieldType) :
-                        Convert.ChangeType(filter.Value.ToString(), fieldType);
-
-
-                    //if (ConvertExtensions.IsNullableType(fieldType))
-                    //{
-                    //    value = ConvertExtensions.ChangeTypeNullable(filter.Value.ToString(), fieldType);
-                    //}
-                    //else
-                    //{
-                    //    value = Convert.ChangeType(filter.Value.ToString(), fieldType);
-                    //}
-                }
-                catch (Exception)
-                {
-                    _logger.LogError("Invalid value for field {Field}", filter.Field);
-                    throw new ArgumentException("Invalid filter value");
-                }
+                _logger.LogError("Applied operation is not supported");
+                throw new FilterValidationException($"Operation '{filter.Operation}' is not supported for field '{filter.Field}'");
+                //return false;
             }
 
-            if (!_schemaRegistry.TryGetOperation(fieldType, filter.Operation, out var operation) || (value == null && operation != FilterOperation.EQUALS))
-                throw new ArgumentException("Invalid filter operation");
+            if (value == null && operation != FilterOperation.EQUALS)
+            {
+                _logger.LogError("Applied operation cannot be applied on NULL value");
+                throw new FilterValidationException($"Operation '{operation.GetDescription()}' cannot be used with NULL");
+               // return false;
+            }
+
+            if (value == null && !TypeValidator.IsNullableType(fieldType))
+            {
+                _logger.LogError("NULL check cannot be applied to non-nullable field");
+                throw new FilterValidationException("NULL check cannot be applied to non-nullable field");
+                //return false;
+            }
 
             var parameter = Expression.Parameter(typeof(T), "x");
             var property = Expression.PropertyOrField(parameter, filter.Field);
             var constant = Expression.Constant(value, fieldType);
-
 
             Expression? comparison = operation switch
             {
@@ -89,12 +115,12 @@ namespace LoginEKO.FileProcessingService.Persistence
                     when constant.Value == null || !IsFilterNullable(fieldType) => Expression.Equal(Expression.Constant(1), Expression.Constant(2)),
 
                 FilterOperation.GreaterThan
-                    when (FilterIsNumber(fieldType) || FilterIsDate(fieldType)) && (constant.Value != null || IsFilterNullable(fieldType)) => Expression.GreaterThan(property, constant),
+                    when (TypeValidator.FilterIsNumber(fieldType) || TypeValidator.FilterIsDate(fieldType)) && (constant.Value != null || IsFilterNullable(fieldType)) => Expression.GreaterThan(property, constant),
                 //FilterOperation.GreaterThan
                 //    when (IsNumber(fieldType) || IsDate(fieldType)) && (constant.Value == null || !NullableTypes(fieldType)) => Expression.Equal(Expression.Constant(1), Expression.Constant(2)),
 
                 FilterOperation.LESSTHAN
-                    when (FilterIsNumber(fieldType) || FilterIsDate(fieldType)) && (constant.Value != null || IsFilterNullable(fieldType)) => Expression.LessThan(property, constant),
+                    when (TypeValidator.FilterIsNumber(fieldType) || TypeValidator.FilterIsDate(fieldType)) && (constant.Value != null || IsFilterNullable(fieldType)) => Expression.LessThan(property, constant),
                 //FilterOperation.LESSTHAN
                 //    when (IsNumber(fieldType) || IsDate(fieldType)) && (constant.Value == null || !NullableTypes(fieldType)) => Expression.Equal(Expression.Constant(1), Expression.Constant(2)),
 
@@ -114,28 +140,15 @@ namespace LoginEKO.FileProcessingService.Persistence
             return false;
         }
 
-        private static bool FilterIsNumber(Type type)
-        {
-            return type == typeof(int) || type == typeof(double) || type == typeof(short) ||
-                type == typeof(short?) || type == typeof(int?) || type == typeof(double?);
-        }
-
-        private static bool FilterIsDate(Type type)
-        {
-            return type == typeof(DateTime);
-        }
-
         private static bool FilterValueIsEmptyString(Type type, ConstantExpression expression)
         {
-            if (!FilterIsString(type, expression))
+            if (!TypeValidator.FilterIsString(type, expression))
+                return false;
+
+            if (expression.Value is not string)
                 return false;
 
             return (string)expression.Value! == string.Empty;
-        }
-
-        private static bool FilterIsString(Type type, ConstantExpression expression)
-        {
-            return type == typeof(string) && expression.Value is string;
         }
 
         private static bool IsFilterNullable(Type type)

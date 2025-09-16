@@ -61,8 +61,8 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
             return new PaginatedFilter
             {
                 Filters = filters.Select(MapToFilter),
-                PageNumber = pageNumber.HasValue ? pageNumber.Value : 1,
-                PageSize = pageSize.HasValue ? pageSize.Value : throw new ArgumentException("Page size must be between 1 and 100"),
+                PageNumber = pageNumber ?? 1,
+                PageSize = pageSize ?? throw new ArgumentException("Page size must be between 1 and 100"),
 
             };
         }

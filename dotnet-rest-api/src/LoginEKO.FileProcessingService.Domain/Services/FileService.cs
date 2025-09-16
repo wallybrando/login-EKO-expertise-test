@@ -1,4 +1,5 @@
-﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
+﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
+using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
 using LoginEKO.FileProcessingService.Domain.Models;
@@ -32,23 +33,21 @@ namespace LoginEKO.FileProcessingService.Domain.Services
             if (fileDb != null)
             {
                 _logger.LogError("File has been corrupted");
-                throw new ArgumentException("File has been corrupted");
+                throw new FileValidationException("File has been corrupted");
             }
-
-            file.MD5Hash = fileHash;
 
             var vehicleType = FileManager.GetVehicleTypeFromFilename(file.Filename);
             if (vehicleType == VehicleType.UNKNOWN)
             {
                 _logger.LogError("Filename format is invalid");
-                throw new ArgumentException("Invalid filename format");
+                throw new FileValidationException("Name of file is invalid");
             }
 
             var fileType = FileManager.GetFileTypeFromExtension(file.Extension);
             if (fileType == FileType.UNKNOWN)
             {
                 _logger.LogError("File type is not supported");
-                throw new ArgumentException("Unknown file type");
+                throw new FileValidationException("File type is not supported");
             }
 
             var fileExtractor = _serviceProvider.GetServices<IFileExtractor>()
@@ -61,8 +60,9 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                                                            ??
                                                            throw new ArgumentNullException("vehicleDataParser");
 
+            file.MD5Hash = fileHash;
             var extractedData = await fileExtractor.ExtractDataAsync(file.File, token);
-            if (extractedData.Count() == 0)
+            if (!extractedData.Any())
                 return 0;
 
             var telemetries = vehicleDataParser.TransformVehicleData(extractedData);
@@ -74,13 +74,13 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                     break;
             }
 
-            var telemetryRecordsImported = await _fileMetadataRepository.ImportFileAsync(file, token);
+            // minus 1 because one affected row is for filemetadata insert
+            var dbRowsAffected = await _fileMetadataRepository.ImportFileAsync(file, token) - 1;
 
-            if (telemetryRecordsImported == 0)
+            if (dbRowsAffected <= 0)
                 return 0;
 
-            // minus 1 because one affected row is for filemetadata insert
-            return telemetryRecordsImported - 1;
+            return dbRowsAffected;
         }
     }
 }

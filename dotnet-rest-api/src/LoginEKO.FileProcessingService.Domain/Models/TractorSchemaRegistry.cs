@@ -1,5 +1,6 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
+using LoginEKO.FileProcessingService.Domain.Utils;
 
 namespace LoginEKO.FileProcessingService.Domain.Models
 {
@@ -33,7 +34,7 @@ namespace LoginEKO.FileProcessingService.Domain.Models
             OperationRegistry = new Dictionary<Type, FilterOperation>
             {
                 { typeof(string), FilterOperation.EQUALS | FilterOperation.CONTAINS },
-                { typeof(DateTime), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan }, // tested
+                { typeof(DateTime), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
                 { typeof(double), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
                 { typeof(double?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
                 { typeof(int), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
@@ -42,7 +43,23 @@ namespace LoginEKO.FileProcessingService.Domain.Models
                 { typeof(short?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
                 { typeof(bool), FilterOperation.EQUALS },
                 { typeof(bool?), FilterOperation.EQUALS },
-                { typeof(Enum), FilterOperation.EQUALS },
+                { typeof(ParkingBreakStatus), FilterOperation.EQUALS },
+                { typeof(TransverseDifferentialLockStatus), FilterOperation.EQUALS },
+                { typeof(WheelDriveStatus), FilterOperation.EQUALS },
+            };
+
+            EnumRegistry = new Dictionary<string, Func<string, Enum>>
+            {
+                { nameof(TractorTelemetry.ParkingBreakStatus).ToLower(), x => DataConverter.ToEnum<ParkingBreakStatus>(x) },
+                { nameof(TractorTelemetry.TransverseDifferentialLockStatus).ToLower(), x => DataConverter.ToEnum<TransverseDifferentialLockStatus>(x) },
+                { nameof(TractorTelemetry.AllWheelDriveStatus).ToLower(), x => DataConverter.ToEnum<WheelDriveStatus>(x) }
+            };
+
+            EnumTypeRegistry = new Dictionary<string, Type>
+            {
+                { nameof(TractorTelemetry.ParkingBreakStatus).ToLower(), typeof(ParkingBreakStatus) },
+                { nameof(TractorTelemetry.TransverseDifferentialLockStatus).ToLower(), typeof(TransverseDifferentialLockStatus) },
+                { nameof(TractorTelemetry.AllWheelDriveStatus).ToLower(), typeof(WheelDriveStatus) }
             };
         }
     }

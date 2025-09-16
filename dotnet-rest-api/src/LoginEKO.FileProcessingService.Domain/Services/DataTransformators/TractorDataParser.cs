@@ -1,4 +1,5 @@
-﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
+﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
+using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
@@ -40,7 +41,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
                     tractor.GPSLongitude = DataConverter.ToDouble(entity[2]);
                     tractor.GPSLatitude = DataConverter.ToDouble(entity[3]);
                     tractor.TotalWorkingHours = DataConverter.ToDouble(entity[4]);
-                    tractor.EngineSpeedInRpm = DataConverter.ToInt(entity[5]); // int.Parse(entity[5]);
+                    tractor.EngineSpeedInRpm = DataConverter.ToInt(entity[5]);
                     tractor.EngineLoadInPercentage = DataConverter.ToDouble(entity[6]);
                     tractor.FuelConsumptionPerHour = DataConverter.ToNullableDouble(entity[7]);
                     tractor.GroundSpeedGearboxInKmh = DataConverter.ToDouble(entity[8]);
@@ -57,16 +58,16 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
                                                                            _boolValues[nameof(TractorTelemetry.ActualStatusOfCreeper)][0],
                                                                            _boolValues[nameof(TractorTelemetry.ActualStatusOfCreeper)][1]);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    _logger.LogError("Failed to parse data");
+                    _logger.LogError("Unable to convert data");
                     throw;
                 }
 
                 tractorsTelemetry.Add(tractor);
             }
 
-            _logger.LogDebug("Successfully transformed data to");
+            _logger.LogDebug("Data successfully converted");
             return tractorsTelemetry;
         }
     }

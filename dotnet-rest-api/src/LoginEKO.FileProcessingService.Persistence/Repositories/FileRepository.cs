@@ -1,9 +1,9 @@
-﻿using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
+﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
+using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Data;
 
 namespace LoginEKO.FileProcessingService.Persistence.Repositories
 {
@@ -39,12 +39,21 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
             _logger.LogTrace("ImportFileAsync() file={Filename}", file.Filename);
             file.CreatedDate = DateTime.Now;
 
-            _logger.LogDebug("Attempting to import telemetry data from file {Filename} to database", file.Filename);
-            await _dbContext.FileMetadata.AddAsync(file, token);
-            var result = await _dbContext.SaveChangesAsync(token);
+            try
+            {
+                _logger.LogDebug("Attempting to import telemetry data from file {Filename} to database", file.Filename);
 
-            _logger.LogDebug("Successfully imported telemetry data to database");
-            return result;
+                await _dbContext.FileMetadata.AddAsync(file, token);
+                var result = await _dbContext.SaveChangesAsync(token);
+
+                _logger.LogDebug("Successfully imported telemetry data to database");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Unable to insert telemetry data. Message: {Message}", ex.Message);
+                throw new RepositoryException("Unexpected error occured in database", ex);
+            }
         }
     }
 }

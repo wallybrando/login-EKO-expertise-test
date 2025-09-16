@@ -1,17 +1,27 @@
-﻿using LoginEKO.FileProcessingService.Domain.Extensions;
+﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
+using LoginEKO.FileProcessingService.Domain.Extensions;
 
 namespace LoginEKO.FileProcessingService.Domain.Utils
 {
     public static class DataConverter
     {
-        public static bool ToBool(string field, string expectedTrue, string expectedFalse)
+        public static bool ToBool(string value, string expectedTrue, string expectedFalse)
         {
-            if (field.Equals(expectedTrue, StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(expectedTrue) || string.IsNullOrEmpty(expectedFalse))
+                throw new ArgumentException("Value cannot be empty");
+
+            if (string.IsNullOrEmpty(expectedTrue))
+                throw new ArgumentException("ExpectedTrue value cannot be empty");
+
+            if (string.IsNullOrEmpty(expectedFalse))
+                throw new ArgumentException("ExpectedFalse value cannot be empty");
+
+            if (value.Equals(expectedTrue, StringComparison.OrdinalIgnoreCase))
                 return true;
-            if (field.Equals(expectedFalse, StringComparison.OrdinalIgnoreCase))
+            if (value.Equals(expectedFalse, StringComparison.OrdinalIgnoreCase))
                 return false;
 
-            throw new ArgumentException("Value cannot be coverted to bool");
+            throw new DataConversionException("Value cannot be coverted to bool");
         }
 
         public static bool? ToNullableBool(string field, string expectedTrue, string expectedFalse)
@@ -22,66 +32,78 @@ namespace LoginEKO.FileProcessingService.Domain.Utils
             return ToBool(field, expectedTrue, expectedFalse);
         }
 
-        public static string ToString(string field)
+        public static string ToString(string value)
         {
-            if (string.IsNullOrEmpty(field))
-                throw new ArgumentException("Value cannot be converted to string");
-
-            return field;
+            return value;
         }
 
-        public static DateTime ToDateTime(string field)
+        public static DateTime ToDateTime(string value)
         {
-            if (!DateTime.TryParse(field, out var result))
-                throw new ArgumentException("Value cannot be converted to DateTime");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentException("Value cannot be empty");
+
+            if (!DateTime.TryParse(value, out var result))
+                throw new DataConversionException("Value cannot be converted to DateTime");
 
             return result;
         }
 
-        public static double ToDouble(string field)
+        public static double ToDouble(string value)
         {
-            if (!double.TryParse(field, out var result))
-                throw new ArgumentException("Value cannot be converted to double");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentException("Value cannot be empty");
+
+            if (!double.TryParse(value, out var result))
+                throw new DataConversionException("Value cannot be converted to double");
 
             return result;
         }
 
-        public static double? ToNullableDouble(string field)
+        public static double? ToNullableDouble(string value)
         {
-            if (field == "NA")
+            if (value == "NA")
                 return null;
 
-            return ToDouble(field);
+            return ToDouble(value);
         }
 
-        public static T ToEnum<T>(string columnValue) where T : struct, Enum
+        public static T ToEnum<T>(string value) where T : struct, Enum
         {
-            if (!Enum.TryParse(typeof(T), columnValue, true, out var value))
-                throw new ArgumentException("Value cannot be converted to enum");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentException("Value cannot be empty");
 
-            return (T)value;
+            if (!Enum.TryParse(typeof(T), value, true, out var result))
+                throw new DataConversionException("Value cannot be converted to enum");
+
+            return (T)result;
         }
 
-        public static int? ToNullableInt(string field)
+        public static int? ToNullableInt(string value)
         {
-            if (field == "NA")
+            if (value == "NA")
                 return null;
 
-            return ToInt(field);
+            return ToInt(value);
         }
 
-        public static int ToInt(string field)
+        public static int ToInt(string value)
         {
-            if (!int.TryParse(field, out var result))
-                throw new ArgumentException("Value cannot be converted to int");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentException("Value cannot be empty");
+
+            if (!int.TryParse(value, out var result))
+                throw new DataConversionException("Value cannot be converted to int");
 
             return result;
         }
 
-        public static short ToShort(string field)
+        public static short ToShort(string value)
         {
-            if (!short.TryParse(field, out var result))
-                throw new ArgumentException("Value cannot be converted to short");
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentException("Value cannot be empty");
+
+            if (!short.TryParse(value, out var result))
+                throw new DataConversionException("Value cannot be converted to short");
 
             return result;
         }
@@ -96,6 +118,12 @@ namespace LoginEKO.FileProcessingService.Domain.Utils
 
         public static string ToString(bool value, string expectedTrue, string expectedFalse)
         {
+            if (string.IsNullOrEmpty(expectedTrue))
+                throw new ArgumentException("ExpectedTrue value cannot be empty");
+
+            if (string.IsNullOrEmpty(expectedFalse))
+                throw new ArgumentException("ExpectedFalse value cannot be empty");
+
             return value ? expectedTrue : expectedFalse;
         }
 

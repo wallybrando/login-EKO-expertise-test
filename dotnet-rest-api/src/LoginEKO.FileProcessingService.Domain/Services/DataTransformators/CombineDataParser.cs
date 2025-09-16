@@ -89,16 +89,16 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
                     combine.SeparationSensitivityInPercentage = DataConverter.ToDouble(entity[42]);
                     combine.SieveSensitivityInPercentage = DataConverter.ToDouble(entity[43]);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    _logger.LogError("Failed to parse data");
+                    _logger.LogError("Unable to convert data");
                     throw;
                 }
 
                 combineTelemetry.Add(combine);
             }
 
-            _logger.LogDebug("Successfully transformed data");
+            _logger.LogDebug("Data successfully converted");
             return combineTelemetry;
         }
     }

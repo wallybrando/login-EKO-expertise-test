@@ -4,6 +4,7 @@ using LoginEKO.FileProcessingService.Contracts.Responses;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
 using LoginEKO.FileProcessingService.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace LoginEKO.FileProcessingService.Api.Controllers
 {
@@ -23,8 +24,25 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
         {
             var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
 
-            var result = await _tractorTelemetryService.GetTractorTelemetriesAsync(filter, token);
-            var response = result.MapToResponse();
+            var tractorTelemetry = await _tractorTelemetryService.GetTractorTelemetriesAsync(filter, token);
+            var totalTractorTelemetryCount = await _tractorTelemetryService.GetCountAsync(filter, token);
+
+            var telemetry = new Dictionary<string, IEnumerable<object>>(1)
+            {
+                { nameof(TractorTelemetry), tractorTelemetry.MapToResponse() }
+            };
+
+            var response = CreatePagedTelemetryResponse(telemetry, filter.PageNumber, filter.PageSize, totalTractorTelemetryCount, 0);
+
+            //var response = new PagedTelemetryResponse
+            //{
+            //    Page = pageNumber,
+            //    PageSize = pageSize,
+            //    TotalTractorItems = totalTractorTelemetryCount,
+            //    TotalCombineItems = 0,
+            //    TotalItems = totalTractorTelemetryCount + 0,
+            //    Telemetry = telemetry
+            //};
 
             return Ok(response);
         }
@@ -34,8 +52,25 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
         {
             var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
 
-            var result = await _combineTelemetryService.GetCombineTelemetriesAsync(filter, token);
-            var response = result.MapToResponse();
+            var combineTelemetry = await _combineTelemetryService.GetCombineTelemetriesAsync(filter, token);
+            var totalCombineTelemetryCount = await _combineTelemetryService.GetCountAsync(filter, token);
+
+            var telemetry = new Dictionary<string, IEnumerable<object>>(1)
+            {
+                { nameof(CombineTelemetry), combineTelemetry.MapToResponse() }
+            };
+
+            var response = CreatePagedTelemetryResponse(telemetry, filter.PageNumber, filter.PageSize, 0, totalCombineTelemetryCount);
+
+            //var response = new PagedTelemetryResponse
+            //{
+            //    Page = pageNumber,
+            //    PageSize = pageSize,
+            //    TotalTractorItems = 0,
+            //    TotalCombineItems = totalCombineTelemetryCount,
+            //    TotalItems = 0 + totalCombineTelemetryCount,
+            //    Telemetry = telemetry
+            //};
 
             return Ok(response);
         }
@@ -46,31 +81,51 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
             var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
 
             var tractorTelemetry = await _tractorTelemetryService.GetTractorTelemetriesAsync(filter, token);
-            var totalTractorItems = await _tractorTelemetryService.GetCountAsync(filter, token);
+            var totalTrractorTelemetryCount = await _tractorTelemetryService.GetCountAsync(filter, token);
 
             var combineTelemetry = await _combineTelemetryService.GetCombineTelemetriesAsync(filter, token);
-            var totalCombineItems = await _combineTelemetryService.GetCountAsync(filter, token);
+            var totalCombineTelemetryCount = await _combineTelemetryService.GetCountAsync(filter, token);
 
             var tractorTelemetryResponse = tractorTelemetry.MapToResponse();
             var combineTelemetryResponse = combineTelemetry.MapToResponse();
 
-            var telemetryResponse = new Dictionary<string, IEnumerable<object>>()
+            var telemetry = new Dictionary<string, IEnumerable<object>>()
             {
                 { nameof(TractorTelemetry), tractorTelemetryResponse },
                 { nameof(CombineTelemetry), combineTelemetryResponse }
             };
 
-            var response = new PagedTelemetryResponse
+            var response = CreatePagedTelemetryResponse(telemetry, filter.PageNumber, filter.PageSize, totalTrractorTelemetryCount, totalCombineTelemetryCount);
+
+            //var response = new PagedTelemetryResponse
+            //{
+            //    Page = pageNumber,
+            //    PageSize = pageSize,
+            //    TotalTractorItems = totalTrractorTelemetryCount,
+            //    TotalCombineItems = totalCombineTelemetryCount,
+            //    TotalItems = totalTrractorTelemetryCount + totalCombineTelemetryCount,
+            //    Telemetry = telemetry
+            //};
+
+            return Ok(response);
+        }
+
+        private PagedTelemetryResponse CreatePagedTelemetryResponse(
+            IDictionary<string, IEnumerable<object>> telemetry,
+            int pageNumber,
+            int pageSize,
+            int totalTractorTelemetryCount,
+            int totalCombineTelemetryCount)
+        {
+            return new PagedTelemetryResponse
             {
                 Page = pageNumber,
                 PageSize = pageSize,
-                TotalTractorItems = totalTractorItems,
-                TotalCombineItems = totalCombineItems,
-                TotalItems = totalTractorItems + totalCombineItems,
-                Telemetry = telemetryResponse
+                TotalTractorItems = totalTractorTelemetryCount,
+                TotalCombineItems = totalCombineTelemetryCount,
+                TotalItems = totalTractorTelemetryCount + totalCombineTelemetryCount,
+                Telemetry = telemetry
             };
-
-            return Ok(response);
         }
     }
 }
