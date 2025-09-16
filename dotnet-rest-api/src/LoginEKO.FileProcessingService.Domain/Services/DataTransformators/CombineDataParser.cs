@@ -33,7 +33,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
             };
         }
 
-        public IEnumerable<Vehicle> TransformVehicleData(IEnumerable<string[]> data)
+        public IEnumerable<VehicleTelemetry> TransformVehicleData(IEnumerable<string[]> data)
         {
             _logger.LogTrace("TransformVehicleData() data=combine data collection");
             var combineTelemetry = new List<CombineTelemetry>();

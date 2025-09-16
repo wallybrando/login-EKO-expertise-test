@@ -1,15 +1,34 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
-using System.Collections.Specialized;
 
-namespace LoginEKO.FileProcessingService.Domain.Models.Base
+namespace LoginEKO.FileProcessingService.Domain.Interfaces
 {
-    public abstract class SchemaRegistry
+    public abstract class SchemaRegistry<T>
     {
         protected virtual IDictionary<string, Type> FieldRegistry { get; init; } = new Dictionary<string, Type>();
         protected virtual IDictionary<Type, FilterOperation> OperationRegistry { get; init; } = new Dictionary<Type, FilterOperation>();
         protected virtual IDictionary<string, Func<string, Enum>> EnumRegistry { get; init; } = new Dictionary<string, Func<string, Enum>>();
         protected virtual IDictionary<string, Type> EnumTypeRegistry { get; init; } = new Dictionary<string, Type>();
+
+        protected SchemaRegistry()
+        {
+            OperationRegistry = new Dictionary<Type, FilterOperation>
+            {
+                { typeof(string), FilterOperation.EQUALS | FilterOperation.CONTAINS },
+                { typeof(DateTime), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+                { typeof(double), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+                { typeof(double?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+                { typeof(int), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+                { typeof(int?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+                { typeof(short), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+                { typeof(short?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+                { typeof(bool), FilterOperation.EQUALS },
+                { typeof(bool?), FilterOperation.EQUALS },
+                { typeof(ParkingBreakStatus), FilterOperation.EQUALS },
+                { typeof(TransverseDifferentialLockStatus), FilterOperation.EQUALS },
+                { typeof(WheelDriveStatus), FilterOperation.EQUALS },
+            };
+        }
 
         public virtual bool TryGetFieldType(string fieldName, out Type type)
         {

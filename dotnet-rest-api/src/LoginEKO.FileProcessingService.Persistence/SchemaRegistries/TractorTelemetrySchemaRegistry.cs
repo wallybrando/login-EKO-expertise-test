@@ -1,12 +1,13 @@
-﻿using LoginEKO.FileProcessingService.Domain.Models.Base;
+﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
+using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
 
-namespace LoginEKO.FileProcessingService.Domain.Models
+namespace LoginEKO.FileProcessingService.Persistence.SchemaRegistries
 {
-    public class TractorSchemaRegistry : SchemaRegistry
+    public class TractorTelemetrySchemaRegistry<T> : SchemaRegistry<T>
     {
-        public TractorSchemaRegistry()
+        public TractorTelemetrySchemaRegistry()
         {
             FieldRegistry = new Dictionary<string, Type>()
             {
@@ -31,22 +32,22 @@ namespace LoginEKO.FileProcessingService.Domain.Models
                 {  nameof(TractorTelemetry.ActualStatusOfCreeper).ToLower(), typeof(bool?) },
             };
 
-            OperationRegistry = new Dictionary<Type, FilterOperation>
-            {
-                { typeof(string), FilterOperation.EQUALS | FilterOperation.CONTAINS },
-                { typeof(DateTime), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(double), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(double?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(int), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(int?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(short), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(short?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(bool), FilterOperation.EQUALS },
-                { typeof(bool?), FilterOperation.EQUALS },
-                { typeof(ParkingBreakStatus), FilterOperation.EQUALS },
-                { typeof(TransverseDifferentialLockStatus), FilterOperation.EQUALS },
-                { typeof(WheelDriveStatus), FilterOperation.EQUALS },
-            };
+            //OperationRegistry = new Dictionary<Type, FilterOperation>
+            //{
+            //    { typeof(string), FilterOperation.EQUALS | FilterOperation.CONTAINS },
+            //    { typeof(DateTime), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+            //    { typeof(double), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+            //    { typeof(double?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+            //    { typeof(int), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+            //    { typeof(int?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+            //    { typeof(short), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+            //    { typeof(short?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+            //    { typeof(bool), FilterOperation.EQUALS },
+            //    { typeof(bool?), FilterOperation.EQUALS },
+            //    { typeof(ParkingBreakStatus), FilterOperation.EQUALS },
+            //    { typeof(TransverseDifferentialLockStatus), FilterOperation.EQUALS },
+            //    { typeof(WheelDriveStatus), FilterOperation.EQUALS },
+            //};
 
             EnumRegistry = new Dictionary<string, Func<string, Enum>>
             {

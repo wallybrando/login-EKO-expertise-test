@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace LoginEKO.FileProcessingService.Domain.Models
 {
-    public class TractorTelemetry : Vehicle
+    public class TractorTelemetry : VehicleTelemetry
     {
         public double EngineLoadInPercentage { get; set; }
         public double? FuelConsumptionPerHour { get; set; }

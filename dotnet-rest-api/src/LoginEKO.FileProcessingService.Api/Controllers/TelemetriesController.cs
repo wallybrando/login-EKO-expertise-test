@@ -4,7 +4,6 @@ using LoginEKO.FileProcessingService.Contracts.Responses;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
 using LoginEKO.FileProcessingService.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace LoginEKO.FileProcessingService.Api.Controllers
 {
@@ -34,16 +33,6 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
 
             var response = CreatePagedTelemetryResponse(telemetry, filter.PageNumber, filter.PageSize, totalTractorTelemetryCount, 0);
 
-            //var response = new PagedTelemetryResponse
-            //{
-            //    Page = pageNumber,
-            //    PageSize = pageSize,
-            //    TotalTractorItems = totalTractorTelemetryCount,
-            //    TotalCombineItems = 0,
-            //    TotalItems = totalTractorTelemetryCount + 0,
-            //    Telemetry = telemetry
-            //};
-
             return Ok(response);
         }
 
@@ -61,16 +50,6 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
             };
 
             var response = CreatePagedTelemetryResponse(telemetry, filter.PageNumber, filter.PageSize, 0, totalCombineTelemetryCount);
-
-            //var response = new PagedTelemetryResponse
-            //{
-            //    Page = pageNumber,
-            //    PageSize = pageSize,
-            //    TotalTractorItems = 0,
-            //    TotalCombineItems = totalCombineTelemetryCount,
-            //    TotalItems = 0 + totalCombineTelemetryCount,
-            //    Telemetry = telemetry
-            //};
 
             return Ok(response);
         }
@@ -96,16 +75,6 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
             };
 
             var response = CreatePagedTelemetryResponse(telemetry, filter.PageNumber, filter.PageSize, totalTrractorTelemetryCount, totalCombineTelemetryCount);
-
-            //var response = new PagedTelemetryResponse
-            //{
-            //    Page = pageNumber,
-            //    PageSize = pageSize,
-            //    TotalTractorItems = totalTrractorTelemetryCount,
-            //    TotalCombineItems = totalCombineTelemetryCount,
-            //    TotalItems = totalTrractorTelemetryCount + totalCombineTelemetryCount,
-            //    Telemetry = telemetry
-            //};
 
             return Ok(response);
         }

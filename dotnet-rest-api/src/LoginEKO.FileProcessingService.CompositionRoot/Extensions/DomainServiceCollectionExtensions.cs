@@ -1,7 +1,5 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
-using LoginEKO.FileProcessingService.Domain.Models;
-using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Services;
 using LoginEKO.FileProcessingService.Domain.Services.DataTransformators;
 using LoginEKO.FileProcessingService.Domain.Services.FileExtractors;
@@ -22,7 +20,6 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
             services.AddScoped<ITractorTelemetryService, TractorTelemetryService>();
             services.AddScoped<ICombineTelemetryService, CombineTelemetryService>();
 
-            services.AddSingleton<SchemaRegistry, TractorSchemaRegistry>();
             return services;
         }
     }

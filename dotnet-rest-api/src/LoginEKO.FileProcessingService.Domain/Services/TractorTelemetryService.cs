@@ -1,7 +1,6 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
 using LoginEKO.FileProcessingService.Domain.Models;
-using Microsoft.Extensions.Logging;
 
 namespace LoginEKO.FileProcessingService.Domain.Services
 {

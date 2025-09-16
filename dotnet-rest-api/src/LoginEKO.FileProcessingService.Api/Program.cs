@@ -2,8 +2,6 @@ using LoginEKO.FileProcessingService.Api.Middlewares;
 using LoginEKO.FileProcessingService.CompositionRoot.Extensions;
 using LoginEKO.FileProcessingService.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Api
 {

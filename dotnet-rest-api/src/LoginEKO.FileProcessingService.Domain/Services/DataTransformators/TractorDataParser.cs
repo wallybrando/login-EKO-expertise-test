@@ -1,5 +1,4 @@
-﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
-using LoginEKO.FileProcessingService.Domain.Interfaces;
+﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
@@ -26,7 +25,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
             };
         }
 
-        public IEnumerable<Vehicle> TransformVehicleData(IEnumerable<string[]> data)
+        public IEnumerable<VehicleTelemetry> TransformVehicleData(IEnumerable<string[]> data)
         {
             _logger.LogTrace("TransformVehicleData() data=tractor data collection");
             var tractorsTelemetry = new List<TractorTelemetry>();

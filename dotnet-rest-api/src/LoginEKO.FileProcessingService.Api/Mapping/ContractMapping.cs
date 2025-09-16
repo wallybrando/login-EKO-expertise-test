@@ -2,10 +2,8 @@
 using LoginEKO.FileProcessingService.Contracts.Responses;
 using LoginEKO.FileProcessingService.Domain.Extensions;
 using LoginEKO.FileProcessingService.Domain.Models;
-using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
-using System.Runtime.CompilerServices;
 
 namespace LoginEKO.FileProcessingService.Api.Mapping
 {
@@ -32,18 +30,6 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
                 SizeInBytes = file.SizeInBytes,
                 CreatedDate = file.CreatedDate,
             };
-        }
-
-        private static byte[] ToByteArray(IFormFile file)
-        {
-            byte[] bytes;
-            using (var memoryStream = new MemoryStream())
-            {
-                file.CopyTo(memoryStream);
-                bytes = memoryStream.ToArray();
-            }
-
-            return bytes;
         }
 
         public static Filter MapToFilter(this FilterRequest request)
@@ -149,14 +135,25 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
                 YieldInTonsPerHour = DataConverter.ToString(telemetry.YieldInTonsPerHour),
                 QuantimeterCalibrationFactor = DataConverter.ToString(telemetry.QuantimeterCalibrationFactor),
                 SeparationSensitivityInPercentage = DataConverter.ToString(telemetry.SeparationSensitivityInPercentage),
-                SieveSensitivityInPercentage = DataConverter.ToString(telemetry.SieveSensitivityInPercentage),
-
+                SieveSensitivityInPercentage = DataConverter.ToString(telemetry.SieveSensitivityInPercentage)
             };
         }
 
         public static IEnumerable<CombineTelemetryResponse> MapToResponse(this IEnumerable<CombineTelemetry> telemetries)
         {
             return telemetries.Select(MapToResponse);
+        }
+
+        private static byte[] ToByteArray(IFormFile file)
+        {
+            byte[] bytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                file.CopyTo(memoryStream);
+                bytes = memoryStream.ToArray();
+            }
+
+            return bytes;
         }
     }
 }

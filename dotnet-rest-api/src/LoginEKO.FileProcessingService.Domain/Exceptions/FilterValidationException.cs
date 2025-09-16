@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LoginEKO.FileProcessingService.Domain.Exceptions
+﻿namespace LoginEKO.FileProcessingService.Domain.Exceptions
 {
     public class FilterValidationException : Exception
     {

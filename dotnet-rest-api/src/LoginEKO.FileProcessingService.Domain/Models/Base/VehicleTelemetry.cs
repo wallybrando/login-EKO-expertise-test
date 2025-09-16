@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LoginEKO.FileProcessingService.Domain.Models.Base
+﻿namespace LoginEKO.FileProcessingService.Domain.Models.Base
 {
-    public abstract class Vehicle : BaseModel
+    public abstract class VehicleTelemetry : BaseModel
     {
         public string SerialNumber { get; set; }
         public DateTime Date { get; set; }

@@ -1,8 +1,5 @@
 ﻿using LoginEKO.FileProcessingService.Contracts.Responses;
 using LoginEKO.FileProcessingService.Domain.Exceptions;
-using System;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Api.Middlewares
 {

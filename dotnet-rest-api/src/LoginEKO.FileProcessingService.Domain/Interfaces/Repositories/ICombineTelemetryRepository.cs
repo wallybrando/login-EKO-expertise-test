@@ -1,5 +1,4 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Models;
-using System.Data;
 
 namespace LoginEKO.FileProcessingService.Domain.Interfaces.Repositories
 {

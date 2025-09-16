@@ -2,7 +2,6 @@
 using LoginEKO.FileProcessingService.Domain.Extensions;
 using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Models;
-using LoginEKO.FileProcessingService.Domain.Models.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
 using Microsoft.Extensions.Logging;
@@ -12,10 +11,10 @@ namespace LoginEKO.FileProcessingService.Persistence
 {
     public class FilterExpressionBuilder<T> : IFilterExpressionBuilder<T>
     {
-        private readonly SchemaRegistry _schemaRegistry;
+        private readonly SchemaRegistry<T> _schemaRegistry;
         private readonly ILogger<FilterExpressionBuilder<T>> _logger;
 
-        public FilterExpressionBuilder(SchemaRegistry schemaRegistry, ILogger<FilterExpressionBuilder<T>> logger)
+        public FilterExpressionBuilder(SchemaRegistry<T> schemaRegistry, ILogger<FilterExpressionBuilder<T>> logger)
         {
             _schemaRegistry = schemaRegistry;
             _logger = logger;
@@ -54,17 +53,21 @@ namespace LoginEKO.FileProcessingService.Persistence
             {
                 if (fieldType == typeof(Enum))
                 {
+                    if (!_schemaRegistry.TryGetEnumType(filter.Field, out fieldType))
+                    {
+                        _logger.LogError("Provided enum type does not exists");
+                        throw new FilterValidationException("Provided enum type does not exists");
+                        //return false;
+                    }
+
                     if (!_schemaRegistry.TryGetEnumValue(filter.Field, filter.Value, out var val))
                     {
-                        return false;
+                        _logger.LogError($"Unknown value '{filter.Value}' for enum type '{fieldType}'");
+                        throw new FilterValidationException("Unknown enum value");
+                        //return false;
                     }
 
                     value = val;
-                        
-                    if (!_schemaRegistry.TryGetEnumType(filter.Field, out fieldType))
-                    {
-                        return false;
-                    }
                 }
                 else
                 {

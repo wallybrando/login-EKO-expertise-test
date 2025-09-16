@@ -7,6 +7,6 @@
         public int TotalCombineItems { get; init; }
         public int TotalTractorItems { get; init; }
         public int TotalItems { get; init; }
-        public IDictionary<string, IEnumerable<object>> Telemetry { get; init; }
+        public IDictionary<string, IEnumerable<object>> Telemetry { get; init; } = new Dictionary<string, IEnumerable<object>>();
     }
 }

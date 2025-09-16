@@ -5,6 +5,7 @@ using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Persistence;
 using LoginEKO.FileProcessingService.Persistence.Database;
 using LoginEKO.FileProcessingService.Persistence.Repositories;
+using LoginEKO.FileProcessingService.Persistence.SchemaRegistries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -19,6 +20,9 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
 
             services.AddScoped<IFilterExpressionBuilder<TractorTelemetry>, FilterExpressionBuilder<TractorTelemetry>>();
             services.AddScoped<IFilterExpressionBuilder<CombineTelemetry>, FilterExpressionBuilder<CombineTelemetry>>();
+
+            services.AddSingleton<SchemaRegistry<TractorTelemetry>, TractorTelemetrySchemaRegistry<TractorTelemetry>>();
+            services.AddSingleton<SchemaRegistry<CombineTelemetry>, CombineTelemetrySchemaRegistry<CombineTelemetry>>();
 
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<ITractorTelemetryRepository, TractorTelemetryRepository>();
