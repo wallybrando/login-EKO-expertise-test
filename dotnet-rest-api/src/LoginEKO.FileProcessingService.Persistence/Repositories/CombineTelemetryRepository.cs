@@ -58,6 +58,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
             var query = _dbContext.CombineTelemetries.OrderBy(x => x.Date).AsQueryable();
 
             var filterExpressions = _filterExpressionBuilder.ApplyFilters(paginatedFilter.Filters);
+
             try
             {
                 _logger.LogDebug("Attempting to get total telemetry data count");
