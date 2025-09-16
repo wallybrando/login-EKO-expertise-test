@@ -32,7 +32,7 @@ namespace LoginEKO.FileProcessingService.Api.Middlewares
 
             ErrorResponse response = exception switch
             {
-                FilterValidationException filterValidationException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Invalid filter", filterValidationException.Message),
+                FilterValidationException filterValidationException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Invalid filter parameters", filterValidationException.Message),
                 DataConversionException dataConversionException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Data conversion error", dataConversionException.Message),
                 ArgumentException argumentException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Parameter is not valid", argumentException.Message),
                 FileValidationException fileValidationException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Unable to process file", fileValidationException.Message),

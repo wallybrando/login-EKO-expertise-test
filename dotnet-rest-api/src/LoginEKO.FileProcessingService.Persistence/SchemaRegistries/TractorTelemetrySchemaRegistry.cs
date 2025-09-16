@@ -32,22 +32,9 @@ namespace LoginEKO.FileProcessingService.Persistence.SchemaRegistries
                 {  nameof(TractorTelemetry.ActualStatusOfCreeper).ToLower(), typeof(bool?) },
             };
 
-            //OperationRegistry = new Dictionary<Type, FilterOperation>
-            //{
-            //    { typeof(string), FilterOperation.EQUALS | FilterOperation.CONTAINS },
-            //    { typeof(DateTime), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-            //    { typeof(double), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-            //    { typeof(double?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-            //    { typeof(int), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-            //    { typeof(int?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-            //    { typeof(short), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-            //    { typeof(short?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-            //    { typeof(bool), FilterOperation.EQUALS },
-            //    { typeof(bool?), FilterOperation.EQUALS },
-            //    { typeof(ParkingBreakStatus), FilterOperation.EQUALS },
-            //    { typeof(TransverseDifferentialLockStatus), FilterOperation.EQUALS },
-            //    { typeof(WheelDriveStatus), FilterOperation.EQUALS },
-            //};
+            OperationRegistry.Add(typeof(ParkingBreakStatus), FilterOperation.EQUALS);
+            OperationRegistry.Add(typeof(TransverseDifferentialLockStatus), FilterOperation.EQUALS);
+            OperationRegistry.Add(typeof(WheelDriveStatus), FilterOperation.EQUALS);
 
             EnumRegistry = new Dictionary<string, Func<string, Enum>>
             {

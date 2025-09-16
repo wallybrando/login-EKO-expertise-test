@@ -1,5 +1,6 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
 using LoginEKO.FileProcessingService.Domain.Extensions;
+using System.Drawing;
 
 namespace LoginEKO.FileProcessingService.Domain.Utils
 {
@@ -75,6 +76,8 @@ namespace LoginEKO.FileProcessingService.Domain.Utils
             if (!Enum.TryParse(typeof(T), value, true, out var result))
                 throw new DataConversionException("Value cannot be converted to enum");
 
+            if (!Enum.IsDefined(typeof(T), result))
+                throw new DataConversionException($"Value '{result}' is not valid value");
             return (T)result;
         }
 

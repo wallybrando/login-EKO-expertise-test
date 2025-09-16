@@ -1,23 +1,26 @@
-Notes:
+# Notes:
+
+- Bool field valid value: null, "true" or "false"
+- Bool field invalid values: "1", "0"
+
+- Enum field valid value: "Active", "Inactive", "0", "1", "2" - DB throws error when enum value is not supported (try to fix this)
+- Date time field example: 2022-10-07 10:13:04
 
 - If you apply CONTAINS operation with null value, service will return bad request.
+- If you apply eqauls operation with null, empty string,
+  GET Tractor tests:
 
-GET Tractor tests:
+Tractor:
 
-- SerialNumber (string):
-
-  - Equals with explicit null: returns emtpy collection [PASSES]
-  - Equals with implicit null: 400 HTTP error - value field is requried [PASSES]
-  - Equals with wrong serial number returns emtpy collection [PASSES]
-  - Equals with correct serial number: returns telemetry data [PASSES]
-  - Equals with empty string: returns empty collection [PASSES]
-  - Equals with number: returns emtpy collection [PASSES AND FAILS] - should it throw exception
-  - Equals with date: returns emtpy collection [PASSES AND FAILS] - should it throw exception
-
-  - Contains with explicit null: throw exception [PASSES] \*\*\*\*
-  - Contains with implicit null: 400 HTTP error - value field is requried [PASSES]
-  - Contains with wrong serial number returns emtpy collection [PASSES]
-  - Contains with correct serial number: returns telemetry data [PASSES]
-  - Contains with empty string: returns empty collection [PASSES AND FAILS] -DB returns data????
-  - Contains with number: returns emtpy collection [PASSES AND FAILS] - should it throw exception
-  - Contains with date: returns emtpy collection [PASSES AND FAILS] - should it throw exception
+- string:
+  - SerialNumber
+  - "A5304997"
+- datetime:
+  - Date
+  - "2023-03-31 14:34:38"
+- bool?:
+  - ActualStatusOfCreeper
+  - true/false/null
+- Enum:
+  - TransverseDifferentialLockStatus
+  - "STATUS_2"/0

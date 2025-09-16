@@ -23,10 +23,7 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces
                 { typeof(short), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
                 { typeof(short?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
                 { typeof(bool), FilterOperation.EQUALS },
-                { typeof(bool?), FilterOperation.EQUALS },
-                { typeof(ParkingBreakStatus), FilterOperation.EQUALS },
-                { typeof(TransverseDifferentialLockStatus), FilterOperation.EQUALS },
-                { typeof(WheelDriveStatus), FilterOperation.EQUALS },
+                { typeof(bool?), FilterOperation.EQUALS }
             };
         }
 
@@ -69,13 +66,16 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces
             return true;
         }
 
-        public virtual bool TryGetEnumValue(string fieldName, string stringValue, out Enum value)
+        public virtual bool TryGetEnumValue(string fieldName, object? value, out Enum result)
         {
-            value = MockEnum.NULL;
-            if (string.IsNullOrEmpty(fieldName) || string.IsNullOrEmpty(stringValue) || !EnumRegistry.TryGetValue(fieldName, out var func))
+            result = MockEnum.NULL;
+            if (string.IsNullOrEmpty(fieldName) || !EnumRegistry.TryGetValue(fieldName, out var func))
                 return false;
 
-            value = func.Invoke(stringValue);
+            if (value == null)
+                return false;
+
+            result = func.Invoke(value.ToString());
             return true;
         }
 
