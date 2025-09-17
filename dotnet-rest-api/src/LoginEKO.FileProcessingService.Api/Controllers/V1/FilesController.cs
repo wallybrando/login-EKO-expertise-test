@@ -1,9 +1,9 @@
 ﻿using LoginEKO.FileProcessingService.Api.Mapping;
-using LoginEKO.FileProcessingService.Contracts.Requests;
+using LoginEKO.FileProcessingService.Contracts.Requests.V1;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LoginEKO.FileProcessingService.Api.Controllers
+namespace LoginEKO.FileProcessingService.Api.Controllers.V1
 {
     [ApiController]
     public class FilesController : ControllerBase
@@ -17,7 +17,7 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
             _logger = logger;
         }
 
-        [HttpPost(ApiEndpoints.Files.Import)]
+        [HttpPost(ApiEndpoints.V1.Files.Import)]
         public async Task<IActionResult> ImportVehicleTelemetryFileAsync([FromForm] UploadFileRequest request, CancellationToken token)
         {
             var file = request.MapToFileMetadata();
@@ -31,7 +31,7 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
 
             var response = file.MapToResponse();
             response.NumberOfImports = numberOfImports;
-            return Accepted($"{ApiEndpoints.Files.Base}/{response.Id}", response);
+            return Accepted($"{ApiEndpoints.V1.Files.Get}/{response.Id}", response);
         }
     }
 }

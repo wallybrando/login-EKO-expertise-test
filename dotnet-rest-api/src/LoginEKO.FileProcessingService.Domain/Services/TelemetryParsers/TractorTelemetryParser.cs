@@ -1,20 +1,20 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
-using LoginEKO.FileProcessingService.Domain.Models;
-using LoginEKO.FileProcessingService.Domain.Models.Base;
+using LoginEKO.FileProcessingService.Domain.Models.Entities;
+using LoginEKO.FileProcessingService.Domain.Models.Entities.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
 using Microsoft.Extensions.Logging;
 
-namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
+namespace LoginEKO.FileProcessingService.Domain.Services.TelemetryParsers
 {
-    public class TractorDataParser : IVehicleDataParser
+    public class TractorTelemetryParser : IVehicleTelemetryParser
     {
-        private readonly ILogger<TractorDataParser> _logger;
+        private readonly ILogger<TractorTelemetryParser> _logger;
         public VehicleType Type { get; init; }
 
         private readonly IDictionary<string, string[]> _boolValues;
 
-        public TractorDataParser(ILogger<TractorDataParser> logger)
+        public TractorTelemetryParser(ILogger<TractorTelemetryParser> logger)
         {
             _logger = logger;
             Type = VehicleType.TRACTOR;
@@ -25,7 +25,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services.DataTransformators
             };
         }
 
-        public IEnumerable<VehicleTelemetry> TransformVehicleData(IEnumerable<string[]> data)
+        public IEnumerable<AgroVehicleTelemetry> ParseAgroVehicleTelemetry(IEnumerable<string[]> data)
         {
             _logger.LogTrace("TransformVehicleData() data=tractor data collection");
             var tractorsTelemetry = new List<TractorTelemetry>();

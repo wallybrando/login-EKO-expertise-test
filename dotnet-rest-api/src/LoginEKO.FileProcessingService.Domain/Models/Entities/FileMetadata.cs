@@ -1,10 +1,11 @@
-﻿using LoginEKO.FileProcessingService.Domain.Models.Base;
+﻿using LoginEKO.FileProcessingService.Domain.Models.Entities.Base;
 using Microsoft.AspNetCore.Http;
 
-namespace LoginEKO.FileProcessingService.Domain.Models
+namespace LoginEKO.FileProcessingService.Domain.Models.Entities
 {
-    public class FileMetadata : BaseModel
+    public class FileMetadata
     {
+        public Guid Id { get; set; }
         public required string Filename { get; set; }
         public required string Extension { get; set; }
         public long SizeInBytes { get; set; }

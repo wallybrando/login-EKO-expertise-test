@@ -1,4 +1,4 @@
-﻿using LoginEKO.FileProcessingService.Domain.Models;
+﻿using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Persistence.Database.Configuration;
 using Microsoft.EntityFrameworkCore;

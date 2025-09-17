@@ -1,3 +1,4 @@
+using LoginEKO.FileProcessingService.Api.Health;
 using LoginEKO.FileProcessingService.Api.Middlewares;
 using LoginEKO.FileProcessingService.CompositionRoot.Extensions;
 using LoginEKO.FileProcessingService.Persistence.Database;
@@ -15,6 +16,10 @@ namespace LoginEKO.FileProcessingService.Api
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            builder.Services.AddHealthChecks()
+                .AddCheck<DatabaseHealthCheck>(DatabaseHealthCheck.Name); 
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -35,6 +40,8 @@ namespace LoginEKO.FileProcessingService.Api
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                 await dbContext.Database.MigrateAsync();
             }
+
+            app.MapHealthChecks("_health");
 
             app.UseHttpsRedirection();
 

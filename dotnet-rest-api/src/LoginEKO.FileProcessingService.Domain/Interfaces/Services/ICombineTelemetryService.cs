@@ -1,4 +1,5 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Entities;
 
 namespace LoginEKO.FileProcessingService.Domain.Interfaces.Services
 {

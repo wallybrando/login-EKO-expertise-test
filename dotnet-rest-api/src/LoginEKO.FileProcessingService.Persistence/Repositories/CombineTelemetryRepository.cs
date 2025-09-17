@@ -2,6 +2,7 @@
 using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
             _logger = logger;
         }
 
+        /// <summary>Returns paginated combine telemetry data from database based on applied filter</summary>
         public async Task<ICollection<CombineTelemetry>> GetAsync(PaginatedFilter paginatedFilter, CancellationToken token = default)
         {
             _logger.LogTrace("GetAsync() pageNumber={pageNumber} pageSize={pageSize}", paginatedFilter.PageNumber, paginatedFilter.PageSize);
@@ -52,6 +54,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
             }
         }
 
+        /// <summary>Returns total number of affected combine telemetry data from database based on applied filter</summary>
         public Task<int> GetCountAsync(PaginatedFilter paginatedFilter, CancellationToken token = default)
         {
             _logger.LogTrace("GetCountAsync() pageNumber={pageNumber} pageSize={pageSize}", paginatedFilter.PageNumber, paginatedFilter.PageSize);

@@ -1,10 +1,10 @@
-﻿using LoginEKO.FileProcessingService.Domain.Models.Base;
+﻿using LoginEKO.FileProcessingService.Domain.Models.Entities.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using System.ComponentModel;
 
-namespace LoginEKO.FileProcessingService.Domain.Models
+namespace LoginEKO.FileProcessingService.Domain.Models.Entities
 {
-    public class TractorTelemetry : VehicleTelemetry
+    public class TractorTelemetry : AgroVehicleTelemetry
     {
         public double EngineLoadInPercentage { get; set; }
         public double? FuelConsumptionPerHour { get; set; }

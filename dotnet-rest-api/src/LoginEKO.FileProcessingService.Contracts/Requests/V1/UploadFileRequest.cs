@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace LoginEKO.FileProcessingService.Contracts.Requests
+namespace LoginEKO.FileProcessingService.Contracts.Requests.V1
 {
     public class UploadFileRequest
     {

@@ -1,19 +1,22 @@
-﻿using AutoFixture;
-using LoginEKO.FileProcessingService.Domain.Models;
+﻿using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Persistence.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Persistence.Tests.Database
 {
     public static class MockDbContext
     {
+        public static ApplicationContext CreateInvalidInMemoryDbContext()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationContext>().Options;
+
+            var context = new ApplicationContext(options);
+
+            return context;
+        }
+
         public static ApplicationContext CreateInMemoryDbContext(string dbName = "testDB")
         {
             var options = new DbContextOptionsBuilder<ApplicationContext>().UseInMemoryDatabase(dbName).Options;

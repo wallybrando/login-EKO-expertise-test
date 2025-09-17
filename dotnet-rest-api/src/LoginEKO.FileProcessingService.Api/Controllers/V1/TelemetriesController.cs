@@ -1,11 +1,11 @@
 ﻿using LoginEKO.FileProcessingService.Api.Mapping;
-using LoginEKO.FileProcessingService.Contracts.Requests;
-using LoginEKO.FileProcessingService.Contracts.Responses;
+using LoginEKO.FileProcessingService.Contracts.Requests.V1;
+using LoginEKO.FileProcessingService.Contracts.Responses.V1;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
-using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LoginEKO.FileProcessingService.Api.Controllers
+namespace LoginEKO.FileProcessingService.Api.Controllers.V1
 {
     [ApiController]
     public class TelemetriesController : ControllerBase
@@ -18,7 +18,7 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
             _combineTelemetryService = combineTelemetryService;
         }
 
-        [HttpPost(ApiEndpoints.Telemetries.Tractors)]
+        [HttpPost(ApiEndpoints.V1.Telemetries.Tractors)]
         public async Task<IActionResult> GetAllTractorTelemetriesAsync([FromBody] IEnumerable<FilterRequest> request, [FromQuery] int? pageNumber, int? pageSize, CancellationToken token)
         {
             var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
@@ -36,7 +36,7 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost(ApiEndpoints.Telemetries.Combines)]
+        [HttpPost(ApiEndpoints.V1.Telemetries.Combines)]
         public async Task<IActionResult> GetAllCombineTelemetriesAsync([FromBody] IEnumerable<FilterRequest> request, [FromQuery] int? pageNumber, int? pageSize, CancellationToken token)
         {
             var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
@@ -54,7 +54,7 @@ namespace LoginEKO.FileProcessingService.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost(ApiEndpoints.Telemetries.All)]
+        [HttpPost(ApiEndpoints.V1.Telemetries.All)]
         public async Task<IActionResult> GetAllAsync([FromBody] IEnumerable<FilterRequest> request, [FromQuery] int? pageNumber, int? pageSize, CancellationToken token)
         {
             var filter = request.MapToPaginatedFilter(pageNumber, pageSize);

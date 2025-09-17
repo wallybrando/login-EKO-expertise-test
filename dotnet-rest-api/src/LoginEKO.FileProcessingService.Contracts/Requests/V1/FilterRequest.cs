@@ -1,4 +1,4 @@
-﻿namespace LoginEKO.FileProcessingService.Contracts.Requests
+﻿namespace LoginEKO.FileProcessingService.Contracts.Requests.V1
 {
     public class FilterRequest
     {

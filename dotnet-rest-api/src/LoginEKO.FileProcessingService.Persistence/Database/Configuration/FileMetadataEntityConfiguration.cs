@@ -1,4 +1,4 @@
-﻿using LoginEKO.FileProcessingService.Domain.Models;
+﻿using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

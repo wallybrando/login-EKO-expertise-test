@@ -1,40 +1,48 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
-using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace LoginEKO.FileProcessingService.Persistence.Repositories
 {
-    public class FileRepository : IFileRepository
+    public class FileMetadataRepository : IFileMetadataRepository
     {
         private readonly ApplicationContext _dbContext;
-        private readonly ILogger<FileRepository> _logger;
+        private readonly ILogger<FileMetadataRepository> _logger;
 
-        public FileRepository(ApplicationContext dbContext, ILogger<FileRepository> logger)
+        public FileMetadataRepository(ApplicationContext dbContext, ILogger<FileMetadataRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
         }
 
-        public async Task<FileMetadata?> GetByMD5HashAsync(string md5Hash, CancellationToken token = default)
+        /// <summary>Returns true if file exists in database based on MD5Hash, otherwise returns false</summary>
+        public async Task<bool> ExistsByMD5HashAsync(string md5Hash, CancellationToken token = default)
         {
             _logger.LogTrace("GetByMD5HashAsync() md5Hash=******");
             if (string.IsNullOrEmpty(md5Hash))
             {
                 _logger.LogError("MD5 Hash is not provided");
-                throw new ArgumentException("MD5 Hash is empty");
+                throw new ArgumentException("MD5 Hash cannot be NULL or empty");
             }
 
             _logger.LogDebug("Attempting to get filemetadata with MD5Hash=****** from database");
             var entity = await _dbContext.FileMetadata.SingleOrDefaultAsync(x => x.MD5Hash == md5Hash, token);
 
-            _logger.LogDebug("Successfully get filemetadata from database");
-            return entity;
+            if (entity == null)
+            {
+                _logger.LogDebug("File does not exist in database with provided MD5 Hash");
+                return false;
+            }
+
+            _logger.LogDebug("File exists in database with provided MD5 Hash");
+            return true;
         }
 
-        public async Task<int> ImportFileAsync(FileMetadata file, CancellationToken token = default)
+        /// <summary>Imports file metadata into database</summary>
+        public async Task<int> ImportFileMetadataAsync(FileMetadata file, CancellationToken token = default)
         {
             _logger.LogTrace("ImportFileAsync() file={Filename}", file.Filename);
             file.CreatedDate = DateTime.Now;

@@ -1,4 +1,4 @@
-﻿using LoginEKO.FileProcessingService.Contracts.Responses;
+﻿using LoginEKO.FileProcessingService.Contracts.Responses.V1;
 using LoginEKO.FileProcessingService.Domain.Exceptions;
 
 namespace LoginEKO.FileProcessingService.Api.Middlewares

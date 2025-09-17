@@ -7,18 +7,15 @@ namespace LoginEKO.FileProcessingService.Domain.Services.FileExtractors
 {
     public class CsvFileExtractor : IFileExtractor
     {
-        private readonly ILogger<CsvFileExtractor> _logger;
         public FileType Type { get; init; }
 
-        public CsvFileExtractor(ILogger<CsvFileExtractor> logger)
+        public CsvFileExtractor()
         {
-            _logger = logger;
             Type = FileType.CSV;
         }
 
         public async Task<IEnumerable<string[]>> ExtractDataAsync(IFormFile file, CancellationToken token = default)
         {
-            _logger.LogTrace("ExtractDataAsync() data=string[]");
             using var stream = file.OpenReadStream();
             using var reader = new StreamReader(stream);
 
@@ -57,7 +54,6 @@ namespace LoginEKO.FileProcessingService.Domain.Services.FileExtractors
                 result.Add(columnValues);
             }
 
-            _logger.LogDebug("Successfully extracted data from CSV file");
             return result;
         }
     }

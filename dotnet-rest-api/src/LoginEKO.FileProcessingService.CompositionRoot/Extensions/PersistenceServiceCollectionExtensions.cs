@@ -1,6 +1,6 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
-using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Persistence;
 using LoginEKO.FileProcessingService.Persistence.Database;
@@ -24,7 +24,7 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
             services.AddSingleton<SchemaRegistry<TractorTelemetry>, TractorTelemetrySchemaRegistry<TractorTelemetry>>();
             services.AddSingleton<SchemaRegistry<CombineTelemetry>, CombineTelemetrySchemaRegistry<CombineTelemetry>>();
 
-            services.AddScoped<IFileRepository, FileRepository>();
+            services.AddScoped<IFileMetadataRepository, FileMetadataRepository>();
             services.AddScoped<ITractorTelemetryRepository, TractorTelemetryRepository>();
             services.AddScoped<ICombineTelemetryRepository, CombineTelemetryRepository>();
             return services;

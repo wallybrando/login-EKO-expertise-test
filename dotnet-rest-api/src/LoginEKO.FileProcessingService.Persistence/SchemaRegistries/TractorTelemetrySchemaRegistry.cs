@@ -1,5 +1,5 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
-using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
 
