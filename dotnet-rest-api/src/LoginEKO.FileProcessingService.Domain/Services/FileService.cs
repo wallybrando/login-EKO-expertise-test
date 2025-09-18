@@ -65,18 +65,15 @@ namespace LoginEKO.FileProcessingService.Domain.Services
             var telemetries = telemetryParser.ParseAgroVehicleTelemetry(extractedData);
             switch (vehicleType)
             {
-                case VehicleType.TRACTOR: file.TractorTelemetries = (ICollection<TractorTelemetry>)telemetries;
+                case VehicleType.TRACTOR: file.TractorTelemetries = (List<TractorTelemetry>)telemetries;
                     break;
-                case VehicleType.COMBINE: file.CombineTelemetries = (ICollection<CombineTelemetry>)telemetries;
+                case VehicleType.COMBINE: file.CombineTelemetries = (List<CombineTelemetry>)telemetries;
                     break;
             }
 
             /*** Load telemety in Database *********************************************/
             file.MD5Hash = fileHash;
             var dbRowsAffected = await _fileMetadataRepository.ImportFileMetadataAsync(file, token) - 1; // minus 1 because one affected row is for filemetadata insert
-
-            if (dbRowsAffected <= 0)
-                return 0;
 
             return dbRowsAffected;
         }

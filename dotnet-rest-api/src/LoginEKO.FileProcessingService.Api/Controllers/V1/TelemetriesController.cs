@@ -10,48 +10,10 @@ namespace LoginEKO.FileProcessingService.Api.Controllers.V1
     [ApiController]
     public class TelemetriesController : ControllerBase
     {
-        private readonly ITractorTelemetryService _tractorTelemetryService;
-        private readonly ICombineTelemetryService _combineTelemetryService;
-        public TelemetriesController(ITractorTelemetryService tractorTelemetryService, ICombineTelemetryService combineTelemetryService)
+        private readonly ITelemetryService _telemetryService;
+        public TelemetriesController(ITelemetryService telemetryService)
         {
-            _tractorTelemetryService = tractorTelemetryService;
-            _combineTelemetryService = combineTelemetryService;
-        }
-
-        [HttpPost(ApiEndpoints.V1.Telemetries.Tractors)]
-        public async Task<IActionResult> GetAllTractorTelemetriesAsync([FromBody] IEnumerable<FilterRequest> request, [FromQuery] int? pageNumber, int? pageSize, CancellationToken token)
-        {
-            var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
-
-            var tractorTelemetry = await _tractorTelemetryService.GetTractorTelemetriesAsync(filter, token);
-            var totalTractorTelemetryCount = await _tractorTelemetryService.GetCountAsync(filter, token);
-
-            var telemetry = new Dictionary<string, IEnumerable<object>>(1)
-            {
-                { nameof(TractorTelemetry), tractorTelemetry.MapToResponse() }
-            };
-
-            var response = CreatePagedTelemetryResponse(telemetry, filter.PageNumber, filter.PageSize, totalTractorTelemetryCount, 0);
-
-            return Ok(response);
-        }
-
-        [HttpPost(ApiEndpoints.V1.Telemetries.Combines)]
-        public async Task<IActionResult> GetAllCombineTelemetriesAsync([FromBody] IEnumerable<FilterRequest> request, [FromQuery] int? pageNumber, int? pageSize, CancellationToken token)
-        {
-            var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
-
-            var combineTelemetry = await _combineTelemetryService.GetCombineTelemetriesAsync(filter, token);
-            var totalCombineTelemetryCount = await _combineTelemetryService.GetCountAsync(filter, token);
-
-            var telemetry = new Dictionary<string, IEnumerable<object>>(1)
-            {
-                { nameof(CombineTelemetry), combineTelemetry.MapToResponse() }
-            };
-
-            var response = CreatePagedTelemetryResponse(telemetry, filter.PageNumber, filter.PageSize, 0, totalCombineTelemetryCount);
-
-            return Ok(response);
+            _telemetryService = telemetryService;
         }
 
         [HttpPost(ApiEndpoints.V1.Telemetries.All)]
@@ -59,22 +21,15 @@ namespace LoginEKO.FileProcessingService.Api.Controllers.V1
         {
             var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
 
-            var tractorTelemetry = await _tractorTelemetryService.GetTractorTelemetriesAsync(filter, token);
-            var totalTrractorTelemetryCount = await _tractorTelemetryService.GetCountAsync(filter, token);
-
-            var combineTelemetry = await _combineTelemetryService.GetCombineTelemetriesAsync(filter, token);
-            var totalCombineTelemetryCount = await _combineTelemetryService.GetCountAsync(filter, token);
-
-            var tractorTelemetryResponse = tractorTelemetry.MapToResponse();
-            var combineTelemetryResponse = combineTelemetry.MapToResponse();
+             var unifedTelemetry = await _telemetryService.GetTractorTelemetriesAsync(filter, token);
 
             var telemetry = new Dictionary<string, IEnumerable<object>>()
             {
-                { nameof(TractorTelemetry), tractorTelemetryResponse },
-                { nameof(CombineTelemetry), combineTelemetryResponse }
+                { nameof(TractorTelemetry), unifedTelemetry.TractorTelemetry.MapToResponse() },
+                { nameof(CombineTelemetry), unifedTelemetry.CombinesTelemetry.MapToResponse() }
             };
 
-            var response = CreatePagedTelemetryResponse(telemetry, filter.PageNumber, filter.PageSize, totalTrractorTelemetryCount, totalCombineTelemetryCount);
+            var response = CreatePagedTelemetryResponse(telemetry, filter.PageNumber, filter.PageSize, unifedTelemetry.TotalTractorsTelemetryCount, unifedTelemetry.TotalCombinesTelemetryCount);
 
             return Ok(response);
         }

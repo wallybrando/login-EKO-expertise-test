@@ -18,7 +18,7 @@ namespace LoginEKO.FileProcessingService.Api.Controllers.V1
         }
 
         [HttpPost(ApiEndpoints.V1.Files.Import)]
-        public async Task<IActionResult> ImportVehicleTelemetryFileAsync([FromForm] UploadFileRequest request, CancellationToken token)
+        public async Task<IActionResult> ImportVehicleTelemetryFileAsync([FromForm] UploadFileRequest request, CancellationToken token = default)
         {
             var file = request.MapToFileMetadata();
             var numberOfImports = await _fileService.ImportVehicleTelemetryAsync(file, token);

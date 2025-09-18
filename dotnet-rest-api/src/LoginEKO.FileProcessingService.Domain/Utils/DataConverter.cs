@@ -77,7 +77,7 @@ namespace LoginEKO.FileProcessingService.Domain.Utils
                 throw new DataConversionException("Value cannot be converted to enum");
 
             if (!Enum.IsDefined(typeof(T), result))
-                throw new DataConversionException($"Value '{result}' is not valid value");
+                throw new DataConversionException($"Value '{result}' is not valid enum value");
             return (T)result;
         }
 
@@ -138,11 +138,8 @@ namespace LoginEKO.FileProcessingService.Domain.Utils
             return ToString(value.Value, expectedTrue, expectedFalse);
         }
 
-        public static string ToString(DateTime date, string? format = null)
+        public static string ToString(DateTime date, string? format = "G")
         {
-            if (string.IsNullOrEmpty(format))
-                format = "yyyy-MM-dd hh:mm:ss";
-
             return date.ToString(format);
         }
 

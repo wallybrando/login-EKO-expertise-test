@@ -1,5 +1,5 @@
-﻿using LoginEKO.FileProcessingService.Domain.Models.Enums;
-using LoginEKO.FileProcessingService.Domain.Utils;
+﻿using LoginEKO.FileProcessingService.Domain.Models.Entities;
+using LoginEKO.FileProcessingService.Domain.Models.Enums;
 
 namespace LoginEKO.FileProcessingService.Domain.Interfaces
 {
@@ -12,6 +12,16 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces
 
         protected SchemaRegistry()
         {
+            FieldRegistry = new Dictionary<string, Type>()
+            {
+                {  nameof(TractorTelemetry.SerialNumber).ToLower(), typeof(string) },
+                {  nameof(TractorTelemetry.Date).ToLower(), typeof(DateTime) },
+                {  nameof(TractorTelemetry.GPSLongitude).ToLower(), typeof(double) },
+                {  nameof(TractorTelemetry.GPSLatitude).ToLower(), typeof(double) },
+                {  nameof(TractorTelemetry.TotalWorkingHours).ToLower(), typeof(double) },
+                {  nameof(TractorTelemetry.EngineSpeedInRpm).ToLower(), typeof(int) }
+            };
+
             OperationRegistry = new Dictionary<Type, FilterOperation>
             {
                 { typeof(string), FilterOperation.EQUALS | FilterOperation.CONTAINS },
@@ -27,39 +37,37 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces
             };
         }
 
-        public virtual bool TryGetFieldType(string fieldName, out Type type)
+        public virtual bool FieldExists(string fieldName)
         {
-            type = typeof(MockType);
             fieldName = fieldName.ToLower();
-            if (string.IsNullOrEmpty(fieldName) || !FieldRegistry.TryGetValue(fieldName.ToLower(), out type))
+            if (string.IsNullOrEmpty(fieldName) || !FieldRegistry.ContainsKey(fieldName))
+                return false;
+
+            return true;
+        }
+
+        public virtual bool TryGetFieldType(string fieldName, out Type? type)
+        {
+            type = null;
+
+            fieldName = fieldName.ToLower();
+            if (!FieldExists(fieldName))
                 return false;
 
             type = FieldRegistry[fieldName];
             return true;
         }
 
-        public virtual bool TryGetOperation(Type type, string suppliedOperation, out FilterOperation operation)
+        public virtual bool TryGetOperation(Type type, FilterOperation suppliedOperation/*, out FilterOperation operation*/)
         {
-            operation = FilterOperation.UNKNOWN;
-
-            if (string.IsNullOrEmpty(suppliedOperation) || !OperationRegistry.TryGetValue(type, out FilterOperation allowedOperations))
+            if (suppliedOperation == FilterOperation.UNKNOWN)
                 return false;
 
-            try
-            {
-                operation = DataConverter.ToEnum<FilterOperation>(suppliedOperation);
-            }
-            catch
-            {
-                return false;
-            }
-
-            if (operation == FilterOperation.UNKNOWN)
+            if (!OperationRegistry.TryGetValue(type, out FilterOperation allowedOperations))
                 return false;
 
-            if (!allowedOperations.HasFlag(operation))
+            if (!allowedOperations.HasFlag(suppliedOperation))
             {
-                operation = FilterOperation.UNKNOWN;
                 return false;
             }
 
@@ -69,6 +77,7 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces
         public virtual bool TryGetEnumValue(string fieldName, object? value, out Enum result)
         {
             result = MockEnum.NULL;
+            fieldName = fieldName.ToLower();
             if (string.IsNullOrEmpty(fieldName) || !EnumRegistry.TryGetValue(fieldName, out var func))
                 return false;
 
@@ -82,6 +91,8 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces
         public virtual bool TryGetEnumType(string fieldName, out Type result)
         {
             result = typeof(MockType);
+            fieldName = fieldName.ToLower();
+
             if (string.IsNullOrEmpty(fieldName) || !EnumTypeRegistry.TryGetValue(fieldName, out var type))
             {
                 return false;

@@ -35,10 +35,20 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
 
         public static Filter MapToFilter(this FilterRequest request)
         {
+            var operation = FilterOperation.EQUALS;
+
+            if (!string.IsNullOrEmpty(request.Operation))
+            {
+                if (!Enum.TryParse<FilterOperation>(request.Operation, true, out var outputOperation) || !Enum.IsDefined(typeof(FilterOperation), outputOperation))
+                    throw new ArgumentException("Invalid operation for one or more filters");
+
+                operation = outputOperation;
+            }
+
             return new Filter
             {
-                Field = request.Field.ToLower(),
-                Operation = request.Operation ?? FilterOperation.EQUALS.GetDescription().ToLower(),
+                Field = request.Field,
+                Operation = operation,
                 Value = request.Value 
             };
         }
