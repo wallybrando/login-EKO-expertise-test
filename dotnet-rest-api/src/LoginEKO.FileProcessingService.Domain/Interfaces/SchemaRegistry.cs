@@ -25,13 +25,13 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces
             OperationRegistry = new Dictionary<Type, FilterOperation>
             {
                 { typeof(string), FilterOperation.EQUALS | FilterOperation.CONTAINS },
-                { typeof(DateTime), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(double), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(double?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(int), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(int?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(short), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
-                { typeof(short?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GreaterThan },
+                { typeof(DateTime), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GREATERTHAN },
+                { typeof(double), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GREATERTHAN },
+                { typeof(double?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GREATERTHAN },
+                { typeof(int), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GREATERTHAN },
+                { typeof(int?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GREATERTHAN },
+                { typeof(short), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GREATERTHAN },
+                { typeof(short?), FilterOperation.EQUALS | FilterOperation.LESSTHAN | FilterOperation.GREATERTHAN },
                 { typeof(bool), FilterOperation.EQUALS },
                 { typeof(bool?), FilterOperation.EQUALS }
             };

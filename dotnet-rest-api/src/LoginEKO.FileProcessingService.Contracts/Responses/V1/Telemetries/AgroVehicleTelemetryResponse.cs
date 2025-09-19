@@ -1,6 +1,6 @@
-﻿namespace LoginEKO.FileProcessingService.Contracts.Responses.V1
+﻿namespace LoginEKO.FileProcessingService.Contracts.Responses.V1.Telemetries
 {
-    public class VehicleResponse
+    public class AgroVehicleTelemetryResponse
     {
         public string SerialNumber { get; init; }
         public string Date { get; init; }

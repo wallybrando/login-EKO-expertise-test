@@ -1,5 +1,4 @@
-﻿using LoginEKO.FileProcessingService.Domain.Models;
-using LoginEKO.FileProcessingService.Domain.Models.Entities;
+﻿using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using System.Linq.Expressions;
 
 namespace LoginEKO.FileProcessingService.Domain.Interfaces.Repositories

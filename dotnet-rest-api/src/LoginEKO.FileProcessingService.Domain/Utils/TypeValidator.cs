@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace LoginEKO.FileProcessingService.Domain.Utils
+﻿namespace LoginEKO.FileProcessingService.Domain.Utils
 {
     public static class TypeValidator
     {

@@ -1,6 +1,5 @@
 ﻿using LoginEKO.FileProcessingService.Persistence.Database;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using System.Runtime.CompilerServices;
 
 namespace LoginEKO.FileProcessingService.Api.Health
 {

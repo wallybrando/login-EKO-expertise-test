@@ -20,9 +20,6 @@
                 private const string Base = $"{VersionBase}/telemetries";
 
                 public const string All = Base;
-                public const string Tractors = $"{Base}/tractors";
-                public const string Combines = $"{Base}/combines";
-
             }
         }
     }

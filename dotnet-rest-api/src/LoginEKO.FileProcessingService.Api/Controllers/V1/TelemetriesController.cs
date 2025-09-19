@@ -1,7 +1,8 @@
 ﻿using LoginEKO.FileProcessingService.Api.Mapping;
 using LoginEKO.FileProcessingService.Contracts.Requests.V1;
-using LoginEKO.FileProcessingService.Contracts.Responses.V1;
+using LoginEKO.FileProcessingService.Contracts.Responses.V1.Telemetries;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
+using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,34 +22,27 @@ namespace LoginEKO.FileProcessingService.Api.Controllers.V1
         {
             var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
 
-             var unifedTelemetry = await _telemetryService.GetTractorTelemetriesAsync(filter, token);
+            var unifedTelemetry = await _telemetryService.GetTractorTelemetriesAsync(filter, token);
 
-            var telemetry = new Dictionary<string, IEnumerable<object>>()
-            {
-                { nameof(TractorTelemetry), unifedTelemetry.TractorTelemetry.MapToResponse() },
-                { nameof(CombineTelemetry), unifedTelemetry.CombinesTelemetry.MapToResponse() }
-            };
-
-            var response = CreatePagedTelemetryResponse(telemetry, filter.PageNumber, filter.PageSize, unifedTelemetry.TotalTractorsTelemetryCount, unifedTelemetry.TotalCombinesTelemetryCount);
+            var response = CreateResponse(unifedTelemetry, filter.PageNumber, filter.PageSize);
 
             return Ok(response);
         }
 
-        private PagedTelemetryResponse CreatePagedTelemetryResponse(
-            IDictionary<string, IEnumerable<object>> telemetry,
-            int pageNumber,
-            int pageSize,
-            int totalTractorTelemetryCount,
-            int totalCombineTelemetryCount)
+        private PagedTelemetryResponse CreateResponse(UnifiedTelemetry telemetry, int pageNumber, int pageSize)
         {
             return new PagedTelemetryResponse
             {
                 Page = pageNumber,
                 PageSize = pageSize,
-                TotalTractorItems = totalTractorTelemetryCount,
-                TotalCombineItems = totalCombineTelemetryCount,
-                TotalItems = totalTractorTelemetryCount + totalCombineTelemetryCount,
-                Telemetry = telemetry
+                TotalTractorItems = telemetry.TotalTractorsTelemetryCount,
+                TotalCombineItems = telemetry.TotalCombinesTelemetryCount,
+                TotalItems = telemetry.TotalTractorsTelemetryCount + telemetry.TotalCombinesTelemetryCount,
+                Telemetry = new Dictionary<string, IEnumerable<object>>
+                {
+                    { nameof(TractorTelemetry), telemetry.TractorTelemetry.MapToResponse() },
+                    { nameof(CombineTelemetry), telemetry.CombinesTelemetry.MapToResponse() }
+                }
             };
         }
     }

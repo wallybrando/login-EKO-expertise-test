@@ -13,27 +13,15 @@ namespace LoginEKO.FileProcessingService.Domain
         private static readonly Type _stringType = typeof(string);
         private static readonly MethodInfo? _toStringMethod = typeof(object).GetMethod("ToString");
         private static readonly MethodInfo? _stringContainsMethod = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
-        private static readonly MethodInfo _dictionaryContainsKeyMethod = typeof(Dictionary<string, string>)
-            .GetMethods()
-            .Where(x => string.Equals(x.Name, "ContainsKey", StringComparison.OrdinalIgnoreCase))
-            .Single();
-        private static readonly MethodInfo _dictionaryContainsValueMethod = typeof(Dictionary<string, string>)
-            .GetMethods()
-            .Where(x => string.Equals(x.Name, "ContainsValue", StringComparison.OrdinalIgnoreCase))
-            .Single();
-        private static readonly MethodInfo _enumerableContainsMethod = typeof(Enumerable)
-            .GetMethods()
-            .Where(x => string.Equals(x.Name, "Contains", StringComparison.OrdinalIgnoreCase))
-            .Single(x => x.GetParameters().Length == 2).MakeGenericMethod(typeof(string));
 
         public static Expression GetFilter(ParameterExpression param, string property, FilterOperation op, object? value, Type? valueType)
         {
-            object? tempValue = null;
+            object? filterValue = null;
             if (valueType != null && valueType.IsEnum)
             {
                 if (value != null && Enum.TryParse(valueType, value.ToString(), true, out var enumValue) && Enum.IsDefined(valueType, enumValue))
                 {
-                    tempValue = enumValue;
+                    filterValue = enumValue;
                 }
             }
             // Handle non-nullable values f all types
@@ -41,21 +29,19 @@ namespace LoginEKO.FileProcessingService.Domain
             {
                 try
                 {
-                    tempValue = TypeValidator.IsNullableType(valueType)
+                    filterValue = TypeValidator.IsNullableType(valueType)
                         ? TypeValidator.ChangeTypeNullable(value.ToString(), valueType) : Convert.ChangeType(value.ToString(), valueType);
                 }
                 catch (Exception)
                 {
                     throw;
-                    //_logger.LogError("Invalid value for '{Field}' field", filter.Field);
-                   // throw new FilterValidationException($"Invalid value for '{filter.Field}' field");
                 }
             }
 
-            value = tempValue;
+            value = filterValue;
 
             var constant = Expression.Constant(value, valueType);
-            var prop = param.GetNestedProperty(property);
+            var prop = Expression.Property(param, property);
             return CreateFilter(prop, op, constant);
         }
 
@@ -64,7 +50,7 @@ namespace LoginEKO.FileProcessingService.Domain
             return op switch
             {
                 FilterOperation.EQUALS => RobustEquals(prop, constant),
-                FilterOperation.GreaterThan => Expression.GreaterThan(prop, constant),
+                FilterOperation.GREATERTHAN => Expression.GreaterThan(prop, constant),
                 FilterOperation.LESSTHAN => Expression.LessThan(prop, constant),
                 FilterOperation.CONTAINS => GetContainsMethodCallExpression(prop, constant),
                 _ => throw new NotImplementedException()
@@ -84,10 +70,6 @@ namespace LoginEKO.FileProcessingService.Domain
         {
             if (prop.Type == _stringType)
                 return Expression.Call(prop, _stringContainsMethod, PrepareConstant(constant));
-            else if (prop.Type.GetInterfaces().Contains(typeof(IDictionary)))
-                return Expression.Or(Expression.Call(prop, _dictionaryContainsKeyMethod, PrepareConstant(constant)), Expression.Call(prop, _dictionaryContainsValueMethod, PrepareConstant(constant)));
-            else if (prop.Type.GetInterfaces().Contains(typeof(IEnumerable)))
-                return Expression.Call(_enumerableContainsMethod, prop, PrepareConstant(constant));
 
             throw new NotImplementedException($"{prop.Type} contains is not implemented.");
         }

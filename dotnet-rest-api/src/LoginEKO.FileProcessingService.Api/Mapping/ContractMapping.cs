@@ -1,6 +1,6 @@
 ﻿using LoginEKO.FileProcessingService.Contracts.Requests.V1;
-using LoginEKO.FileProcessingService.Contracts.Responses.V1;
-using LoginEKO.FileProcessingService.Domain.Extensions;
+using LoginEKO.FileProcessingService.Contracts.Responses.V1.Files;
+using LoginEKO.FileProcessingService.Contracts.Responses.V1.Telemetries;
 using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;

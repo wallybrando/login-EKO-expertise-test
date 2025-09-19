@@ -1,5 +1,4 @@
-﻿using LoginEKO.FileProcessingService.Domain.Models.Entities.Base;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace LoginEKO.FileProcessingService.Domain.Models.Entities
 {

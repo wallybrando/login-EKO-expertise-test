@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace LoginEKO.FileProcessingService.Contracts.Responses.V1
+namespace LoginEKO.FileProcessingService.Contracts.Responses
 {
     public class ErrorResponse
     {

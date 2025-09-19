@@ -6,13 +6,7 @@ using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Domain.Models.Entities.Base;
 using LoginEKO.FileProcessingService.Domain.Validators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.XPath;
 
 namespace LoginEKO.FileProcessingService.Domain.Services
 {
@@ -107,7 +101,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                     throw new FilterValidationException("xxxxxxxx");
                 }
 
-                if (fieldType != null && fieldType.IsEnum /*== typeof(Enum)*/)
+                if (fieldType != null && fieldType.IsEnum)
                 {
                     if (!_tractorSchemaRegistry.TryGetEnumType(filter.Key.Field, out fieldType))
                         throw new FilterValidationException("yyyyyyyy");

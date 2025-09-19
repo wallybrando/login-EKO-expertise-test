@@ -3,7 +3,7 @@ using LoginEKO.FileProcessingService.Domain.Models.Enums;
 
 namespace LoginEKO.FileProcessingService.Domain.Utils
 {
-    public static class FileManager
+    public static class FileHandler
     {
         public static VehicleType GetVehicleTypeFromFilename(string filename)
         {

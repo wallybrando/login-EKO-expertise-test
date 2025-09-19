@@ -34,11 +34,11 @@ namespace LoginEKO.FileProcessingService.Domain
             return this;
         }
 
-        public DynamicFilterBuilder<TEntity> Or(IEnumerable<(string property, FilterOperation op, object? value, Type? valueType)> items)
+        public DynamicFilterBuilder<TEntity> Or(IEnumerable<(string property, FilterOperation op, object? value, Type? valueType)> filters)
         {
-            foreach (var i in items)
+            foreach (var filter in filters)
             {
-                Or(i.property, i.op, i.value, i.valueType);
+                Or(filter.property, filter.op, filter.value, filter.valueType);
             }
             return this;
         }

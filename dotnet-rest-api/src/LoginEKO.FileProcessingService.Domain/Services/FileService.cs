@@ -39,14 +39,14 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                 throw new FileValidationException("File has been corrupted");
             }
 
-            var vehicleType = FileManager.GetVehicleTypeFromFilename(file.Filename);
+            var vehicleType = FileHandler.GetVehicleTypeFromFilename(file.Filename);
             if (vehicleType == VehicleType.UNKNOWN)
             {
                 _logger.LogError("Filename format is invalid");
                 throw new FileValidationException("Name of file is invalid");
             }
 
-            var fileType = FileManager.GetFileTypeFromExtension(file.Extension);
+            var fileType = FileHandler.GetFileTypeFromExtension(file.Extension);
             if (fileType == FileType.UNKNOWN)
             {
                 _logger.LogError("File type is not supported");

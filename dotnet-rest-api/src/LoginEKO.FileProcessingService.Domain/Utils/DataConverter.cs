@@ -1,6 +1,5 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
 using LoginEKO.FileProcessingService.Domain.Extensions;
-using System.Drawing;
 
 namespace LoginEKO.FileProcessingService.Domain.Utils
 {
@@ -12,10 +11,10 @@ namespace LoginEKO.FileProcessingService.Domain.Utils
                 throw new ArgumentException("Value cannot be empty");
 
             if (string.IsNullOrEmpty(expectedTrue))
-                throw new ArgumentException("ExpectedTrue value cannot be empty");
+                throw new ArgumentException("ExpectedTrue arg value cannot be empty");
 
             if (string.IsNullOrEmpty(expectedFalse))
-                throw new ArgumentException("ExpectedFalse value cannot be empty");
+                throw new ArgumentException("ExpectedFalse arg value cannot be empty");
 
             if (value.Equals(expectedTrue, StringComparison.OrdinalIgnoreCase))
                 return true;

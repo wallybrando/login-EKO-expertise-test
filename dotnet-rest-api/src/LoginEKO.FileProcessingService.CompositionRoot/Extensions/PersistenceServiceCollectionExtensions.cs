@@ -1,8 +1,5 @@
-﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
-using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
-using LoginEKO.FileProcessingService.Domain.Models.Entities;
+﻿using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
-using LoginEKO.FileProcessingService.Persistence;
 using LoginEKO.FileProcessingService.Persistence.Database;
 using LoginEKO.FileProcessingService.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;

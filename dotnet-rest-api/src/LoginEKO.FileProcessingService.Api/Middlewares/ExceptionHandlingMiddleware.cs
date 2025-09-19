@@ -1,4 +1,4 @@
-﻿using LoginEKO.FileProcessingService.Contracts.Responses.V1;
+﻿using LoginEKO.FileProcessingService.Contracts.Responses;
 using LoginEKO.FileProcessingService.Domain.Exceptions;
 
 namespace LoginEKO.FileProcessingService.Api.Middlewares
@@ -32,11 +32,11 @@ namespace LoginEKO.FileProcessingService.Api.Middlewares
 
             ErrorResponse response = exception switch
             {
-                FilterValidationException filterValidationException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Invalid filter parameters", filterValidationException.Message),
+                FilterValidationException filterValidationException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Invalid filter criteria", filterValidationException.Message),
                 DataConversionException dataConversionException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Data conversion error", dataConversionException.Message),
-                ArgumentException argumentException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Parameter is not valid", argumentException.Message),
+                ArgumentException argumentException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Input parameter is not valid", argumentException.Message),
                 FileValidationException fileValidationException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Unable to process file", fileValidationException.Message),
-                RepositoryException repositoryException => new ErrorResponse(System.Net.HttpStatusCode.InternalServerError, "Internal server error", repositoryException.Message),
+                RepositoryException repositoryException => new ErrorResponse(System.Net.HttpStatusCode.InternalServerError, "Database error", repositoryException.Message),
                 _ => new ErrorResponse(System.Net.HttpStatusCode.InternalServerError, "Internal server error", "Try again later"),
             };
 

@@ -1,7 +1,6 @@
 ﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace LoginEKO.FileProcessingService.Domain.Services.FileExtractors
 {
