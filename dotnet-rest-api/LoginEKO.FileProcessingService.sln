@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ABE43F7A-CF9C-4950-A899-0137209E038E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginEKO.FileProcessingService.Api.Tests", "LoginEKO.FileProcessingService.Api.Tests\LoginEKO.FileProcessingService.Api.Tests.csproj", "{3E2CF8DB-524F-46F7-849E-917B4B674312}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginEKO.FileProcessingService.Api.Tests", "tests\LoginEKO.FileProcessingService.Api.Tests\LoginEKO.FileProcessingService.Api.Tests.csproj", "{54D1038C-D0DA-466E-AED1-04B2B78450BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,10 +57,10 @@ Global
 		{910C5385-F232-4013-A06C-9076519D1919}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{910C5385-F232-4013-A06C-9076519D1919}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{910C5385-F232-4013-A06C-9076519D1919}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3E2CF8DB-524F-46F7-849E-917B4B674312}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E2CF8DB-524F-46F7-849E-917B4B674312}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E2CF8DB-524F-46F7-849E-917B4B674312}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E2CF8DB-524F-46F7-849E-917B4B674312}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54D1038C-D0DA-466E-AED1-04B2B78450BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54D1038C-D0DA-466E-AED1-04B2B78450BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54D1038C-D0DA-466E-AED1-04B2B78450BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54D1038C-D0DA-466E-AED1-04B2B78450BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,7 +73,7 @@ Global
 		{AC167197-E53C-4F11-90E7-402EE1992BDC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{0209295A-D23A-436E-95AB-33589E7FF90E} = {ABE43F7A-CF9C-4950-A899-0137209E038E}
 		{910C5385-F232-4013-A06C-9076519D1919} = {ABE43F7A-CF9C-4950-A899-0137209E038E}
-		{3E2CF8DB-524F-46F7-849E-917B4B674312} = {ABE43F7A-CF9C-4950-A899-0137209E038E}
+		{54D1038C-D0DA-466E-AED1-04B2B78450BC} = {ABE43F7A-CF9C-4950-A899-0137209E038E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C48BED20-ED34-4D6B-983B-170D798F52B1}
