@@ -1,13 +1,7 @@
-﻿using LoginEKO.FileProcessingService.Domain.Models;
+﻿using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Persistence.Database.Configuration;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace LoginEKO.FileProcessingService.Persistence.Database
 {

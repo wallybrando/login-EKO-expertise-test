@@ -1,11 +1,10 @@
-﻿using LoginEKO.FileProcessingService.Contracts.Requests;
-using LoginEKO.FileProcessingService.Contracts.Responses;
-using LoginEKO.FileProcessingService.Domain.Extensions;
+﻿using LoginEKO.FileProcessingService.Contracts.Requests.V1;
+using LoginEKO.FileProcessingService.Contracts.Responses.V1.Files;
+using LoginEKO.FileProcessingService.Contracts.Responses.V1.Telemetries;
 using LoginEKO.FileProcessingService.Domain.Models;
-using LoginEKO.FileProcessingService.Domain.Models.Base;
+using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
-using System.Runtime.CompilerServices;
 
 namespace LoginEKO.FileProcessingService.Api.Mapping
 {
@@ -34,24 +33,22 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
             };
         }
 
-        private static byte[] ToByteArray(IFormFile file)
-        {
-            byte[] bytes;
-            using (var memoryStream = new MemoryStream())
-            {
-                file.CopyTo(memoryStream);
-                bytes = memoryStream.ToArray();
-            }
-
-            return bytes;
-        }
-
         public static Filter MapToFilter(this FilterRequest request)
         {
+            var operation = FilterOperation.EQUALS;
+
+            if (!string.IsNullOrEmpty(request.Operation))
+            {
+                if (!Enum.TryParse<FilterOperation>(request.Operation, true, out var outputOperation) || !Enum.IsDefined(typeof(FilterOperation), outputOperation))
+                    throw new ArgumentException("Invalid operation for one or more filters");
+
+                operation = outputOperation;
+            }
+
             return new Filter
             {
-                Field = request.Field.ToLower(),
-                Operation = request.Operation ?? FilterOperation.EQUALS.GetDescription().ToLower(),
+                Field = request.Field,
+                Operation = operation,
                 Value = request.Value 
             };
         }
@@ -149,14 +146,25 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
                 YieldInTonsPerHour = DataConverter.ToString(telemetry.YieldInTonsPerHour),
                 QuantimeterCalibrationFactor = DataConverter.ToString(telemetry.QuantimeterCalibrationFactor),
                 SeparationSensitivityInPercentage = DataConverter.ToString(telemetry.SeparationSensitivityInPercentage),
-                SieveSensitivityInPercentage = DataConverter.ToString(telemetry.SieveSensitivityInPercentage),
-
+                SieveSensitivityInPercentage = DataConverter.ToString(telemetry.SieveSensitivityInPercentage)
             };
         }
 
         public static IEnumerable<CombineTelemetryResponse> MapToResponse(this IEnumerable<CombineTelemetry> telemetries)
         {
             return telemetries.Select(MapToResponse);
+        }
+
+        private static byte[] ToByteArray(IFormFile file)
+        {
+            byte[] bytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                file.CopyTo(memoryStream);
+                bytes = memoryStream.ToArray();
+            }
+
+            return bytes;
         }
     }
 }

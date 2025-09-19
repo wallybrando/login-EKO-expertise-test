@@ -11,10 +11,10 @@ namespace LoginEKO.FileProcessingService.Domain.Utils
                 throw new ArgumentException("Value cannot be empty");
 
             if (string.IsNullOrEmpty(expectedTrue))
-                throw new ArgumentException("ExpectedTrue value cannot be empty");
+                throw new ArgumentException("ExpectedTrue arg value cannot be empty");
 
             if (string.IsNullOrEmpty(expectedFalse))
-                throw new ArgumentException("ExpectedFalse value cannot be empty");
+                throw new ArgumentException("ExpectedFalse arg value cannot be empty");
 
             if (value.Equals(expectedTrue, StringComparison.OrdinalIgnoreCase))
                 return true;
@@ -75,6 +75,8 @@ namespace LoginEKO.FileProcessingService.Domain.Utils
             if (!Enum.TryParse(typeof(T), value, true, out var result))
                 throw new DataConversionException("Value cannot be converted to enum");
 
+            if (!Enum.IsDefined(typeof(T), result))
+                throw new DataConversionException($"Value '{result}' is not valid enum value");
             return (T)result;
         }
 
@@ -135,11 +137,8 @@ namespace LoginEKO.FileProcessingService.Domain.Utils
             return ToString(value.Value, expectedTrue, expectedFalse);
         }
 
-        public static string ToString(DateTime date, string? format = null)
+        public static string ToString(DateTime date, string? format = "G")
         {
-            if (string.IsNullOrEmpty(format))
-                format = "yyyy-MM-dd hh:mm:ss";
-
             return date.ToString(format);
         }
 

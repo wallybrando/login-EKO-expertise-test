@@ -1,24 +1,21 @@
-﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
+﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
+using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace LoginEKO.FileProcessingService.Domain.Services.FileExtractors
 {
     public class CsvFileExtractor : IFileExtractor
     {
-        private readonly ILogger<CsvFileExtractor> _logger;
         public FileType Type { get; init; }
 
-        public CsvFileExtractor(ILogger<CsvFileExtractor> logger)
+        public CsvFileExtractor()
         {
-            _logger = logger;
             Type = FileType.CSV;
         }
 
         public async Task<IEnumerable<string[]>> ExtractDataAsync(IFormFile file, CancellationToken token = default)
         {
-            _logger.LogTrace("ExtractDataAsync() data=string[]");
             using var stream = file.OpenReadStream();
             using var reader = new StreamReader(stream);
 
@@ -28,7 +25,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services.FileExtractors
             var fieldsCount = 0;
 
             var result = new List<string[]>();
-            while ((line = await reader.ReadLineAsync(token)) != null)
+            while ((line = await reader.ReadLineAsync(token)) != null && !line.Equals(string.Empty))
             {
                 if (isHeader)
                 {
@@ -38,10 +35,20 @@ namespace LoginEKO.FileProcessingService.Domain.Services.FileExtractors
                 }
 
                 var splitedColumns = line.Split(',');
+
+                if (splitedColumns.Length != 3)
+                {
+                    throw new FileValidationException("Invalid data structure in CSV file");
+                }
+
                 var telemetryData = splitedColumns[2].Split(';');
 
+                if (telemetryData.Length != fieldsCount)
+                {
+                    throw new FileValidationException("Mismatch between number of columns in row from number of columns in header");
+                }
+
                 var dateAsString = $"{splitedColumns[0]} {splitedColumns[1]} {telemetryData[0]}";
-                var date = DateTime.Parse(dateAsString);
 
                 var columnValues = new string[fieldsCount];
                 for (int i = 0; i < fieldsCount; i++)
@@ -57,7 +64,6 @@ namespace LoginEKO.FileProcessingService.Domain.Services.FileExtractors
                 result.Add(columnValues);
             }
 
-            _logger.LogDebug("Successfully extracted data from CSV file");
             return result;
         }
     }

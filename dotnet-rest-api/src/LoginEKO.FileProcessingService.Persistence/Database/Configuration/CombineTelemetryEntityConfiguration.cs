@@ -1,13 +1,8 @@
-﻿using LoginEKO.FileProcessingService.Domain.Models;
+﻿using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Persistence.Database.Configuration
 {

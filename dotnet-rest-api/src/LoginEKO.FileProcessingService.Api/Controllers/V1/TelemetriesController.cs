@@ -1,0 +1,49 @@
+﻿using LoginEKO.FileProcessingService.Api.Mapping;
+using LoginEKO.FileProcessingService.Contracts.Requests.V1;
+using LoginEKO.FileProcessingService.Contracts.Responses.V1.Telemetries;
+using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
+using LoginEKO.FileProcessingService.Domain.Models;
+using LoginEKO.FileProcessingService.Domain.Models.Entities;
+using Microsoft.AspNetCore.Mvc;
+
+namespace LoginEKO.FileProcessingService.Api.Controllers.V1
+{
+    [ApiController]
+    public class TelemetriesController : ControllerBase
+    {
+        private readonly ITelemetryService _telemetryService;
+        public TelemetriesController(ITelemetryService telemetryService)
+        {
+            _telemetryService = telemetryService;
+        }
+
+        [HttpPost(ApiEndpoints.V1.Telemetries.All)]
+        public async Task<IActionResult> GetAllAsync([FromBody] IEnumerable<FilterRequest> request, [FromQuery] int? pageNumber, int? pageSize, CancellationToken token)
+        {
+            var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
+
+            var unifedTelemetry = await _telemetryService.GetTractorTelemetriesAsync(filter, token);
+
+            var response = CreateResponse(unifedTelemetry, filter.PageNumber, filter.PageSize);
+
+            return Ok(response);
+        }
+
+        private PagedTelemetryResponse CreateResponse(UnifiedTelemetry telemetry, int pageNumber, int pageSize)
+        {
+            return new PagedTelemetryResponse
+            {
+                Page = pageNumber,
+                PageSize = pageSize,
+                TotalTractorItems = telemetry.TotalTractorsTelemetryCount,
+                TotalCombineItems = telemetry.TotalCombinesTelemetryCount,
+                TotalItems = telemetry.TotalTractorsTelemetryCount + telemetry.TotalCombinesTelemetryCount,
+                Telemetry = new Dictionary<string, IEnumerable<object>>
+                {
+                    { nameof(TractorTelemetry), telemetry.TractorTelemetry.MapToResponse() },
+                    { nameof(CombineTelemetry), telemetry.CombinesTelemetry.MapToResponse() }
+                }
+            };
+        }
+    }
+}

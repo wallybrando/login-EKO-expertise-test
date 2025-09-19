@@ -1,17 +1,11 @@
-﻿using LoginEKO.FileProcessingService.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Interfaces.Repositories
 {
     public interface ITractorTelemetryRepository
     {
-        Task<ICollection<TractorTelemetry>> GetAsync(PaginatedFilter paginatedFilter, CancellationToken token = default);
-        Task<int> GetCountAsync(PaginatedFilter paginatedFilter, CancellationToken token = default);
+        Task<IEnumerable<TractorTelemetry>> GetAsync(Expression<Func<TractorTelemetry, bool>> expression, int pageNumber, int pageSize, CancellationToken token = default);
+        Task<int> GetCountAsync(Expression<Func<TractorTelemetry, bool>> expression, CancellationToken token = default);
     }
 }

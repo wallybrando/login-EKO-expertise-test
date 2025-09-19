@@ -6,9 +6,6 @@ namespace LoginEKO.FileProcessingService.Domain.Validators
 {
     public static partial class MD5Validator
     {
-        private const string InvalidInputToHash = "Invalid input to compute an MD5 Hash";
-        private const string InvalidBinaryHash = "Invalid binary hash value to create hash string";
-
         public static IEnumerable<byte> ComputeHash(IEnumerable<byte> bytesToHash)
         {
             if (bytesToHash == null)
@@ -16,7 +13,7 @@ namespace LoginEKO.FileProcessingService.Domain.Validators
 
             var bytesArray = bytesToHash.ToArray();
             if (bytesArray.Length == 0)
-                throw new ArgumentException(InvalidInputToHash);
+                throw new ArgumentException("Invalid input to compute an MD5 Hash");
 
             var hashBytes = MD5.HashData(bytesArray);
 
@@ -33,7 +30,7 @@ namespace LoginEKO.FileProcessingService.Domain.Validators
             var hashArray = hashBytes as byte[] ?? [.. hashBytes];
             if (hashArray is not { Length: 16 })
             {
-                throw new ArgumentException(InvalidBinaryHash, nameof(hashBytes));
+                throw new ArgumentException("Invalid binary hash value to create hash string", nameof(hashBytes));
             }
 
             var sb = new StringBuilder();
@@ -69,9 +66,6 @@ namespace LoginEKO.FileProcessingService.Domain.Validators
             return byteArray;
         }
 
-        /// <summary> Checks to see if the input is a valid MD5 Hash, which is a string of 32 hex digits, case-insensitive </summary>
-        /// <param name="hashString">A string to se if it is a valid MD5 Hash value</param>
-        /// <returns>Returns true if string is valid, false if not</returns>
         private static bool IsValidMd5HashFormat(string hashString)
         {
             return hashString != null && MD5HashRegex().IsMatch(hashString);

@@ -1,8 +1,5 @@
-﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
-using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
-using LoginEKO.FileProcessingService.Domain.Models;
+﻿using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
-using LoginEKO.FileProcessingService.Persistence;
 using LoginEKO.FileProcessingService.Persistence.Database;
 using LoginEKO.FileProcessingService.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +14,7 @@ namespace LoginEKO.FileProcessingService.CompositionRoot.Extensions
         {
             services.AddEFDatabaseConfiguration(connectionString);
 
-            services.AddScoped<IFilterExpressionBuilder<TractorTelemetry>, FilterExpressionBuilder<TractorTelemetry>>();
-            services.AddScoped<IFilterExpressionBuilder<CombineTelemetry>, FilterExpressionBuilder<CombineTelemetry>>();
-
-            services.AddScoped<IFileRepository, FileRepository>();
+            services.AddScoped<IFileMetadataRepository, FileMetadataRepository>();
             services.AddScoped<ITractorTelemetryRepository, TractorTelemetryRepository>();
             services.AddScoped<ICombineTelemetryRepository, CombineTelemetryRepository>();
             return services;

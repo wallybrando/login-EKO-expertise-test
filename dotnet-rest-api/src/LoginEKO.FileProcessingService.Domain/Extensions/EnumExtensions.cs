@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Extensions
 {
@@ -12,14 +7,13 @@ namespace LoginEKO.FileProcessingService.Domain.Extensions
     {
         public static string GetDescription(this Enum value)
         {
-            FieldInfo? fi = value.GetType()
-                .GetField(value.ToString());
+            FieldInfo? fieldInfo = value.GetType().GetField(value.ToString());
 
-            if (fi == null)
-                throw new ArgumentNullException(nameof(fi));
+            if (fieldInfo == null)
+                throw new ArgumentNullException(nameof(fieldInfo));
 
 
-            if (fi.GetCustomAttributes(typeof(DescriptionAttribute), false) is DescriptionAttribute[] attributes && attributes.Length != 0)
+            if (fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false) is DescriptionAttribute[] attributes && attributes.Length != 0)
             {
                 return attributes.First().Description;
             }
