@@ -26,7 +26,8 @@ namespace LoginEKO.FileProcessingService.Domain.Tests.Services
         public void ImportVehicleTelemetryAsync_MD5HashColision_ThrowsFileValidationException()
         {
             // Arrange
-            var fileMetadata = CreateObject();
+            var filename = $"LD_A{DateTime.Now}.csv";
+            var fileMetadata = CreateObject(filename: filename);
 
             var serviceProviderMock = new Mock<IServiceProvider>();
             var fileMetadataRepositoryMock = new Mock<IFileMetadataRepository>();
@@ -94,7 +95,7 @@ namespace LoginEKO.FileProcessingService.Domain.Tests.Services
         }
 
         [Test]
-        public async Task ImportVehicleTelemetryAsync_EmptyCollectionOfExtractedData_ReturnsZeroAffectedRows()
+        public void ImportVehicleTelemetryAsync_EmptyCollectionOfExtractedData_ThrowsFileValidationException()
         {
             // Arrange
             var filename = $"LD_A{DateTime.Now}.csv";
@@ -119,10 +120,10 @@ namespace LoginEKO.FileProcessingService.Domain.Tests.Services
                 .ReturnsAsync(false);
 
             // Act
-            var result = await service.ImportVehicleTelemetryAsync(fileMetadata);
+            var ex = Assert.ThrowsAsync<FileValidationException>(async () => await service.ImportVehicleTelemetryAsync(fileMetadata));
 
             // Assert
-            Assert.That(result, Is.EqualTo(0));
+            StringAssert.Contains("Document cannot be empty", ex.Message);
         }
 
         [Test]
@@ -214,10 +215,10 @@ namespace LoginEKO.FileProcessingService.Domain.Tests.Services
                 Id = Id ?? Guid.NewGuid(),
                 MD5Hash = md5Hash ?? Guid.NewGuid().ToString(),
                 SizeInBytes = 16,
-                Filename = filename ?? $"file_{DateTime.Now}",
+                Filename = filename ?? $"file_{DateTime.Now}.csv",
                 File = Mock.Of<IFormFile>(),
                 CreatedDate = DateTime.Now,
-                Extension = extension ?? "csv",
+                Extension = extension ?? "text/csv",
                 BinaryObject = new byte[16]
             };
         }

@@ -21,6 +21,8 @@
 
 # How to run system?
 
+Clone this repository to local machine and use **_main_** branch to spin up system and review code.
+
 Prerequisites:
 
 - **Required: Docker Desktop or Docker CLI must be installed on host machine to spin up system.**
@@ -78,4 +80,4 @@ In hybrid environment, PostgreSQL **must** be ran in Docker Container and API ca
 
 # How to use system?
 
-[On this page](./docs/API%20Endpoint%20documentation.md) you have brief explanation about every endpoint and how to use it.
+[On this page](./docs/API%20Endpoint%20documentation.md) you will find brief explanation how to use system.
