@@ -58,7 +58,7 @@ Both API service and PostgreSQL database run in Docker containers. Steps to spin
    **Note**: Use **HTTP** instead of HTTPS, because self-signed certificate is not added to container. **TBD**
 6. _Swagger UI_ should load:
    ![](/docs/resources/img/container-swagger-ui.png)
-7. You are ready to use consume API endpoints.
+7. You are ready to consume API endpoints.
 
 ## 2. Hybrid environment
 
