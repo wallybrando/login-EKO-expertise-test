@@ -9,8 +9,8 @@
 - _docs_ contains test CSV files and other resources like images for documentation.
 - _dotnet-rest-api_ contains API service implemented in .NET 8
 - _quarkus-rest-api_ **not imeplemented yet\***
-- _README.MD_ represent service documentation
-- _docker-compose.yml_ represent script to spin up service in containerized environment ([more information here](#how-to-run-system))
+- _README.MD_ represents service documentation
+- _docker-compose.yml_ represents script to spin up service in containerized environment ([more information here](#how-to-run-system))
 
 **\* It was planned to implement service also in Java with Quarkus framework. However, after limited time this implementation is ON HOLD.**
 
