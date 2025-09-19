@@ -1,4 +1,5 @@
-﻿using LoginEKO.FileProcessingService.Domain.Extensions;
+﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
+using LoginEKO.FileProcessingService.Domain.Extensions;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Utils;
 using System.Collections;
@@ -19,22 +20,25 @@ namespace LoginEKO.FileProcessingService.Domain
             object? filterValue = null;
             if (valueType != null && valueType.IsEnum)
             {
-                if (value != null && Enum.TryParse(valueType, value.ToString(), true, out var enumValue) && Enum.IsDefined(valueType, enumValue))
+                if (value == null || !Enum.TryParse(valueType, value.ToString(), true, out var enumValue) || !Enum.IsDefined(valueType, enumValue))
                 {
-                    filterValue = enumValue;
+                    throw new DataConversionException($"Unable to convert filter value type to enum type");
                 }
+
+                filterValue = enumValue;
             }
             // Handle non-nullable values f all types
             else if (value != null)
             {
+
                 try
                 {
                     filterValue = TypeValidator.IsNullableType(valueType)
                         ? TypeValidator.ChangeTypeNullable(value.ToString(), valueType) : Convert.ChangeType(value.ToString(), valueType);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw;
+                    throw new DataConversionException($"Unable to convert filter value type to '{valueType}'");
                 }
             }
 

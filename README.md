@@ -6,8 +6,8 @@
 
 # Directory structure
 
-- _docs_ contains CSV files for import
-- _dotnet-rest-api_ contains API service coded in .NET 8
+- _docs_ contains test CSV files and other resources like images for documentation.
+- _dotnet-rest-api_ contains API service implemented in .NET 8
 - _quarkus-rest-api_ **not imeplemented yet\***
 - _README.MD_ represent service documentation
 - _docker-compose.yml_ represent script to spin up service in containerized environment ([more information here](#how-to-run-system))
@@ -23,22 +23,22 @@
 
 Prerequisites:
 
-- Required: Docker Desktop or Docker CLI must be installed on host machine to run service.
-- Optional: Visual Studio 2022 to inspect and debug code
-- Optional: pgAdmin or Visual Studio Code (with PostgreSQL extension installed)
+- **Required: Docker Desktop or Docker CLI must be installed on host machine to spin up system.**
+- Optional: _Visual Studio 2022_ to inspect and debug code
+- Optional: _pgAdmin_ or _Visual Studio Code_ (with PostgreSQL extension installed) to query data from PostgreSQL database.
 
-System can be run in:
+System can be run in two ways:
 
-1.  Docker containerized environment - recommended
-2.  Hybrid environment - only during development phase
+1.  In Docker containerized environment - recommended
+2.  In "Hybrid" environment - only during development phase
 
-In both cases, database must run in Docker container.
+**In both cases, database must run in Docker container.**
 
 ## 1. Docker Containerized environment (docker compose)
 
 Both API service and PostgreSQL database run in Docker containers. Steps to spin up system are following:
 
-1. Navigate to root location (`/login-EKO-expertise-test`),
+1. Navigate to repo root location (`/login-EKO-expertise-test`),
 2. Open terminal,
 3. Execute following command:
    ```ps
@@ -47,34 +47,34 @@ Both API service and PostgreSQL database run in Docker containers. Steps to spin
    use **-d** flag to spin up system in the background if you prefere it.
 4. After execution, you should see container logs like this:
    ![](/docs/resources/img/container-env-log.png)
-   In Docker client there will be two containers that are up and running:
+   In _Docker client_ there will be two containers that are up and running:
    ![](/docs/resources/img/docker-client-containers.png)
 5. Now open browser and enter in address bar this address:
    ```
    http://localhost:8080/swagger/index.html
    ```
-   **Note**: Use **HTTP** instead of HTTPS, because self-signed certificate is not added to container. TBD
-6. Swagger UI should load:
+   **Note**: Use **HTTP** instead of HTTPS, because self-signed certificate is not added to container. **TBD**
+6. _Swagger UI_ should load:
    ![](/docs/resources/img/container-swagger-ui.png)
 7. You are ready to use consume API endpoints.
 
 ## 2. Hybrid environment
 
-In hybrid environment, PostgreSQL runs in Docker Container and API runs from IDE (Visual Studio). Use this approach during development phase. Steps to spin up system in hybrid environment are:
+In hybrid environment, PostgreSQL **must** be ran in Docker Container and API can be ran from IDE (like _Visual Studio_). Use this approach during development phase. Steps to spin up system in hybrid environment are:
 
-1. Navigate to root location (`/login-EKO-expertise-test`),
+1. Navigate to repo root location (`/login-EKO-expertise-test`),
 2. Open terminal,
 3. Execute following command:
    ```ps
    > docker compose up --build --force-recreate db
    ```
-   - db is name of PostgreSQL service defined in docker compose file.
+   - `db` is name of PostgreSQL service defined in docker compose file.
    - use **-d** flag to spin up system in the background if you prefere it.
 4. After execution, database will be up and running:
    ![](/docs/resources/img/container-env-log-db.png)
-5. Open API project in IDE like Visual Studio and run API.
+5. Open API project in IDE like _Visual Studio_ and run API.
 6. Swagger UI will be loaded automatically
-7. You are ready to inspect and debug code.
+7. You are ready to use service or inspect and debug code.
 
 # How to use system?
 

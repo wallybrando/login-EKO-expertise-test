@@ -40,6 +40,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services
 
         public async Task<UnifiedTelemetry> GetTractorTelemetriesAsync(PaginatedFilter paginatedFilter, CancellationToken token = default)
         {
+            /*** Check filters validity *******************************/
             ValidateFilter(paginatedFilter.Filters);
 
             var tractorFilters = new List<Filter>();
@@ -53,9 +54,11 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                     combintFilters.Add(filter);
             }
 
+            /*** Create dynamic conditions for tractors and combines *******************************/
             var tractorsDynamicFilters = CreateFilterExpressionForTractorTelemetry(tractorFilters);
             var combinesDynamicFilters = CreateFilterExpressionForCombineTelemetry(combintFilters);
 
+            /*** Get results and return it to caller *******************************/
             var tractorTelemetry = await _tractorTelemetryRepository.GetAsync(tractorsDynamicFilters, paginatedFilter.PageNumber, paginatedFilter.PageSize, token);
             var totalTractorTelemetryCount = await _tractorTelemetryRepository.GetCountAsync(tractorsDynamicFilters, token);
             var combineTelemetry = await _combineTelemetryRepository.GetAsync(combinesDynamicFilters, paginatedFilter.PageNumber, paginatedFilter.PageSize, token);
@@ -73,42 +76,33 @@ namespace LoginEKO.FileProcessingService.Domain.Services
 
         private Expression<Func<TractorTelemetry, bool>> CreateFilterExpressionForTractorTelemetry(IEnumerable<Filter> tractorFilters)
         {
-            var serialNumberFilters = tractorFilters
-                .Where(x => x.Field.Equals(nameof(AgroVehicleTelemetry.SerialNumber), StringComparison.OrdinalIgnoreCase));
-
             var predicate = new DynamicFilterBuilder<TractorTelemetry>();
-            if (serialNumberFilters.Any())
-            {
-                if (!_tractorSchemaRegistry.TryGetFieldType(nameof(AgroVehicleTelemetry.SerialNumber), out var fieldType))
-                {
-                    throw new FilterValidationException("xxxxxxxx");
-                }
 
-                var serialNumberFilterTuple = serialNumberFilters.Select(x => (x.Field, x.Operation, x.Value, fieldType));
-                predicate.And(b => b.Or(serialNumberFilterTuple));
+            /*** Handles SerialNumber filter  *************************************/
+            var serialNumberFilters = GetSerialNumberFilters(tractorFilters);
+            HandleSerialNumberFilters(serialNumberFilters, ref predicate);
 
-            }
-
+            /*** Grouping remained filters by field name **************************/
             var filtersWithoutSerialNumber = tractorFilters
                 .Where(x => !x.Field.Equals(nameof(AgroVehicleTelemetry.SerialNumber), StringComparison.OrdinalIgnoreCase))
                 .GroupBy(x => new { x.Field });
 
             foreach (var filter in filtersWithoutSerialNumber)
             {
-
+                var tempFilter = new List<Filter>(filter);
                 if (!_tractorSchemaRegistry.TryGetFieldType(filter.Key.Field, out var fieldType))
                 {
-                    throw new FilterValidationException("xxxxxxxx");
+                    throw new FilterValidationException("Provided field cannot be found");
                 }
 
-                if (fieldType != null && fieldType.IsEnum)
+                if (fieldType != null && fieldType == typeof(Enum))
                 {
                     if (!_tractorSchemaRegistry.TryGetEnumType(filter.Key.Field, out fieldType))
-                        throw new FilterValidationException("yyyyyyyy");
+                        throw new FilterValidationException("Cannot find data type for provided field");
                 }
 
-                var filtersTuple = filter.Select(x => (x.Field, x.Operation, x.Value, fieldType));
-                predicate.And(b => b.Or(filtersTuple));
+                /*** Handles filter  **********************************************/
+                HandleNonSerialNumberFilters(tempFilter, fieldType, ref predicate);
             }
 
             return predicate.Build();
@@ -116,44 +110,129 @@ namespace LoginEKO.FileProcessingService.Domain.Services
 
         private Expression<Func<CombineTelemetry, bool>> CreateFilterExpressionForCombineTelemetry(IEnumerable<Filter> combineFilters)
         {
-            var serialNumberFilters = combineFilters
-                .Where(x => x.Field.Equals(nameof(AgroVehicleTelemetry.SerialNumber), StringComparison.OrdinalIgnoreCase));
-
             var predicate = new DynamicFilterBuilder<CombineTelemetry>();
-            if (serialNumberFilters.Any())
-            {
-                if (!_combineSchemaRegistry.TryGetFieldType(nameof(AgroVehicleTelemetry.SerialNumber), out var fieldType))
-                {
-                    throw new FilterValidationException("xxxxxxxx");
-                }
 
-                var serialNumberFilterTuple = serialNumberFilters.Select(x => (x.Field, x.Operation, x.Value, fieldType));
-                predicate.And(b => b.Or(serialNumberFilterTuple));
-            }
+            /*** Grouping remained filters by field name **************************/
+            var serialNumberFilters = GetSerialNumberFilters(combineFilters);
+            HandleSerialNumberFilters(serialNumberFilters, ref predicate);
 
+            /*** Grouping remained filters by field name **************************/
             var filtersWithoutSerialNumber = combineFilters
                 .Where(x => !x.Field.Equals(nameof(AgroVehicleTelemetry.SerialNumber), StringComparison.OrdinalIgnoreCase))
                 .GroupBy(x => new { x.Field });
 
             foreach (var filter in filtersWithoutSerialNumber)
             {
-
+                var tempFilter = new List<Filter>(filter);
                 if (!_combineSchemaRegistry.TryGetFieldType(filter.Key.Field, out var fieldType))
                 {
-                    throw new FilterValidationException("xxxxxxxx");
+                    throw new FilterValidationException("Provided field cannot be found");
                 }
 
-                if (fieldType != null && fieldType.IsEnum /*== typeof(Enum)*/)
+                if (fieldType != null && fieldType == typeof(Enum))
                 {
                     if (!_combineSchemaRegistry.TryGetEnumType(filter.Key.Field, out fieldType))
-                        throw new FilterValidationException("yyyyyyyy");
+                        throw new FilterValidationException("Cannot find data type for provided field");
                 }
 
-                var filtersTuple = filter.Select(x => (x.Field, x.Operation, x.Value, fieldType));
-                predicate.And(b => b.Or(filtersTuple));
+                /*** Handles filter  **********************************************/
+                HandleNonSerialNumberFilters(tempFilter, fieldType, ref predicate);
             }
 
             return predicate.Build();
+        }
+
+        /// <summary> Filters only criterias for SerialNumber field </summary>
+        /// <remarks>Filter criteria may have multiple SerialNumber filters with same operation</remarks>
+        /// <example>
+        /// Input filters can look like this:
+        /// {
+        ///     "field": "SerialNumber",
+        ///     "operation": "Contains",
+        ///     "value": "A5304997"
+        /// },
+        /// {
+        ///     "field": "SerialNumber",
+        ///     "operation": "Contains",
+        ///     "value": "C7502627"
+        /// }
+        /// </example>
+        private IEnumerable<Filter> GetSerialNumberFilters(IEnumerable<Filter> filters)
+        {
+            return filters
+                .Where(x => x.Field.Equals(nameof(AgroVehicleTelemetry.SerialNumber), StringComparison.OrdinalIgnoreCase));
+        }
+
+
+        /// <summary> Builds predicate for SerialNumber field </summary>
+        /// <remarks>Filter criteria may have multiple SerialNumber filters with same operation</remarks>
+        /// <example>
+        /// Output predicate will be in this format:
+        ///     (SerialNumber = const1 OR SerialNumber = const2 OR SerialNumber LIKE '%const3%') 
+        /// </example>
+        private void HandleSerialNumberFilters<T>(IEnumerable<Filter> serialNumberFilters, ref DynamicFilterBuilder<T> predicate)
+        {
+            if (serialNumberFilters.Any())
+            {
+                if (!_tractorSchemaRegistry.TryGetFieldType(nameof(AgroVehicleTelemetry.SerialNumber), out var fieldType))
+                {
+                    throw new FilterValidationException("Provided field cannot be found");
+                }
+
+                var serialNumberFilterTuple = serialNumberFilters.Select(x => (x.Field, x.Operation, x.Value, fieldType));
+                predicate.And(b => b.Or(serialNumberFilterTuple));
+            }
+        }
+
+        /// <summary> Builds predicate for SerialNumber field </summary>
+        /// <remarks>Filter criteria may have ONLY ONE filter with same operation</remarks>
+        /// <example>
+        /// Valid input filters can look like this:
+        /// {
+        ///     "field": "Date",
+        ///     "operation": "Equals",
+        ///     "value": "2022-10-07 9:58:54"
+        /// },
+        /// {
+        ///     "field": "Date",
+        ///     "operation": "GreaterThan",
+        ///     "value": "2022-10-07 9:58:54"
+        /// }
+        /// 
+        /// Invalid input filters can look like this:
+        /// {
+        ///     "field": "Date",
+        ///     "operation": "Equals",
+        ///     "value": "2022-10-07 9:58:54"
+        /// },
+        /// {
+        ///     "field": "Date",
+        ///     "operation": "Equals",
+        ///     "value": "2023-10-07 9:58:54"
+        /// }
+        /// 
+        /// Output predicate will be in this format:
+        ///     1) (Date = dateConst1 AND Date > dateConst2) - avoid this filter because it will always return result that matches with first condition
+        ///     2) ((Date > dateConst1 AND Date < dateConst3) AND Date = const3) - again avoid this filter because it will return result that matches with first condition
+        /// </example>
+        private void HandleNonSerialNumberFilters<T>(List<Filter> filters, Type fieldType, ref DynamicFilterBuilder<T> predicate)
+        {
+            if (filters.Count(x => x.Operation == Models.Enums.FilterOperation.LESSTHAN || x.Operation == Models.Enums.FilterOperation.GREATERTHAN) == 2)
+            {
+                var rangeFilterTuple = filters
+                    .Where(x => x.Operation == Models.Enums.FilterOperation.LESSTHAN || x.Operation == Models.Enums.FilterOperation.GREATERTHAN)
+                    .Select(x => (x.Field, x.Operation, x.Value, fieldType));
+                predicate.And(b => b.And(rangeFilterTuple));
+
+                filters = filters.Where(x => x.Operation != Models.Enums.FilterOperation.LESSTHAN && x.Operation != Models.Enums.FilterOperation.GREATERTHAN)
+                    .ToList();
+            }
+
+            if (filters.Count != 0)
+            {
+                var filtersTuple = filters.Select(x => (x.Field, x.Operation, x.Value, fieldType));
+                predicate.And(b => b.Or(filtersTuple));
+            }
         }
 
         /// <summary>

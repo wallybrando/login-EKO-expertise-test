@@ -1,4 +1,5 @@
-﻿using LoginEKO.FileProcessingService.Domain.Interfaces;
+﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
+using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using Microsoft.AspNetCore.Http;
 
@@ -24,7 +25,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services.FileExtractors
             var fieldsCount = 0;
 
             var result = new List<string[]>();
-            while ((line = await reader.ReadLineAsync(token)) != null)
+            while ((line = await reader.ReadLineAsync(token)) != null && !line.Equals(string.Empty))
             {
                 if (isHeader)
                 {
@@ -34,10 +35,20 @@ namespace LoginEKO.FileProcessingService.Domain.Services.FileExtractors
                 }
 
                 var splitedColumns = line.Split(',');
+
+                if (splitedColumns.Length != 3)
+                {
+                    throw new FileValidationException("Invalid data structure in CSV file");
+                }
+
                 var telemetryData = splitedColumns[2].Split(';');
 
+                if (telemetryData.Length != fieldsCount)
+                {
+                    throw new FileValidationException("Mismatch between number of columns in row from number of columns in header");
+                }
+
                 var dateAsString = $"{splitedColumns[0]} {splitedColumns[1]} {telemetryData[0]}";
-                var date = DateTime.Parse(dateAsString);
 
                 var columnValues = new string[fieldsCount];
                 for (int i = 0; i < fieldsCount; i++)

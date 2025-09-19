@@ -15,6 +15,15 @@ namespace LoginEKO.FileProcessingService.Domain
             _param = param;
         }
 
+        public DynamicFilterBuilder<TEntity> And(IEnumerable<(string property, FilterOperation op, object? value, Type? valueType)> filters)
+        {
+            foreach (var filter in filters)
+            {
+                And(filter.property, filter.op, filter.value, filter.valueType);
+            }
+            return this;
+        }
+
         public DynamicFilterBuilder<TEntity> And(string property, FilterOperation op, object value, Type valueType)
         {
             var newExpr = DynamicExpressions.GetFilter(_param, property, op, value, valueType);

@@ -58,7 +58,9 @@ namespace LoginEKO.FileProcessingService.Domain.Services
             /*** Extract telemetry data from file **************************************/
             var extractedData = await fileExtractor.ExtractDataAsync(file.File, token);
             if (!extractedData.Any())
-                return 0;
+            {
+                throw new FileValidationException("Document cannot be empty");
+            }
 
             /*** Transform telemetry data **********************************************/
             var telemetryParser = _serviceProvider.GetRequiredKeyedService<IVehicleTelemetryParser>(vehicleType.GetDescription());
