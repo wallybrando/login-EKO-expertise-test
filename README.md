@@ -80,6 +80,6 @@ In hybrid environment, PostgreSQL **must** be ran in Docker Container and API ca
 
 # How to use system?
 
-On page [API Endpoint documentation](./docs/API%20Endpoint%20documentation.md) you will find brief explanation how to consume endpoints.
+On page [API Endpoint documentation](./docs/API%20Endpoint%20documentation.md), you will find brief explanation how to consume endpoints.
 
-Also, on page [Testing](./docs/Testing.md) you can find some test cases that were being tested during development phase.
+Also, on page [Testing](./docs/Testing.md), you can find some test cases that were being tested during development phase.
