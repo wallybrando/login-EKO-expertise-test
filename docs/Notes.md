@@ -1,60 +1,67 @@
 # Test scenarios:
 
-- Import CSV test cases:
+- **Import CSV test cases:**
 
   1. Prevent importing empty CSV file [PASSES]
   2. Prevent importing CSV with invalid data structure [PASSES]
   3. Prevent importing CSV with only headers provided [PASSES]
   4. Import valid CSV [PASSES]
+  5. Prevent importing already imported CSV [PASSED]
+  6. Prevent importing CSV with wrong filename [PASSED]
+  7. Prevent importing non CSV files [PASSED]
 
-- Tractor telemetry test cases:
+- **Tractor telemetry test cases:**
 
-  1. Filter by SerialNumber
+  - Filter by SerialNumber:
 
-  - Filter by exist SerialNumber and allowed operation [PASSES]
-  - Prevent filtering by existing SerialNumber with invalid operation [PASSES]
-  - Prevent filtering by existint SerialNumber with NULL value [PASSES]
-  - Filter all data by existint SerialNumber with empty string and contains operation [PASSES] (PostgreSQL works in the same way - returns all data)
+    1. Filter by exist SerialNumber and allowed operation [PASSES]
+    2. Prevent filtering by existing SerialNumber with invalid operation [PASSES]
+    3. Prevent filtering by existint SerialNumber with NULL value [PASSES]
+    4. Filter all data by existint SerialNumber with empty string and contains operation [PASSES] (PostgreSQL works in the same way - returns all data)
 
-  2. Filter by Date
+  - Filter by Date
 
-  - Filter by existing Date and allowed operation [PASSES]
-  - Prevent filter by duplicated Date filter and allowed operation [PASSES]
-  - Filter by data range [PASSES]
-  - Filter by NULL value [PASSES]
-  - Throw exception for empty string value [PASSES]
+    1. Filter by existing Date and allowed operation [PASSES]
+    2. Prevent filter by duplicated Date filter and allowed operation [PASSES]
+    3. Filter by data range [PASSES]
+    4. Filter by NULL value [PASSES]
+    5. Throw exception for empty string value [PASSES]
 
-  3. Filter by bool? (ActualStatusOfCreeper):
+  - Filter by bool? (ActualStatusOfCreeper):
 
-  - Filter by true value [PASSES]
-  - Filter by false value [PASSES]
-  - Filter by null value [PASSES]
-  - Throw exception for empty string value [PASSES]
-  - Prevent filtering by wrong operation [PASSES]
+    1. Filter by true value [PASSES]
+    2. Filter by false value [PASSES]
+    3. Filter by null value [PASSES]
+    4. Throw exception for empty string value [PASSES]
+    5. Prevent filtering by wrong operation [PASSES]
 
-  4. Filter by Enum (AllWheelDriveStatus)
+  - Filter by Enum (AllWheelDriveStatus)
 
-  - Filter by valid status [PASSES]
-  - Prevent filtering by invalid status [PASSES]
-  - Prevent filtering by invalid operation [PASSES]
-  - Prevent filtering by NULL value [PASSES]
-  - Prevent filtering by emtpy string value [PASSES]
+    1. Filter by valid status [PASSES]
+    2. Prevent filtering by invalid status [PASSES]
+    3. Prevent filtering by invalid operation [PASSES]
+    4. Prevent filtering by NULL value [PASSES]
+    5. Prevent filtering by emtpy string value [PASSES]
 
-  5. Filter by short? (CurrentGearShift)
+  - Filter by short? (CurrentGearShift)
 
-  - Filter by equals operator [PASSES]
-  - Filter by greater than operator [PASSES]
-  - Filter by less than operator [PASSES]
-  - Filter by data range [PASSES]
-  - Filter by null [PASSES]
+    1. Filter by equals operator [PASSES]
+    2. Filter by greater than operator [PASSES]
+    3. Filter by less than operator [PASSES]
+    4. Filter by data range [PASSES]
+    5. Filter by null [PASSES]
 
-6. Filter by double (AmbientTemperatureInCelsius)
+  - Filter by double (AmbientTemperatureInCelsius)
 
-- Filter by valid value
-- Filter by invalid value
-- Filter by range
-- Prevent filtering by null
-- Prevent filtering by invalid operation
+    1. Filter by valid value [PASSES]
+    2. Filter by invalid value [PASSES]
+    3. Filter by range [PASSES]
+    4. Prevent filtering by null [PASSES]
+    5. Prevent filtering by invalid operation [PASSES]
+
+- Combine telemetry test cases:
+
+  - Filter by Enum (TypeOfCrop)
 
 # Notes:
 

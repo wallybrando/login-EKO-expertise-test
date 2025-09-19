@@ -1,0 +1,193 @@
+{
+	"info": {
+		"_postman_id": "c7fbd5cb-f9b5-457e-8625-bc762b9e362d",
+		"name": "LoginEKO .NET API Endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46964669",
+		"_collection_link": "https://marko-stojkovic-8c819f38-8274675.postman.co/workspace/Marko-Stojkovic's-Workspace~e2fca849-818c-44f6-8f7f-fdb68854d545/collection/46964669-c7fbd5cb-f9b5-457e-8625-bc762b9e362d?action=share&source=collection_link&creator=46964669"
+	},
+	"item": [
+		{
+			"name": "[Container] Upload a File",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "File",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/files/import-vehicle-telemetry",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"files",
+						"import-vehicle-telemetry"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Local] Upload a File",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "File",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost:7259/api/v1/files/import-vehicle-telemetry",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7259",
+					"path": [
+						"api",
+						"v1",
+						"files",
+						"import-vehicle-telemetry"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Local] API Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7259/_health",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7259",
+					"path": [
+						"_health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Container] API Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/_health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"_health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Local] Get All Telemetries",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"field\": \"SerialNumber\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"C7502627\"\r\n    },\r\n    {\r\n        \"field\": \"SerialNumber\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"C7502643\"\r\n    },\r\n    {\r\n        \"field\": \"SerialNumber\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"A5304997\"\r\n    },\r\n    {\r\n        \"field\": \"SerialNumber\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"A5305041\"\r\n    },\r\n    {\r\n        \"field\": \"TypeOfCrop\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"Maize\"\r\n    },\r\n    {\r\n        \"field\": \"AllWheelDriveStatus\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"Status_2\"\r\n    }    \r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7259/api/v1/telemetries?pageNumber=1&pageSize=10",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7259",
+					"path": [
+						"api",
+						"v1",
+						"telemetries"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Container] Get All Telemetries",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"field\": \"SerialNumber\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"C7502627\"\r\n    },\r\n    {\r\n        \"field\": \"SerialNumber\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"C7502643\"\r\n    },\r\n    {\r\n        \"field\": \"SerialNumber\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"A5304997\"\r\n    },\r\n    {\r\n        \"field\": \"SerialNumber\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"A5305041\"\r\n    },\r\n    {\r\n        \"field\": \"TypeOfCrop\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"Maize\"\r\n    },\r\n    {\r\n        \"field\": \"AllWheelDriveStatus\",\r\n        \"operation\": \"Equals\",\r\n        \"value\": \"Status_2\"\r\n    }    \r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/telemetries?pageNumber=1&pageSize=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"telemetries"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -29,16 +29,6 @@ namespace LoginEKO.FileProcessingService.Domain.Services
         public async Task<int> ImportVehicleTelemetryAsync(FileMetadata file, CancellationToken token = default)
         {
             /*** Validate input parameters ****************************/
-            var fileHashBytes = MD5Validator.ComputeHash(file.BinaryObject);
-            var fileHash = MD5Validator.CreateHashStringFromHashBytes(fileHashBytes);
-
-            var fileExists = await _fileMetadataRepository.ExistsByMD5HashAsync(fileHash, token);
-            if (fileExists)
-            {
-                _logger.LogError("File has been corrupted");
-                throw new FileValidationException("File has been corrupted");
-            }
-
             var vehicleType = FileHandler.GetVehicleTypeFromFilename(file.Filename);
             if (vehicleType == VehicleType.UNKNOWN)
             {
@@ -51,6 +41,17 @@ namespace LoginEKO.FileProcessingService.Domain.Services
             {
                 _logger.LogError("File type is not supported");
                 throw new FileValidationException("File type is not supported");
+            }
+
+            /*** Validate file's MD5 Hash *****************************/
+            var fileHashBytes = MD5Validator.ComputeHash(file.BinaryObject);
+            var fileHash = MD5Validator.CreateHashStringFromHashBytes(fileHashBytes);
+
+            var fileExists = await _fileMetadataRepository.ExistsByMD5HashAsync(fileHash, token);
+            if (fileExists)
+            {
+                _logger.LogError("File has been corrupted");
+                throw new FileValidationException("File has been corrupted");
             }
 
             var fileExtractor = _serviceProvider.GetRequiredKeyedService<IFileExtractor>(fileType.GetDescription());
