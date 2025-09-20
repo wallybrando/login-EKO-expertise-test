@@ -10,7 +10,7 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
 {
     public static class ContractMapping
     {
-        public static FileMetadata MapToFileMetadata(this UploadFileRequest request)
+        public static FileMetadata MapToFileMetadata(this ImportFileRequest request)
         {
             return new FileMetadata
             {

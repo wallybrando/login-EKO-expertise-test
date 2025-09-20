@@ -1,5 +1,4 @@
-﻿using Castle.Core.Logging;
-using LoginEKO.FileProcessingService.Domain.Exceptions;
+﻿using LoginEKO.FileProcessingService.Domain.Exceptions;
 using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Persistence.Repositories;
 using LoginEKO.FileProcessingService.Persistence.Tests.Database;

@@ -3,19 +3,12 @@ using LoginEKO.FileProcessingService.Domain.Extensions;
 using LoginEKO.FileProcessingService.Domain.Interfaces;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Repositories;
 using LoginEKO.FileProcessingService.Domain.Models.Entities;
-using LoginEKO.FileProcessingService.Domain.Models.Entities.Base;
 using LoginEKO.FileProcessingService.Domain.Models.Enums;
 using LoginEKO.FileProcessingService.Domain.Services;
-using LoginEKO.FileProcessingService.Domain.Services.FileExtractors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoginEKO.FileProcessingService.Domain.Tests.Services
 {

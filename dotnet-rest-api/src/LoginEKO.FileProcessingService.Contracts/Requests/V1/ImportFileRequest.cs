@@ -2,7 +2,7 @@
 
 namespace LoginEKO.FileProcessingService.Contracts.Requests.V1
 {
-    public class UploadFileRequest
+    public class ImportFileRequest
     {
         public required IFormFile File { get; init; }
     }
