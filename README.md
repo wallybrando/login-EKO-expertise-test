@@ -9,8 +9,8 @@
 - _docs_ contains test CSV files and other resources like images for documentation.
 - _dotnet-rest-api_ contains API service implemented in .NET 8
 - _quarkus-rest-api_ **not imeplemented yet\***
-- _README.MD_ represent service documentation
-- _docker-compose.yml_ represent script to spin up service in containerized environment ([more information here](#how-to-run-system))
+- _README.MD_ represents service documentation
+- _docker-compose.yml_ represents script to spin up service in containerized environment ([more information here](#how-to-run-system))
 
 **\* It was planned to implement service also in Java with Quarkus framework. However, after limited time this implementation is ON HOLD.**
 
@@ -58,7 +58,7 @@ Both API service and PostgreSQL database run in Docker containers. Steps to spin
    **Note**: Use **HTTP** instead of HTTPS, because self-signed certificate is not added to container. **TBD**
 6. _Swagger UI_ should load:
    ![](/docs/resources/img/container-swagger-ui.png)
-7. You are ready to use consume API endpoints.
+7. You are ready to consume API endpoints.
 
 ## 2. Hybrid environment
 
@@ -80,6 +80,6 @@ In hybrid environment, PostgreSQL **must** be ran in Docker Container and API ca
 
 # How to use system?
 
-On page [API Endpoint documentation](./docs/API%20Endpoint%20documentation.md) you will find brief explanation how to consume endpoints.
+On page [API Endpoint documentation](./docs/API%20Endpoint%20documentation.md), you will find brief explanation how to consume endpoints.
 
-Also, on page [Testing](./docs/Testing.md) you can find some test cases that were being tested during development phase.
+Also, on page [Testing](./docs/Testing.md), you can find some test cases that were being tested during development phase.

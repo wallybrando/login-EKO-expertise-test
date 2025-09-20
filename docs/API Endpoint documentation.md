@@ -25,7 +25,7 @@ How to consume endpoint:
 - If you use Postman, go to Body section, select form-data option, enter File for Key column and select from dropdown File option, for Value column select file from local machine and send request.
   ![](/docs/resources/img/import-endpoint-postman.png)
 
-On `/CSVs for testing` you have few valid and invalid files for testing.
+On `/CSVs for testing` location, you have few valid and invalid files for testing.
 
 ## Query telemetry endpoint
 
@@ -91,9 +91,9 @@ Validations:
 - Service will prevent quering telemetries if filter operation does not exist or not allowed
 - Service will prevent quering telemetries if filter value is not in right format
 
-On page [Tractor Filter Parameters](./Tractor%20Filter%20Parameters.md) you can find valid parameters for tractor's field.
+On page [Tractor Filter Parameters](./Tractor%20Filter%20Parameters.md), you can find valid parameters for tractor's field.
 
-On page [Combine Filter Parameters](./Combine%20Filter%20Parameters.md) you can find valid parameters for combine's fields.
+On page [Combine Filter Parameters](./Combine%20Filter%20Parameters.md), you can find valid parameters for combine's fields.
 
 How to consume endpoing?
 
