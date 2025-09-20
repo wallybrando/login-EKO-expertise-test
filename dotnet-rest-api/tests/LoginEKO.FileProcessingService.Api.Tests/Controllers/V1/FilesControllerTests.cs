@@ -1,4 +1,5 @@
-﻿using LoginEKO.FileProcessingService.Api.Controllers.V1;
+﻿using FluentAssertions.Execution;
+using LoginEKO.FileProcessingService.Api.Controllers.V1;
 using LoginEKO.FileProcessingService.Contracts.Requests.V1;
 using LoginEKO.FileProcessingService.Contracts.Responses.V1.Files;
 using LoginEKO.FileProcessingService.Domain.Interfaces.Services;
@@ -14,7 +15,7 @@ namespace LoginEKO.FileProcessingService.Api.Tests.Controllers.V1
     public class FilesControllerTests
     {
         [Test]
-        public async Task ImportVehicleTelemetryFileAsync_ValidCSVFile_ReturnsAccepted()
+        public async Task ImportVehicleTelemetryFileAsync_ValidCSVFile_ReturnsAcceptedResponse()
         {
             // Arrange
             var numberOfImports = 10;
@@ -35,12 +36,16 @@ namespace LoginEKO.FileProcessingService.Api.Tests.Controllers.V1
             var result = await controller.ImportVehicleTelemetryFileAsync(request);
 
             // Assert
+            using var scope = new AssertionScope();
             Assert.That(result, Is.InstanceOf<AcceptedResult>());
             var acceptedResponse = result as AcceptedResult;
             var response = (FileMetadataResponse)acceptedResponse!.Value!;
-            Assert.That(filename, Is.EqualTo(response.Filename));
-            Assert.That(numberOfImports, Is.EqualTo(response.NumberOfImports));
-            Assert.That(sizeInBytes, Is.EqualTo(response.SizeInBytes));
+            Assert.Multiple(() =>
+            {
+                Assert.That(filename, Is.EqualTo(response.Filename));
+                Assert.That(numberOfImports, Is.EqualTo(response.NumberOfImports));
+                Assert.That(sizeInBytes, Is.EqualTo(response.SizeInBytes));
+            });
         }
 
         private ImportFileRequest CreateImportFileRequestObject(IFormFile? file = null)

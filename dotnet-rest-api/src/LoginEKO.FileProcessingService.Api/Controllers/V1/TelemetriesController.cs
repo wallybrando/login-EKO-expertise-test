@@ -12,20 +12,24 @@ namespace LoginEKO.FileProcessingService.Api.Controllers.V1
     public class TelemetriesController : ControllerBase
     {
         private readonly ITelemetryService _telemetryService;
-        public TelemetriesController(ITelemetryService telemetryService)
+        private readonly ILogger<TelemetriesController> _logger;
+        public TelemetriesController(ITelemetryService telemetryService, ILogger<TelemetriesController> logger)
         {
             _telemetryService = telemetryService;
+            _logger = logger;
         }
 
         [HttpPost(ApiEndpoints.V1.Telemetries.All)]
-        public async Task<IActionResult> GetAllAsync([FromBody] IEnumerable<FilterRequest> request, [FromQuery] int? pageNumber, int? pageSize, CancellationToken token)
+        public async Task<IActionResult> GetAllAsync([FromBody] IEnumerable<FilterRequest> request, [FromQuery] int? pageNumber, int? pageSize, CancellationToken token = default)
         {
+            _logger.LogTrace("GetAllAsync(FilterRequest[], pageNumber, pageSize, CancellationToken)");
             var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
 
-            var unifedTelemetry = await _telemetryService.GetTractorTelemetriesAsync(filter, token);
+            var unifedTelemetry = await _telemetryService.GetUnifiedTelemetriesAsync(filter, token);
 
             var response = CreateResponse(unifedTelemetry, filter.PageNumber, filter.PageSize);
 
+            _logger.LogDebug("Successfully returned response to client");
             return Ok(response);
         }
 

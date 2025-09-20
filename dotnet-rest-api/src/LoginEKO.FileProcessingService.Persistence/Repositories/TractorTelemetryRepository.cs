@@ -24,6 +24,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
                                                                   int pageSize,
                                                                   CancellationToken token = default)
         {
+            _logger.LogDebug("Attempting to get tractor telemetry data from database");
             var result = await _dbContext.TractorTelemetries
                                          .OrderBy(x => x.Date)
                                          .AsQueryable()
@@ -32,17 +33,20 @@ namespace LoginEKO.FileProcessingService.Persistence.Repositories
                                          .Take(pageSize)
                                          .ToListAsync(token);
 
+            _logger.LogDebug("Successfully fetched tractor telemetry data from database");
             return result;
         }
 
         public async Task<int> GetCountAsync(Expression<Func<TractorTelemetry, bool>> expression, CancellationToken token = default)
         {
+            _logger.LogDebug("Attempting to get total tractor telemetry count from database");
             var result = await _dbContext.TractorTelemetries
                                          .OrderBy(x => x.Date)
                                          .AsQueryable()
                                          .Where(expression)
                                          .CountAsync(token);
 
+            _logger.LogDebug("Successfully fetched total tractor telemetry count from database");
             return result;
         }
     }

@@ -60,6 +60,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services
             var extractedData = await fileExtractor.ExtractDataAsync(file.File, token);
             if (!extractedData.Any())
             {
+                _logger.LogError("Document does not contains data to import in database");
                 throw new FileValidationException("Document cannot be empty");
             }
 

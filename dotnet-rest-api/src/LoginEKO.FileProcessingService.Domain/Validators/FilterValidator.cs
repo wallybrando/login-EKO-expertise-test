@@ -41,7 +41,7 @@ namespace LoginEKO.FileProcessingService.Domain.Validators
                 return false;
             }
 
-            if (!_schemaRegistry.TryGetOperation(outputType, filterOperation))
+            if (!_schemaRegistry.TypeHasAllowedOperation(outputType, filterOperation))
                 return false;
 
             return true;

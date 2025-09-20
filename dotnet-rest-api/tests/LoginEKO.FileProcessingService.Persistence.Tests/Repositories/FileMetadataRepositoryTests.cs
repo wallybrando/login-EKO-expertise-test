@@ -17,7 +17,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Tests.Repositories
             // Arrange
             var md5Hash = "";
 
-            var dbContext = MockDbContext.CreateInMemoryDbContext();
+            var dbContext = MockDbContext.CreateInMemoryDbContext(Guid.NewGuid().ToString());
             var loggerMock = new Mock<ILogger<FileMetadataRepository>>();
             var repository = new FileMetadataRepository(dbContext, loggerMock.Object);
 
@@ -34,7 +34,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Tests.Repositories
             // Arrange
             var md5Hash = Guid.NewGuid().ToString();
 
-            var dbContext = MockDbContext.CreateInMemoryDbContext();
+            var dbContext = MockDbContext.CreateInMemoryDbContext(Guid.NewGuid().ToString());
             var loggerMock = new Mock<ILogger<FileMetadataRepository>>();
             var repository = new FileMetadataRepository(dbContext, loggerMock.Object);
 
@@ -52,7 +52,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Tests.Repositories
             var md5Hash = Guid.NewGuid().ToString();
             var fileMetadata = CreateObject(md5Hash: md5Hash);
 
-            var dbContext = MockDbContext.CreateInMemoryDbContext();
+            var dbContext = MockDbContext.CreateInMemoryDbContext(Guid.NewGuid().ToString());
             dbContext.FileMetadata.Add(fileMetadata);
             dbContext.SaveChanges();
 
@@ -89,7 +89,7 @@ namespace LoginEKO.FileProcessingService.Persistence.Tests.Repositories
             // Arrange
             var fileMetadata = CreateObject();
 
-            var dbContext = MockDbContext.CreateInMemoryDbContext();
+            var dbContext = MockDbContext.CreateInMemoryDbContext(Guid.NewGuid().ToString());
             var loggerMock = new Mock<ILogger<FileMetadataRepository>>();
             var repository = new FileMetadataRepository(dbContext, loggerMock.Object);
 

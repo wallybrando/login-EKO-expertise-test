@@ -6,6 +6,7 @@ using LoginEKO.FileProcessingService.Domain.Models;
 using LoginEKO.FileProcessingService.Domain.Models.Entities;
 using LoginEKO.FileProcessingService.Domain.Models.Entities.Base;
 using LoginEKO.FileProcessingService.Domain.Validators;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace LoginEKO.FileProcessingService.Domain.Services
@@ -21,13 +22,16 @@ namespace LoginEKO.FileProcessingService.Domain.Services
         private readonly SchemaRegistry<TractorTelemetry> _tractorSchemaRegistry;
         private readonly SchemaRegistry<CombineTelemetry> _combineSchemaRegistry;
 
+        private readonly ILogger<TelemetryService> _logger;
+
         public TelemetryService(
             ITractorTelemetryRepository tractorTelemetryRepository,
             ICombineTelemetryRepository combineTelemetryRepository,
             FilterValidator<TractorTelemetry> tractorFilterValidator,
             FilterValidator<CombineTelemetry> combineFilterValidator,
             SchemaRegistry<TractorTelemetry> tractorSchemaRegistry,
-            SchemaRegistry<CombineTelemetry> combineSchemaRegistry)
+            SchemaRegistry<CombineTelemetry> combineSchemaRegistry,
+            ILogger<TelemetryService> logger)
         {
             _tractorTelemetryRepository = tractorTelemetryRepository;
             _combineTelemetryRepository = combineTelemetryRepository;
@@ -36,10 +40,14 @@ namespace LoginEKO.FileProcessingService.Domain.Services
 
             _tractorSchemaRegistry = tractorSchemaRegistry;
             _combineSchemaRegistry = combineSchemaRegistry;
+
+            _logger = logger;
         }
 
-        public async Task<UnifiedTelemetry> GetTractorTelemetriesAsync(PaginatedFilter paginatedFilter, CancellationToken token = default)
+        public async Task<UnifiedTelemetry> GetUnifiedTelemetriesAsync(PaginatedFilter paginatedFilter, CancellationToken token = default)
         {
+            _logger.LogTrace("GetUnifiedTelemetriesAsync(PaginatedFilter, CancellationToken)");
+
             /*** Check filters validity *******************************/
             ValidateFilter(paginatedFilter.Filters);
 
@@ -92,13 +100,17 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                 var tempFilter = new List<Filter>(filter);
                 if (!_tractorSchemaRegistry.TryGetFieldType(filter.Key.Field, out var fieldType))
                 {
-                    throw new FilterValidationException("Provided field cannot be found");
+                    _logger.LogError("Filter data type is not assigned to filter '{Field}", filter.Key.Field);
+                    throw new InvalidOperationException($"Filter data type is not assigned to filter '{filter.Key.Field}");
                 }
 
                 if (fieldType != null && fieldType == typeof(Enum))
                 {
                     if (!_tractorSchemaRegistry.TryGetEnumType(filter.Key.Field, out fieldType))
-                        throw new FilterValidationException("Cannot find data type for provided field");
+                    {
+                        _logger.LogError("Filter data type is not assigned to filter '{Field}", filter.Key.Field);
+                        throw new InvalidOperationException($"Filter data type is not assigned to filter '{filter.Key.Field}");
+                    }
                 }
 
                 /*** Handles filter  **********************************************/
@@ -126,13 +138,17 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                 var tempFilter = new List<Filter>(filter);
                 if (!_combineSchemaRegistry.TryGetFieldType(filter.Key.Field, out var fieldType))
                 {
-                    throw new FilterValidationException("Provided field cannot be found");
+                    _logger.LogError("Filter data type is not assigned to filter '{Field}", filter.Key.Field);
+                    throw new InvalidOperationException($"Filter data type is not assigned to filter '{filter.Key.Field}");
                 }
 
                 if (fieldType != null && fieldType == typeof(Enum))
                 {
                     if (!_combineSchemaRegistry.TryGetEnumType(filter.Key.Field, out fieldType))
-                        throw new FilterValidationException("Cannot find data type for provided field");
+                    {
+                        _logger.LogError("Filter data type is not assigned to filter '{Field}", filter.Key.Field);
+                        throw new InvalidOperationException($"Filter data type is not assigned to filter '{filter.Key.Field}");
+                    }
                 }
 
                 /*** Handles filter  **********************************************/
@@ -176,7 +192,8 @@ namespace LoginEKO.FileProcessingService.Domain.Services
             {
                 if (!_tractorSchemaRegistry.TryGetFieldType(nameof(AgroVehicleTelemetry.SerialNumber), out var fieldType))
                 {
-                    throw new FilterValidationException("Provided field cannot be found");
+                    _logger.LogError($"Filter data type is not assigned to filter '{nameof(AgroVehicleTelemetry.SerialNumber)}");
+                    throw new InvalidOperationException($"Filter data type is not assigned to filter '{nameof(AgroVehicleTelemetry.SerialNumber)}");
                 }
 
                 var serialNumberFilterTuple = serialNumberFilters.Select(x => (x.Field, x.Operation, x.Value, fieldType));
@@ -267,6 +284,7 @@ namespace LoginEKO.FileProcessingService.Domain.Services
         {
             if (!ValidateFilterUniqueness(filters))
             {
+                _logger.LogError("Duplicated filters' parameters in filter criteria");
                 throw new FilterValidationException("Duplicated filters' parameters in filter criteria");
             }
 
@@ -275,25 +293,31 @@ namespace LoginEKO.FileProcessingService.Domain.Services
                 if (!_tractorFilterValidator.ValidateFilterFieldName(filter.Field) &&
                     !_combineFilterValidator.ValidateFilterFieldName(filter.Field))
                 {
-                    throw new FilterValidationException("One or more invalid fields in filter criteria");
+                    _logger.LogError("Field {Field} is invalid in filter criteria", filter.Field);
+                    throw new FilterValidationException($"Field '{filter.Field}' is invalid in filter criteria");
                 }
 
                 if (!_tractorFilterValidator.ValidateOperation(filter.Field, filter.Operation) &&
                     !_combineFilterValidator.ValidateOperation(filter.Field, filter.Operation))
                 {
-                    throw new FilterValidationException("One or more invalid operations in filter criteria");
+                    _logger.LogError("Operation '{Operation}' is invalid for field '{Field}' in filter criteria", filter.Operation, filter.Field);
+                    throw new FilterValidationException($"Operation '{filter.Operation}' is invalid for field '{filter.Field}' in filter criteria");
                 }
 
-                if (!_tractorFilterValidator.ValidFilterType(filter.Field) &&
-                    !_combineFilterValidator.ValidFilterType(filter.Field))
-                {
-                    throw new FilterValidationException("Unknown data type for one or more filters");
-                }
+                //if (!_tractorFilterValidator.ValidFilterType(filter.Field) &&
+                //    !_combineFilterValidator.ValidFilterType(filter.Field))
+                //{
+                //    // Error indicates that filter is valid but we (API) didn't include filter in allowed filters
+                //    // Situation when system starts to support new filter but our API has not implemented it.
+                //    _logger.LogError("Filter data type is not assigned to filter '{Field}", filter.Field);
+                //    throw new InvalidOperationException($"Filter data type is not assigned to filter '{filter.Field}'");
+                //}
 
                 if (!_tractorFilterValidator.ValidateNullAssignment(filter.Field, filter.Value, filter.Operation) &&
                     !_combineFilterValidator.ValidateNullAssignment(filter.Field, filter.Value, filter.Operation))
                 {
-                    throw new FilterValidationException("NULL filter value assigned to one or more non-nullable fields");
+                    _logger.LogError("NULL value cannot be assigned to non-nullable field '{Field}'", filter.Field);
+                    throw new FilterValidationException($"NULL value cannot be assigned to non-nullable field '{filter.Field}'");
                 }
             }
         }

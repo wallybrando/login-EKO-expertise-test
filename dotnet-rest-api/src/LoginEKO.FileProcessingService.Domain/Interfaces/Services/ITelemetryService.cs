@@ -4,6 +4,6 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces.Services
 {
     public interface ITelemetryService
     {
-        Task<UnifiedTelemetry> GetTractorTelemetriesAsync(PaginatedFilter paginatedFilter, CancellationToken token = default);
+        Task<UnifiedTelemetry> GetUnifiedTelemetriesAsync(PaginatedFilter paginatedFilter, CancellationToken token = default);
     }
 }

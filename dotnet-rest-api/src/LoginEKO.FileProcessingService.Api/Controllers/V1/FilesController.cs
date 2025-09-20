@@ -20,11 +20,14 @@ namespace LoginEKO.FileProcessingService.Api.Controllers.V1
         [HttpPost(ApiEndpoints.V1.Files.Import)]
         public async Task<IActionResult> ImportVehicleTelemetryFileAsync([FromForm] ImportFileRequest request, CancellationToken token = default)
         {
+            _logger.LogTrace("ImportVehicleTelemetryFileAsync(ImportFileRequest, CancellationToken)");
             var file = request.MapToFileMetadata();
             var numberOfImports = await _fileService.ImportVehicleTelemetryAsync(file, token);
 
             var response = file.MapToResponse();
             response.NumberOfImports = numberOfImports;
+
+            _logger.LogDebug("Successfully returned response to client");
             return Accepted($"{ApiEndpoints.V1.Files.Get}/{response.Id}", response);
         }
     }

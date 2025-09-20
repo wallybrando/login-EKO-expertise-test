@@ -59,26 +59,38 @@ namespace LoginEKO.FileProcessingService.Persistence.Tests.Database
             context.TractorTelemetries.Add(new TractorTelemetry
             {
                 FileMetadataId = tractorFileMetadaId,
-                SerialNumber = "SerialNumber123",
+                SerialNumber = "Tractor123",
                 AllWheelDriveStatus = Domain.Models.Enums.WheelDriveStatus.ACTIVE
             });
             context.TractorTelemetries.Add(new TractorTelemetry
             {
                 FileMetadataId = tractorFileMetadaId,
-                SerialNumber = "SerialNumber123",
+                SerialNumber = "Tractor123",
+                AllWheelDriveStatus = Domain.Models.Enums.WheelDriveStatus.INACTIVE
+            });
+            context.TractorTelemetries.Add(new TractorTelemetry
+            {
+                FileMetadataId = tractorFileMetadaId,
+                SerialNumber = "Tractor123",
+                AllWheelDriveStatus = Domain.Models.Enums.WheelDriveStatus.INACTIVE
+            });
+            context.TractorTelemetries.Add(new TractorTelemetry
+            {
+                FileMetadataId = tractorFileMetadaId,
+                SerialNumber = "Tractor123",
                 AllWheelDriveStatus = Domain.Models.Enums.WheelDriveStatus.INACTIVE
             });
 
             context.CombineTelemetries.Add(new CombineTelemetry
             {
                 FileMetadataId = tractorFileMetadaId,
-                SerialNumber = "SerialNumber123",
+                SerialNumber = "Combine123",
                 TypeOfCrop = Domain.Models.Enums.CropType.MAIZE
             });
             context.CombineTelemetries.Add(new CombineTelemetry
             {
                 FileMetadataId = tractorFileMetadaId,
-                SerialNumber = "SerialNumber123",
+                SerialNumber = "Combine123",
                 TypeOfCrop = Domain.Models.Enums.CropType.SUNFLOWERS
             });
 

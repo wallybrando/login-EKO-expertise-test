@@ -37,7 +37,7 @@ namespace LoginEKO.FileProcessingService.Api.Middlewares
                 ArgumentException argumentException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Input parameter is not valid", argumentException.Message),
                 FileValidationException fileValidationException => new ErrorResponse(System.Net.HttpStatusCode.BadRequest, "Unable to process file", fileValidationException.Message),
                 RepositoryException repositoryException => new ErrorResponse(System.Net.HttpStatusCode.InternalServerError, "Database error", repositoryException.Message),
-                _ => new ErrorResponse(System.Net.HttpStatusCode.InternalServerError, "Internal server error", "Try again later"),
+                Exception ex => new ErrorResponse(System.Net.HttpStatusCode.InternalServerError, "Internal server error", ex.Message),
             };
 
             context.Response.ContentType = "application/json";

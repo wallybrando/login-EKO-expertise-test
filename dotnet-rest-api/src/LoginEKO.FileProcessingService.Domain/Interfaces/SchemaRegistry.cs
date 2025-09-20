@@ -58,7 +58,7 @@ namespace LoginEKO.FileProcessingService.Domain.Interfaces
             return true;
         }
 
-        public virtual bool TryGetOperation(Type type, FilterOperation suppliedOperation/*, out FilterOperation operation*/)
+        public virtual bool TypeHasAllowedOperation(Type type, FilterOperation suppliedOperation)
         {
             if (suppliedOperation == FilterOperation.UNKNOWN)
                 return false;
