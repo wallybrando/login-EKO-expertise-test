@@ -53,14 +53,13 @@ namespace LoginEKO.FileProcessingService.Api.Mapping
             };
         }
 
-        public static PaginatedFilter MapToPaginatedFilter(this IEnumerable<FilterRequest> filters, int? pageNumber, int? pageSize)
+        public static PaginatedFilter MapToPaginatedFilter(this IEnumerable<FilterRequest> filters, int pageNumber, int pageSize)
         {
             return new PaginatedFilter
             {
                 Filters = filters.Select(MapToFilter),
-                PageNumber = pageNumber ?? 1,
-                PageSize = pageSize ?? throw new ArgumentException("Page size must be between 1 and 100"),
-
+                PageNumber = pageNumber > 0 ? pageNumber : throw new ArgumentException("Page number cannot be zero or negative number"),
+                PageSize = pageSize > 0 && pageSize <= 100 ? pageSize : throw new ArgumentException("Page size must be between 1 and 100"),
             };
         }
 

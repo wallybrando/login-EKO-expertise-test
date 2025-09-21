@@ -20,7 +20,7 @@ namespace LoginEKO.FileProcessingService.Api.Controllers.V1
         }
 
         [HttpPost(ApiEndpoints.V1.Telemetries.All)]
-        public async Task<IActionResult> GetAllAsync([FromBody] IEnumerable<FilterRequest> request, [FromQuery] int? pageNumber, int? pageSize, CancellationToken token = default)
+        public async Task<IActionResult> GetAllAsync([FromBody] IEnumerable<FilterRequest> request, [FromQuery] int pageNumber, int pageSize, CancellationToken token = default)
         {
             _logger.LogTrace("GetAllAsync(FilterRequest[], pageNumber, pageSize, CancellationToken)");
             var filter = request.MapToPaginatedFilter(pageNumber, pageSize);
